@@ -31,9 +31,11 @@ class Conexion{
 
 			$link->exec("set names utf8");
 
-			Logger::info('Conexión a base de datos establecida correctamente', [
-				'database' => $dbname
-			]);
+			// Log de conexión exitosa comentado para evitar ruido en logs
+			// Solo se registran errores de conexión
+			// Logger::info('Conexión a base de datos establecida correctamente', [
+			// 	'database' => $dbname
+			// ]);
 
 			return $link;
 

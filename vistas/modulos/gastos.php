@@ -193,7 +193,7 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
 
                 // Columna 7: Imagen
                 if(!empty($value["imagen_comprobante"])){
-                  echo '<td><button class="btn btn-info btn-xs btnVerComprobante" imagen="'.$value["imagen_comprobante"].'"><i class="fa fa-image"></i></button></td>';
+                  echo '<td><img src="'.$value["imagen_comprobante"].'" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;"></td>';
                 } else {
                   echo '<td>-</td>';
                 }

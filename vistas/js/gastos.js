@@ -187,12 +187,12 @@ $("#modalGestionarCategorias").on("click", ".btnEliminarCategoriaGasto", functio
 })
 
 /*=============================================
-VER COMPROBANTE
+VER COMPROBANTE DESDE TABLA
 =============================================*/
 
-$(".tablas1").on("click", ".btnVerComprobante", function(){
+$(".tablas1").on("click", ".img-comprobante-clickeable", function(){
 
-	var imagen = $(this).attr("imagen");
+	var imagen = $(this).attr("src");
 
     $("#imagenComprobante").attr("src", imagen);
     $("#modalVerComprobante").modal("show");

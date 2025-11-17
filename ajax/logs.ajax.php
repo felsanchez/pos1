@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once "../controladores/logs.controlador.php";
 require_once "../modelos/logger.php";

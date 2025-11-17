@@ -135,7 +135,10 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
             <tr>
               <th style="width: 10px">#</th>
               <th>Concepto</th>
+              <th>Fecha</th>
+              <th>Monto</th>
               <th>Categoría</th>
+              <th>Imagen</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -167,10 +170,25 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 // Columna 2: Concepto
                 echo '<td>'.$value["concepto"].'</td>';
 
-                // Columna 3: Categoría
+                // Columna 3: Fecha
+                $fecha = !empty($value["fecha"]) ? date("d/m/Y", strtotime($value["fecha"])) : '-';
+                echo '<td>'.$fecha.'</td>';
+
+                // Columna 4: Monto
+                $monto = !empty($value["monto"]) ? '$'.number_format($value["monto"], 2, ',', '.') : '-';
+                echo '<td><strong>'.$monto.'</strong></td>';
+
+                // Columna 5: Categoría
                 echo '<td>'.$categoriaBadge.'</td>';
 
-                // Columna 4: Acciones
+                // Columna 6: Imagen
+                if(!empty($value["imagen"])){
+                  echo '<td><button class="btn btn-info btn-xs btnVerComprobante" data-imagen="'.$value["imagen"].'" data-toggle="modal" data-target="#modalVerComprobante"><i class="fa fa-image"></i></button></td>';
+                } else {
+                  echo '<td>-</td>';
+                }
+
+                // Columna 7: Acciones
                 echo '<td>
                   <div class="btn-group">
                     <button class="btn btn-warning btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto"><i class="fa fa-pencil"></i></button>

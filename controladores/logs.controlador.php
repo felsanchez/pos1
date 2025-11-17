@@ -7,7 +7,7 @@ class ControladorLogs {
      */
     public static function ctrMostrarLogs() {
         // Solo accesible para usuarios autenticados
-        if (!isset($_SESSION["validarSesion"]) || $_SESSION["validarSesion"] != "ok") {
+        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
             return [];
         }
 
@@ -19,7 +19,7 @@ class ControladorLogs {
      */
     public static function ctrObtenerLogs($fecha = null, $nivel = null, $limite = 100) {
         // Solo accesible para usuarios autenticados
-        if (!isset($_SESSION["validarSesion"]) || $_SESSION["validarSesion"] != "ok") {
+        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
             return [];
         }
 
@@ -36,7 +36,7 @@ class ControladorLogs {
      */
     public static function ctrObtenerEstadisticas($fecha = null) {
         // Solo accesible para usuarios autenticados
-        if (!isset($_SESSION["validarSesion"]) || $_SESSION["validarSesion"] != "ok") {
+        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
             return [];
         }
 
@@ -53,7 +53,7 @@ class ControladorLogs {
      */
     public static function ctrLimpiarLogsAntiguos($dias = 30) {
         // Solo accesible para usuarios autenticados y administradores
-        if (!isset($_SESSION["validarSesion"]) || $_SESSION["validarSesion"] != "ok") {
+        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
             return 0;
         }
 

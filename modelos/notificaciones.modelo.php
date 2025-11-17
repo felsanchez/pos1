@@ -188,11 +188,12 @@ class ModeloNotificaciones{
 
 	static public function mdlExisteNotificacionStock($tipo, $idProducto){
 
+		// Verificar si existe la notificación independientemente de si está leída o no
+		// Esto evita duplicar notificaciones de stock bajo/agotado aunque se marquen como leídas
 		$stmt = Conexion::conectar()->prepare("SELECT id FROM notificaciones
 												WHERE tipo = :tipo
 												AND referencia_tipo = 'producto'
 												AND referencia_id = :referencia_id
-												AND leida = 0
 												LIMIT 1");
 
 		$stmt->bindParam(":tipo", $tipo, PDO::PARAM_STR);

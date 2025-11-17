@@ -26,7 +26,8 @@ error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 	require_once "controladores/categorias_gastos.controlador.php";
 	require_once "controladores/notificaciones.controlador.php";
 	require_once "controladores/configuracion.controlador.php";
-	
+	require_once "controladores/logs.controlador.php";
+
 	require_once "modelos/usuarios.modelo.php";
 	require_once "modelos/categorias.modelo.php";
 	require_once "modelos/productos.modelo.php";

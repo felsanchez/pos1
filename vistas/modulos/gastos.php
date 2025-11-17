@@ -138,7 +138,6 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
               <th>Fecha</th>
               <th>Monto</th>
               <th>Categoría</th>
-              <th>Imagen</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -181,14 +180,7 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 // Columna 5: Categoría
                 echo '<td>'.$categoriaBadge.'</td>';
 
-                // Columna 6: Imagen
-                if(!empty($value["imagen"])){
-                  echo '<td><button class="btn btn-info btn-xs btnVerComprobante" data-imagen="'.$value["imagen"].'" data-toggle="modal" data-target="#modalVerComprobante"><i class="fa fa-image"></i></button></td>';
-                } else {
-                  echo '<td>-</td>';
-                }
-
-                // Columna 7: Acciones
+                // Columna 6: Acciones
                 echo '<td>
                   <div class="btn-group">
                     <button class="btn btn-warning btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto"><i class="fa fa-pencil"></i></button>

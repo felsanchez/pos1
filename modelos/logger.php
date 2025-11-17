@@ -215,6 +215,69 @@ class Logger {
     }
 
     /**
+     * Elimina logs específicos por timestamp
+     * @param array $logsToDelete Array de objetos con timestamp y fecha
+     * @return int Número de logs eliminados
+     */
+    public static function deleteLogs($logsToDelete) {
+        if (!is_array($logsToDelete) || empty($logsToDelete)) {
+            return 0;
+        }
+
+        $deleted = 0;
+
+        // Agrupar logs por fecha para optimizar el proceso
+        $logsByDate = [];
+        foreach ($logsToDelete as $log) {
+            $fecha = isset($log['fecha']) ? $log['fecha'] : date('Y-m-d');
+            if (!isset($logsByDate[$fecha])) {
+                $logsByDate[$fecha] = [];
+            }
+            $logsByDate[$fecha][] = $log['timestamp'];
+        }
+
+        // Procesar cada archivo de log
+        foreach ($logsByDate as $fecha => $timestamps) {
+            $filename = self::$logDir . $fecha . '.log';
+
+            if (!file_exists($filename)) {
+                continue;
+            }
+
+            // Leer todas las líneas del archivo
+            $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $newLines = [];
+
+            foreach ($lines as $line) {
+                $entry = json_decode($line, true);
+
+                if ($entry === null) {
+                    // Mantener líneas que no se puedan decodificar
+                    $newLines[] = $line;
+                    continue;
+                }
+
+                // Si el timestamp no está en la lista de eliminación, mantener la línea
+                if (!in_array($entry['timestamp'], $timestamps)) {
+                    $newLines[] = $line;
+                } else {
+                    $deleted++;
+                }
+            }
+
+            // Reescribir el archivo sin los logs eliminados
+            if (count($newLines) > 0) {
+                file_put_contents($filename, implode(PHP_EOL, $newLines) . PHP_EOL, LOCK_EX);
+            } else {
+                // Si no quedan logs, eliminar el archivo
+                unlink($filename);
+            }
+        }
+
+        return $deleted;
+    }
+
+    /**
      * Obtiene estadísticas de logs
      */
     public static function getStats($date = null) {

@@ -52,6 +52,25 @@ class AjaxLogs {
             'deleted' => $deleted
         ]);
     }
+
+    /**
+     * Eliminar logs específicos
+     */
+    public function ajaxEliminarLogs() {
+        $logsJson = isset($_POST["logs"]) ? $_POST["logs"] : '[]';
+        $logs = json_decode($logsJson, true);
+
+        if (!is_array($logs) || empty($logs)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'No se especificaron logs para eliminar'
+            ]);
+            return;
+        }
+
+        $resultado = ControladorLogs::ctrEliminarLogs($logs);
+        echo json_encode($resultado);
+    }
 }
 
 // Procesar peticiones
@@ -73,6 +92,10 @@ if (isset($_POST["accion"])) {
 
         case 'limpiar_logs':
             $ajax->ajaxLimpiarLogs();
+            break;
+
+        case 'eliminar_logs':
+            $ajax->ajaxEliminarLogs();
             break;
     }
 }

@@ -73,4 +73,35 @@ class ControladorLogs {
             return 0;
         }
     }
+
+    /**
+     * Elimina logs específicos
+     */
+    public static function ctrEliminarLogs($logs) {
+        // Solo accesible para usuarios autenticados
+        if (!isset($_SESSION["iniciarSesion"]) || $_SESSION["iniciarSesion"] != "ok") {
+            return [
+                'success' => false,
+                'message' => 'No tiene permisos para realizar esta acción'
+            ];
+        }
+
+        try {
+            $deleted = Logger::deleteLogs($logs);
+            Logger::info("Se eliminaron {$deleted} registros de log manualmente", [
+                'cantidad' => $deleted,
+                'usuario' => $_SESSION['nombre'] ?? $_SESSION['usuario'] ?? 'desconocido'
+            ]);
+            return [
+                'success' => true,
+                'deleted' => $deleted
+            ];
+        } catch (Exception $e) {
+            Logger::error('Error al eliminar logs específicos', ['exception' => $e]);
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar logs: ' . $e->getMessage()
+            ];
+        }
+    }
 }

@@ -192,7 +192,7 @@ VER COMPROBANTE
 
 $(".tablas1").on("click", ".btnVerComprobante", function(){
 
-	var imagen = $(this).data("imagen");
+	var imagen = $(this).attr("imagen");
 
     $("#imagenComprobante").attr("src", imagen);
     $("#modalVerComprobante").modal("show");

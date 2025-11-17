@@ -182,8 +182,8 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 echo '<td>'.$categoriaBadge.'</td>';
 
                 // Columna 6: Imagen
-                if(!empty($value["imagen"])){
-                  echo '<td><button class="btn btn-info btn-xs btnVerComprobante" data-imagen="'.$value["imagen"].'" data-toggle="modal" data-target="#modalVerComprobante"><i class="fa fa-image"></i></button></td>';
+                if(!empty($value["imagen_comprobante"])){
+                  echo '<td><button class="btn btn-info btn-xs btnVerComprobante" imagen="'.$value["imagen_comprobante"].'"><i class="fa fa-image"></i></button></td>';
                 } else {
                   echo '<td>-</td>';
                 }

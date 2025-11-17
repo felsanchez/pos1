@@ -4,7 +4,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$conexion = new mysqli("localhost", "root", "", "pos");
+// Cargar variables de entorno
+require_once __DIR__ . '/../config.php';
+
+// Obtener credenciales desde variables de entorno
+$host = env('DB_HOST', 'localhost');
+$user = env('DB_USER', 'root');
+$pass = env('DB_PASS', '');
+$dbname = env('DB_NAME', 'pos');
+
+$conexion = new mysqli($host, $user, $pass, $dbname);
 
 // Incluir la conexión centralizada
 //require_once "../modelos/conexion.php";

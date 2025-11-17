@@ -147,8 +147,8 @@ class Logger {
                 continue;
             }
 
-            // Filtrar por nivel si se especifica
-            if ($level !== null && $entry['level'] !== $level) {
+            // Filtrar por nivel si se especifica (y no es vacío)
+            if ($level !== null && $level !== '' && $entry['level'] !== $level) {
                 continue;
             }
 

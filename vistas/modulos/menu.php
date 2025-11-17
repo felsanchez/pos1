@@ -361,7 +361,7 @@
 
         <li>
 
-          <a href="logs">
+          <a href="index.php?ruta=logs">
 
             <i class="fa fa-file-text-o"></i>
 

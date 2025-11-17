@@ -138,6 +138,7 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
               <th>Fecha</th>
               <th>Monto</th>
               <th>Categoría</th>
+              <th>Proveedor</th>
               <th>Imagen</th>
               <th>Acciones</th>
             </tr>
@@ -186,14 +187,18 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 // Columna 5: Categoría
                 echo '<td>'.$categoriaBadge.'</td>';
 
-                // Columna 6: Imagen
+                // Columna 6: Proveedor
+                $proveedor = !empty($value["proveedor_nombre"]) ? $value["proveedor_nombre"] : '-';
+                echo '<td>'.$proveedor.'</td>';
+
+                // Columna 7: Imagen
                 if(!empty($value["imagen_comprobante"])){
                   echo '<td><button class="btn btn-info btn-xs btnVerComprobante" imagen="'.$value["imagen_comprobante"].'"><i class="fa fa-image"></i></button></td>';
                 } else {
                   echo '<td>-</td>';
                 }
 
-                // Columna 7: Acciones
+                // Columna 8: Acciones
                 echo '<td>
                   <div class="btn-group">
                     <button class="btn btn-warning btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto"><i class="fa fa-pencil"></i></button>

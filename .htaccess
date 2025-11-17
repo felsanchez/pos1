@@ -2,9 +2,12 @@ Options All -Indexes
 
 RewriteEngine On
 
-RewriteRule ^([-a-zA-Z0-9]+)$ index.php?ruta=$1
-
-
-
-# Redirige /leads a /clientes.php
+# Redirige /leads a /clientes.php (debe ir antes de la regla general)
 RewriteRule ^leads$ clientes.php [L]
+
+# Condiciones para evitar reescribir archivos y directorios reales
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Regla general: convierte rutas amigables a parámetros GET
+RewriteRule ^([-a-zA-Z0-9]+)$ index.php?ruta=$1 [L,QSA]

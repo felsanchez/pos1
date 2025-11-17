@@ -363,6 +363,28 @@
 
 
 
+      if($_SESSION["perfil"] =="Administrador"){ 
+
+        echo '<li> 
+
+          <a href="index.php?ruta=logs">
+
+            <i class="fa fa-file-text-o"></i>
+
+            <span>Logs del Sistema</span> 
+
+          </a> 
+
+        </li>';
+
+      }
+
+
+
+      
+
+
+
 
     ?>
 

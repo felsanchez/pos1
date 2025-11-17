@@ -169,6 +169,7 @@ INICIO
              $_GET["ruta"] == "gastos" ||
              $_GET["ruta"] == "configuracion" ||
              $_GET["ruta"] == "notificaciones" ||
+             $_GET["ruta"] == "logs" ||
              $_GET["ruta"] == "salir"){
 
             include "modulos/".$_GET["ruta"].".php";
@@ -214,6 +215,7 @@ FOOTER
 <script src="vistas/js/estados-actividades.js"></script>
 <script src="vistas/js/tipos-actividades.js"></script>
 <script src="vistas/js/gastos.js"></script>
+<script src="vistas/js/logs.js"></script>
 
 </body>
 </html>

@@ -53,6 +53,10 @@ function env($clave, $porDefecto = null) {
 // Cargar las variables al incluir este archivo
 cargarEnv();
 
+// Configurar zona horaria
+$timezone = env('APP_TIMEZONE', 'America/Guatemala');
+date_default_timezone_set($timezone);
+
 // Cargar el sistema de logging
 require_once __DIR__ . '/modelos/logger.php';
 

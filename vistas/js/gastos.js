@@ -75,7 +75,7 @@ $(".tablas1").on("click", ".btnEditarGasto", function(){
 
             // Mostrar preview de imagen si existe
             if(respuesta["imagen_comprobante"] != "" && respuesta["imagen_comprobante"] != null){
-                $("#previsualizarImagen").html('<img src="'+respuesta["imagen_comprobante"]+'" style="width: 100px; height: 100px; object-fit: cover;">');
+                $("#previsualizarImagen").html('<img src="'+respuesta["imagen_comprobante"]+'" class="img-thumbnail img-ampliar-gasto" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">');
             } else {
                 $("#previsualizarImagen").html('');
             }

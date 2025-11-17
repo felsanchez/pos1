@@ -837,6 +837,36 @@ MODAL VER COMPROBANTE
 
 </div>
 
+<!--=====================================
+MODAL AMPLIAR IMAGEN COMPROBANTE
+======================================-->
+
+<div id="modalAmpliarComprobanteGasto" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#3c8dbc; color: white">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Comprobante de Gasto</h4>
+      </div>
+      <div class="modal-body text-center">
+        <img id="imagenComprobanteAmpliada" src="" class="img-responsive" style="max-width: 100%; margin: 0 auto;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script para ampliar imagen del comprobante desde modal editar -->
+<script>
+$(document).on("click", ".img-ampliar-gasto", function(){
+    var rutaImagen = $(this).attr("src");
+    $("#imagenComprobanteAmpliada").attr("src", rutaImagen);
+    $("#modalAmpliarComprobanteGasto").modal("show");
+});
+</script>
+
 <?php
 
   $borrarGasto = new ControladorGastos();

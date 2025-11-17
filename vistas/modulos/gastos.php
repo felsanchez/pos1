@@ -165,7 +165,7 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 // Verificar si el gasto es de hoy para resaltarlo
                 $fechaHoy = date('Y-m-d');
                 $esHoy = (!empty($value["fecha"]) && $value["fecha"] == $fechaHoy);
-                $rowStyle = $esHoy ? 'style="border-left: 4px solid #28a745; background-color: #f0f9f4;"' : '';
+                $rowStyle = $esHoy ? 'style="border-left: 6px solid #28a745 !important; background-color: #f0f9f4; box-shadow: inset 6px 0 0 #28a745;"' : '';
 
                 echo '<tr '.$rowStyle.'>';
 

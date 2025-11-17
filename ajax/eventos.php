@@ -8,10 +8,15 @@ error_reporting(E_ALL);
 require_once __DIR__ . '/../config.php';
 
 // Obtener credenciales desde variables de entorno
-$host = env('DB_HOST', 'localhost');
-$user = env('DB_USER', 'root');
-$pass = env('DB_PASS', '');
-$dbname = env('DB_NAME', 'pos');
+// Si no existen las variables, la conexión fallará
+$host = env('DB_HOST');
+$user = env('DB_USER');
+$pass = env('DB_PASS');
+$dbname = env('DB_NAME');
+
+if (!$host || !$dbname || !$user) {
+	die('Error: Las variables de entorno de la base de datos no están configuradas. Revisa el archivo .env');
+}
 
 $conexion = new mysqli($host, $user, $pass, $dbname);
 

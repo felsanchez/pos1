@@ -8,10 +8,15 @@ class Conexion{
 	static public function conectar(){
 
 		// Obtener credenciales desde variables de entorno
-		$host = env('DB_HOST', 'localhost');
-		$dbname = env('DB_NAME', 'pos');
-		$user = env('DB_USER', 'root');
-		$pass = env('DB_PASS', '');
+		// Si no existen las variables, la conexión fallará
+		$host = env('DB_HOST');
+		$dbname = env('DB_NAME');
+		$user = env('DB_USER');
+		$pass = env('DB_PASS');
+
+		if (!$host || !$dbname || !$user) {
+			throw new Exception('Las variables de entorno de la base de datos no están configuradas. Revisa el archivo .env');
+		}
 
 		$link = new PDO("mysql:host={$host};dbname={$dbname}",
 						$user,

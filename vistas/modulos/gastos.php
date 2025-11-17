@@ -162,7 +162,11 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                   $categoriaBadge = '-';
                 }
 
-                echo '<tr>';
+                // Verificar si el gasto es de hoy para resaltarlo
+                $esHoy = (!empty($value["fecha"]) && $value["fecha"] == date('Y-m-d'));
+                $rowStyle = $esHoy ? 'style="border-left: 4px solid #28a745;"' : '';
+
+                echo '<tr '.$rowStyle.'>';
 
                 // Columna 1: Número
                 echo '<td>'.($key+1).'</td>';

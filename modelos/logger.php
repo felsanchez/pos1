@@ -69,7 +69,7 @@ class Logger {
                 'level' => $level,
                 'message' => $message,
                 'context' => $context,
-                'user' => isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'guest',
+                'user' => isset($_SESSION['nombre']) ? $_SESSION['nombre'] : (isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'guest'),
                 'ip' => self::getClientIP(),
                 'url' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : 'CLI',
                 'method' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CLI'

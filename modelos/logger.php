@@ -13,7 +13,7 @@ class Logger {
     const INFO = 'INFO';
     const DEBUG = 'DEBUG';
 
-    private static $logDir = __DIR__ . '/../logs/';
+    private static $logDir = __DIR__ . '/../storage/logs/';
     private static $maxFileSize = 5242880; // 5MB
 
     /**

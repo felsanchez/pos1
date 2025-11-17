@@ -10,7 +10,7 @@ diagnostico*.php
 *.log
 *.tmp
 *.cache
-logs/ 
+storage/logs/*.log 
 
 # Archivos de imágenes subidas (descomentar si son muchas)
 # vistas/img/productos/*

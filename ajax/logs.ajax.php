@@ -1,8 +1,8 @@
 <?php
 session_start();
 
+require_once "../config.php";
 require_once "../controladores/logs.controlador.php";
-require_once "../modelos/logger.php";
 
 class AjaxLogs {
 

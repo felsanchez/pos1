@@ -52,3 +52,11 @@ function env($clave, $porDefecto = null) {
 
 // Cargar las variables al incluir este archivo
 cargarEnv();
+
+// Cargar el sistema de logging
+require_once __DIR__ . '/modelos/logger.php';
+
+// Configurar manejadores de errores globales si estamos en modo desarrollo
+if (env('APP_DEBUG', false) === 'true' || env('APP_DEBUG', false) === true) {
+    setupErrorHandler();
+}

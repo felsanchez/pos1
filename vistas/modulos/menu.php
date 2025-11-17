@@ -345,17 +345,29 @@
       
 
 
-      if($_SESSION["perfil"] =="Administrador"){ 
+      if($_SESSION["perfil"] =="Administrador"){
 
-        echo '<li> 
+        echo '<li>
 
-          <a href="configuracion"> 
+          <a href="configuracion">
 
             <i class="fa fa-cogs"></i>
 
-            <span>Configuración</span> 
+            <span>Configuración</span>
 
-          </a> 
+          </a>
+
+        </li>
+
+        <li>
+
+          <a href="logs">
+
+            <i class="fa fa-file-text-o"></i>
+
+            <span>Logs del Sistema</span>
+
+          </a>
 
         </li>';
 

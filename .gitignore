@@ -9,7 +9,8 @@ diagnostico*.php
 # Archivos temporales de PHP
 *.log
 *.tmp
-*.cache 
+*.cache
+logs/ 
 
 # Archivos de imágenes subidas (descomentar si son muchas)
 # vistas/img/productos/*

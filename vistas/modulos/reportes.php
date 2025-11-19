@@ -35,31 +35,44 @@
 
     <section class="content">
 
-       <div class="box">
-
+       <!-- SECCIÓN 1: ANÁLISIS DE VENTAS -->
+       <div class="box box-info">
           <div class="box-header with-border">
-
-
-            <div class="box-tools pull-right excelbtn">
-              <button class="btn btn-success" style="margin-top:5px" data-toggle="modal" data-target="#modalDescargarExcel">
-                <i class="fa fa-file-excel-o"></i> Descargar reporte en excel
+            <h3 class="box-title"><i class="fa fa-line-chart"></i> Análisis de Ventas</h3>
+            <div class="box-tools pull-right">
+              <button class="btn btn-success btn-sm" style="margin-right: 5px;" data-toggle="modal" data-target="#modalDescargarExcel">
+                <i class="fa fa-file-excel-o"></i> Excel
+              </button>
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
               </button>
             </div>
+          </div>
 
-
+          <div class="box-body">
              <!-- Análisis de ventas -->
                 <div id="contenedor-barras-formas-pago">
                   <div class="col-12 col-md-12">
                     <?php include "reportes/analisis-ventas1.php"; ?>
                   </div>
                 </div>
+          </div>
+       </div>
 
+       <!-- SECCIÓN 2: GRÁFICOS DE RENDIMIENTO -->
+       <div class="box box-success">
+          <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-pie-chart"></i> Gráficos de Rendimiento</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
           </div>
 
          <div class="box-body">
 
             <div class="row">
-
 
             <div class="col-md-6 col-xs-12">
                   <?php
@@ -91,10 +104,15 @@
 
        </div>
 
-       <!-- REPORTE FINANCIERO -->
+       <!-- SECCIÓN 3: REPORTE FINANCIERO -->
        <div class="box box-primary">
           <div class="box-header with-border">
             <h3 class="box-title"><i class="fa fa-balance-scale"></i> Estado de Resultados</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
           </div>
 
           <div class="box-body">
@@ -102,10 +120,15 @@
           </div>
        </div>
 
-       <!-- REPORTE DE ÓRDENES -->
+       <!-- SECCIÓN 4: REPORTE DE ÓRDENES -->
        <div class="box box-warning">
           <div class="box-header with-border">
             <h3 class="box-title"><i class="fa fa-shopping-cart"></i> Análisis de Órdenes</h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
           </div>
 
           <div class="box-body">

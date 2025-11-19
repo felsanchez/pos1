@@ -7,19 +7,23 @@ error_reporting(E_ALL);
 require_once __DIR__ . "/../../../modelos/conexion.php";
 require_once __DIR__ . "/../../../modelos/usuarios.modelo.php";
 require_once __DIR__ . "/../../../modelos/clientes.modelo.php";
+
 require_once __DIR__ . "/../../../modelos/configuracion.modelo.php";
 
-// Obtener usuarios/vendedores
-$usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
+ // Obtener usuarios/vendedores
+$usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null); 
 
 // Obtener clientes
 $clientes = ModeloClientes::mdlMostrarClientes("clientes", null, null);
 
 // Obtener métodos de pago desde la configuración
 $configuracion = ModeloConfiguracion::mdlObtenerConfiguracion();
+
 $metodosPago = [];
+
 if (!empty($configuracion["medios_pago"])) {
     $metodosPagoRaw = explode(',', $configuracion["medios_pago"]);
+
     foreach ($metodosPagoRaw as $metodo) {
         $metodo = trim($metodo);
         if (!empty($metodo)) {
@@ -28,7 +32,8 @@ if (!empty($configuracion["medios_pago"])) {
     }
 }
 
-// Obtener productos únicos (de la tabla productos)
+ // Obtener productos únicos (de la tabla productos)
+
 $conn = Conexion::conectar();
 $stmtProductos = $conn->prepare("SELECT id, descripcion FROM productos ORDER BY descripcion ASC");
 $stmtProductos->execute();

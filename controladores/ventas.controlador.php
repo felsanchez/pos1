@@ -674,20 +674,23 @@ static public function ctrEditarVenta(){
 		// Si era orden y pasa a venta, agregar origen a las notas
 		$notasFinales = $_POST["notas"];
 		if($traerVenta["estado"] == "orden" && $_POST["estado"] == "venta"){
+
 			// Determinar si es orden de Agente IA o manual
 			$origenTexto = "Desde orden";
 			if(!empty($traerVenta["extra"]) && strpos($traerVenta["extra"], 'n8n') !== false){
 				$origenTexto = "Desde Agente IA";
-			}
+			} 
 
 			if(!empty($notasFinales)){
 				$notasFinales = $notasFinales . " | " . $origenTexto;
+
 			} else {
 				$notasFinales = $origenTexto;
 			}
-		}
+		} 
 
 		$datos = array(
+
 			"id_vendedor"=>$_POST["idVendedor"],
 			"id_cliente"=>$_POST["seleccionarCliente"],
 			"codigo"=>$_POST["editarVenta"],

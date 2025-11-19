@@ -122,6 +122,11 @@
                 <button type="button" class="btn btn-success" id="btn-refrescar">
                   <i class="fa fa-refresh"></i> Refrescar
                 </button>
+
+                 <button type="button" class="btn btn-danger" id="btn-eliminar-seleccionados" style="display: none;">
+                  <i class="fa fa-trash"></i> Eliminar Seleccionados
+                </button>
+
                 <button type="button" class="btn btn-warning" id="btn-limpiar" title="Eliminar logs con más de 30 días">
                   <i class="fa fa-trash"></i> Limpiar Logs Antiguos
                 </button>
@@ -144,6 +149,9 @@
               <table class="table table-bordered table-striped table-hover" id="tabla-logs">
                 <thead>
                   <tr>
+                    <th style="width: 30px;">
+                      <input type="checkbox" id="check-all">
+                    </th>
                     <th style="width: 140px;">Fecha/Hora</th>
                     <th style="width: 80px;">Nivel</th>
                     <th>Mensaje</th>
@@ -154,7 +162,7 @@
                 </thead>
                 <tbody id="tbody-logs">
                   <tr>
-                    <td colspan="6" class="text-center">
+                    <td colspan="7" class="text-center">
                       <i class="fa fa-spinner fa-spin"></i> Cargando logs...
                     </td>
                   </tr>

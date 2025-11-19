@@ -671,6 +671,16 @@ static public function ctrEditarVenta(){
 		date_default_timezone_set('America/Bogota');
 		$fechaHoraActual = date('Y-m-d H:i:s');
 
+		// Si era orden y pasa a venta, agregar "Origen = orden" a las notas
+		$notasFinales = $_POST["notas"];
+		if($traerVenta["estado"] == "orden" && $_POST["estado"] == "venta"){
+			if(!empty($notasFinales)){
+				$notasFinales = $notasFinales . " | Origen = orden";
+			} else {
+				$notasFinales = "Origen = orden";
+			}
+		}
+
 		$datos = array(
 			"id_vendedor"=>$_POST["idVendedor"],
 			"id_cliente"=>$_POST["seleccionarCliente"],
@@ -679,7 +689,7 @@ static public function ctrEditarVenta(){
 			"impuesto"=>$_POST["nuevoPrecioImpuesto"],
 			"neto"=>$_POST["nuevoPrecioNeto"],
 			"total"=>$_POST["totalVenta"],
-			"notas" => $_POST["notas"],
+			"notas" => $notasFinales,
 			"imagen" => $_POST["nuevaimagen"],
 			"estado" => $_POST["estado"],
 			"fecha" => $fechaHoraActual,

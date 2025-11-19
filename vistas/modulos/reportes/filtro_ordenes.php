@@ -77,11 +77,12 @@ try {
   $pendientesIA = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
   // =============================================
-  // ÓRDENES CONVERTIDAS (estado = 'venta' AND notas LIKE '%orden%')
+  // ÓRDENES CONVERTIDAS
+  // Busca: "Desde orden", "Desde Agente IA", "Origen = orden" (formato antiguo)
   // =============================================
 
-  // Convertidas manuales
-  $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%' AND $condicionFecha AND (extra NOT LIKE '%n8n%' OR extra IS NULL OR extra = '')";
+  // Convertidas manuales (tienen "orden" en notas pero NO tienen n8n en extra)
+  $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND (notas LIKE '%Desde orden%' OR notas LIKE '%Origen = orden%') AND $condicionFecha AND (extra NOT LIKE '%n8n%' OR extra IS NULL OR extra = '')";
   $stmt = $conn->prepare($sql);
   if ($usaParametrosFecha) {
     $stmt->bindValue(':fecha_inicio', $fecha_inicio);
@@ -90,8 +91,8 @@ try {
   $stmt->execute();
   $convertidasManuales = (int) $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
-  // Convertidas IA
-  $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%' AND $condicionFecha AND extra LIKE '%n8n%'";
+  // Convertidas IA (tienen "Agente IA" en notas O tienen n8n en extra)
+  $sql = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND (notas LIKE '%Desde Agente IA%' OR (notas LIKE '%orden%' AND extra LIKE '%n8n%')) AND $condicionFecha";
   $stmt = $conn->prepare($sql);
   if ($usaParametrosFecha) {
     $stmt->bindValue(':fecha_inicio', $fecha_inicio);
@@ -120,19 +121,19 @@ try {
   // =============================================
 
   // Debug: contar todas las ventas que vinieron de órdenes
-  $sqlDebug = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%'";
+  $sqlDebug = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND (notas LIKE '%orden%' OR notas LIKE '%Agente IA%')";
   $stmtDebug = $conn->prepare($sqlDebug);
   $stmtDebug->execute();
   $debugTotalConvertidas = (int) $stmtDebug->fetch(PDO::FETCH_ASSOC)['total'];
 
   // Debug: ver cuántas tienen extra con n8n
-  $sqlDebug2 = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%' AND extra LIKE '%n8n%'";
+  $sqlDebug2 = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND (notas LIKE '%orden%' OR notas LIKE '%Agente IA%') AND extra LIKE '%n8n%'";
   $stmtDebug2 = $conn->prepare($sqlDebug2);
   $stmtDebug2->execute();
   $debugConExtraN8n = (int) $stmtDebug2->fetch(PDO::FETCH_ASSOC)['total'];
 
   // Debug: ver cuántas tienen extra NULL o vacío
-  $sqlDebug3 = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%' AND (extra IS NULL OR extra = '')";
+  $sqlDebug3 = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND (notas LIKE '%orden%' OR notas LIKE '%Agente IA%') AND (extra IS NULL OR extra = '')";
   $stmtDebug3 = $conn->prepare($sqlDebug3);
   $stmtDebug3->execute();
   $debugConExtraNull = (int) $stmtDebug3->fetch(PDO::FETCH_ASSOC)['total'];

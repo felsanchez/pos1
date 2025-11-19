@@ -671,13 +671,19 @@ static public function ctrEditarVenta(){
 		date_default_timezone_set('America/Bogota');
 		$fechaHoraActual = date('Y-m-d H:i:s');
 
-		// Si era orden y pasa a venta, agregar "Origen = orden" a las notas
+		// Si era orden y pasa a venta, agregar origen a las notas
 		$notasFinales = $_POST["notas"];
 		if($traerVenta["estado"] == "orden" && $_POST["estado"] == "venta"){
+			// Determinar si es orden de Agente IA o manual
+			$origenTexto = "Desde orden";
+			if(!empty($traerVenta["extra"]) && strpos($traerVenta["extra"], 'n8n') !== false){
+				$origenTexto = "Desde Agente IA";
+			}
+
 			if(!empty($notasFinales)){
-				$notasFinales = $notasFinales . " | Origen = orden";
+				$notasFinales = $notasFinales . " | " . $origenTexto;
 			} else {
-				$notasFinales = "Origen = orden";
+				$notasFinales = $origenTexto;
 			}
 		}
 

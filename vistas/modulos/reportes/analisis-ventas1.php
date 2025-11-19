@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 require_once __DIR__ . "/../../../modelos/conexion.php";
 require_once __DIR__ . "/../../../modelos/usuarios.modelo.php";
 require_once __DIR__ . "/../../../modelos/clientes.modelo.php";
+require_once __DIR__ . "/../../../modelos/configuracion.modelo.php";
 
 // Obtener usuarios/vendedores
 $usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
@@ -14,25 +15,21 @@ $usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
 // Obtener clientes
 $clientes = ModeloClientes::mdlMostrarClientes("clientes", null, null);
 
-// Obtener métodos de pago únicos (extraer solo el nombre antes del guión)
-$conn = Conexion::conectar();
-$stmtMetodos = $conn->prepare("SELECT DISTINCT metodo_pago FROM ventas WHERE metodo_pago IS NOT NULL AND metodo_pago != '' ORDER BY metodo_pago");
-$stmtMetodos->execute();
-$metodosPagoRaw = $stmtMetodos->fetchAll(PDO::FETCH_COLUMN);
-
-// Extraer solo el nombre del método (antes del guión con código de transacción)
+// Obtener métodos de pago desde la configuración
+$configuracion = ModeloConfiguracion::mdlObtenerConfiguracion();
 $metodosPago = [];
-foreach ($metodosPagoRaw as $metodo) {
-    // Si contiene guión, extraer solo la primera parte
-    $nombreMetodo = explode('-', $metodo)[0];
-    $nombreMetodo = trim($nombreMetodo);
-    if (!empty($nombreMetodo) && !in_array($nombreMetodo, $metodosPago)) {
-        $metodosPago[] = $nombreMetodo;
+if (!empty($configuracion["medios_pago"])) {
+    $metodosPagoRaw = explode(',', $configuracion["medios_pago"]);
+    foreach ($metodosPagoRaw as $metodo) {
+        $metodo = trim($metodo);
+        if (!empty($metodo)) {
+            $metodosPago[] = $metodo;
+        }
     }
 }
-sort($metodosPago);
 
 // Obtener productos únicos (de la tabla productos)
+$conn = Conexion::conectar();
 $stmtProductos = $conn->prepare("SELECT id, descripcion FROM productos ORDER BY descripcion ASC");
 $stmtProductos->execute();
 $productos = $stmtProductos->fetchAll(PDO::FETCH_ASSOC);

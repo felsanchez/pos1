@@ -94,7 +94,7 @@
         <h3 class="box-title"><i class="fa fa-bar-chart"></i> Conversión por Origen</h3>
       </div>
       <div class="box-body">
-        <canvas id="graficoConversion" style="height: 300px;"></canvas>
+        <div id="graficoConversion" style="height: 300px;"></div>
       </div>
     </div>
   </div>
@@ -131,8 +131,15 @@
 
 <script>
 // Variables globales para las gráficas
-let graficoOrigenOrdenes = null;
-let graficoConversion = null;
+let pieChartOrdenes = null;
+let barChartConversion = null;
+
+// Colores para las gráficas
+const coloresPie = ['#605ca8', '#39cccc'];
+const coloresBar = {
+  manuales: '#605ca8',
+  ia: '#39cccc'
+};
 
 // Mostrar/ocultar fechas personalizadas
 document.getElementById('tipoFechaOrdenes').addEventListener('change', function() {
@@ -166,10 +173,10 @@ function cargarDatosOrdenes() {
     document.getElementById('ordenesIA').textContent = data.totales.pendientes_ia;
     document.getElementById('tasaConversionGeneral').textContent = data.totales.tasa_conversion + '%';
 
-    // Actualizar gráfica de origen
+    // Actualizar gráfica de origen (dona)
     actualizarGraficoOrigen(data.origen);
 
-    // Actualizar gráfica de conversión
+    // Actualizar gráfica de conversión (barras)
     actualizarGraficoConversion(data.conversion);
 
     // Actualizar tabla
@@ -180,88 +187,65 @@ function cargarDatosOrdenes() {
   });
 }
 
-// Actualizar gráfica de origen (dona)
+// Actualizar gráfica de origen (dona) - Chart.js 1.x
 function actualizarGraficoOrigen(datos) {
-  const ctx = document.getElementById('graficoOrigenOrdenes').getContext('2d');
+  const canvas = document.getElementById('graficoOrigenOrdenes');
+  const ctx = canvas.getContext('2d');
 
-  if (graficoOrigenOrdenes) {
-    graficoOrigenOrdenes.destroy();
-  }
+  // Limpiar canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  graficoOrigenOrdenes = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Manuales', 'IA (n8n)'],
-      datasets: [{
-        data: [datos.manuales, datos.ia],
-        backgroundColor: ['#605ca8', '#39cccc'],
-        borderWidth: 2
-      }]
+  const pieData = [
+    {
+      value: datos.manuales,
+      color: '#605ca8',
+      highlight: '#7d79c4',
+      label: 'Manuales'
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom'
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              const total = context.dataset.data.reduce((a, b) => a + b, 0);
-              const porcentaje = total > 0 ? ((context.raw / total) * 100).toFixed(1) : 0;
-              return context.label + ': ' + context.raw + ' (' + porcentaje + '%)';
-            }
-          }
-        }
-      }
+    {
+      value: datos.ia,
+      color: '#39cccc',
+      highlight: '#5fd9d9',
+      label: 'IA (n8n)'
     }
-  });
+  ];
+
+  const pieOptions = {
+    segmentShowStroke: true,
+    segmentStrokeColor: '#fff',
+    segmentStrokeWidth: 2,
+    percentageInnerCutout: 50,
+    animationSteps: 100,
+    animationEasing: 'easeOutBounce',
+    animateRotate: true,
+    animateScale: false,
+    responsive: true,
+    maintainAspectRatio: false,
+    tooltipTemplate: '<%=label%>: <%=value%>'
+  };
+
+  pieChartOrdenes = new Chart(ctx).Doughnut(pieData, pieOptions);
 }
 
-// Actualizar gráfica de conversión (barras)
+// Actualizar gráfica de conversión (barras) - Morris.js
 function actualizarGraficoConversion(datos) {
-  const ctx = document.getElementById('graficoConversion').getContext('2d');
+  // Limpiar contenedor
+  document.getElementById('graficoConversion').innerHTML = '';
 
-  if (graficoConversion) {
-    graficoConversion.destroy();
-  }
-
-  graficoConversion = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Manuales', 'IA (n8n)'],
-      datasets: [
-        {
-          label: 'Total Creadas',
-          data: [datos.manuales.total, datos.ia.total],
-          backgroundColor: 'rgba(96, 92, 168, 0.7)',
-          borderColor: '#605ca8',
-          borderWidth: 1
-        },
-        {
-          label: 'Convertidas',
-          data: [datos.manuales.convertidas, datos.ia.convertidas],
-          backgroundColor: 'rgba(0, 166, 90, 0.7)',
-          borderColor: '#00a65a',
-          borderWidth: 1
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }
+  barChartConversion = new Morris.Bar({
+    element: 'graficoConversion',
+    resize: true,
+    data: [
+      { origen: 'Manuales', creadas: datos.manuales.total, convertidas: datos.manuales.convertidas },
+      { origen: 'IA (n8n)', creadas: datos.ia.total, convertidas: datos.ia.convertidas }
+    ],
+    xkey: 'origen',
+    ykeys: ['creadas', 'convertidas'],
+    labels: ['Total Creadas', 'Convertidas'],
+    barColors: ['#605ca8', '#00a65a'],
+    hideHover: 'auto',
+    gridLineColor: '#eef0f2',
+    xLabelAngle: 0
   });
 }
 
@@ -290,7 +274,7 @@ function actualizarTablaResumen(datos) {
       </td>
     </tr>
     <tr>
-      <td><i class="fa fa-robot text-aqua"></i> IA (n8n)</td>
+      <td><i class="fa fa-rocket text-aqua"></i> IA (n8n)</td>
       <td>${datos.ia.total}</td>
       <td>${datos.ia.convertidas}</td>
       <td>${datos.ia.pendientes}</td>

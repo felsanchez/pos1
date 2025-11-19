@@ -63,7 +63,7 @@
 
             <div class="col-md-6 col-xs-12">
                   <?php
-                  include "reportes/tipos-pagos.php";
+                  include "reportes/metodos-pago-mas-usados.php";
                   ?>
               </div>
 

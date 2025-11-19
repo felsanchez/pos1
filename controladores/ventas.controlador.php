@@ -685,7 +685,7 @@ static public function ctrEditarVenta(){
 			"fecha" => $fechaHoraActual,
 			"metodo_pago"=>$_POST["listaMetodoPago"],
         	"recibe" => isset($_POST["recibe"]) ? $_POST["recibe"] : null,
-			"extra" => null
+			"extra" => $traerVenta["extra"]
     	);
 
 		$respuesta = ModeloVentas::mdlEditarVenta($tabla, $datos);

@@ -21,6 +21,7 @@ try {
   }
 
   // Construir la condición de fecha para ventas y gastos
+  // Nota: ventas usa DATE(fecha) porque almacena datetime, gastos usa fecha directamente
   $condicionFechaVentas = "";
   $condicionFechaGastos = "";
   $condicionFechaGastosAlias = ""; // Para consultas con alias g.
@@ -34,13 +35,13 @@ try {
       break;
     case 'hoy':
       $condicionFechaVentas = "DATE(fecha) = CURDATE()";
-      $condicionFechaGastos = "DATE(fecha) = CURDATE()";
-      $condicionFechaGastosAlias = "DATE(g.fecha) = CURDATE()";
+      $condicionFechaGastos = "fecha = CURDATE()";
+      $condicionFechaGastosAlias = "g.fecha = CURDATE()";
       break;
     case 'ayer':
       $condicionFechaVentas = "DATE(fecha) = CURDATE() - INTERVAL 1 DAY";
-      $condicionFechaGastos = "DATE(fecha) = CURDATE() - INTERVAL 1 DAY";
-      $condicionFechaGastosAlias = "DATE(g.fecha) = CURDATE() - INTERVAL 1 DAY";
+      $condicionFechaGastos = "fecha = CURDATE() - INTERVAL 1 DAY";
+      $condicionFechaGastosAlias = "g.fecha = CURDATE() - INTERVAL 1 DAY";
       break;
     case 'mes':
       $condicionFechaVentas = "MONTH(fecha) = MONTH(CURDATE()) AND YEAR(fecha) = YEAR(CURDATE())";
@@ -54,8 +55,8 @@ try {
         exit;
       }
       $condicionFechaVentas = "DATE(fecha) BETWEEN :fecha_inicio AND :fecha_fin";
-      $condicionFechaGastos = "DATE(fecha) BETWEEN :fecha_inicio AND :fecha_fin";
-      $condicionFechaGastosAlias = "DATE(g.fecha) BETWEEN :fecha_inicio AND :fecha_fin";
+      $condicionFechaGastos = "fecha BETWEEN :fecha_inicio AND :fecha_fin";
+      $condicionFechaGastosAlias = "g.fecha BETWEEN :fecha_inicio AND :fecha_fin";
       $usaParametrosFecha = true;
       break;
     default:

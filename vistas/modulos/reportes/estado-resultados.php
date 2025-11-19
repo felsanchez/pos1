@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . "/../../../controladores/categorias-gastos.controlador.php";
-require_once __DIR__ . "/../../../modelos/categorias-gastos.modelo.php";
+// Los controladores ya están cargados desde index.php
 ?>
 
 <style>

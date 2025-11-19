@@ -89,9 +89,10 @@ $productos = $stmtProductos->fetchAll(PDO::FETCH_ASSOC);
                     <div class="filtro-grupo">
                       <label for="tipo-fecha">Filtrar por fecha</label>
                       <select id="tipo-fecha" name="tipo" class="form-control">
+                        <option value="todo">Todas las ventas</option>
                         <option value="hoy">Hoy</option>
                         <option value="ayer">Ayer</option>
-                        <option value="mes">Mes actual</option>
+                        <option value="mes" selected>Mes actual</option>
                         <option value="personalizado">Personalizado</option>
                       </select>
 

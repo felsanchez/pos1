@@ -26,6 +26,9 @@ $params = [];
 $paramIndex = 1;
 
 switch ($tipo) {
+  case 'todo':
+    $condicionFecha = "1=1"; // Sin filtro de fecha
+    break;
   case 'hoy':
     $condicionFecha = "DATE(fecha) = CURDATE()";
     break;

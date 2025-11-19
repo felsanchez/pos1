@@ -102,6 +102,17 @@
           </div>
        </div>
 
+       <!-- REPORTE DE ÓRDENES -->
+       <div class="box box-warning">
+          <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-shopping-cart"></i> Análisis de Órdenes</h3>
+          </div>
+
+          <div class="box-body">
+            <?php include "reportes/ordenes-reporte.php"; ?>
+          </div>
+       </div>
+
 
     </section>
 

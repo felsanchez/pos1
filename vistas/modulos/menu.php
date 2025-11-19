@@ -237,12 +237,19 @@
                       </a>
                     </li>';
 
-        if($_SESSION["perfil"] =="Administrador"){ 
+        if($_SESSION["perfil"] =="Administrador"){
 
               echo '<li>
                       <a href="reportes">
                         <i class="fa fa-circle-o"></i>
                         <span>Reporte de ventas</span>
+                      </a>
+                    </li>';
+
+              echo '<li>
+                      <a href="reporte-financiero">
+                        <i class="fa fa-circle-o"></i>
+                        <span>Reporte financiero</span>
                       </a>
                     </li>';
         }

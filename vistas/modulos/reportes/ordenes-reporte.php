@@ -167,6 +167,15 @@ function cargarDatosOrdenes() {
       return;
     }
 
+    // Debug info
+    console.log('=== DEBUG ÓRDENES ===');
+    console.log('Total convertidas histórico:', data.debug?.total_convertidas_historico);
+    console.log('Con extra n8n:', data.debug?.con_extra_n8n);
+    console.log('Con extra NULL/vacío:', data.debug?.con_extra_null);
+    console.log('Convertidas Manuales:', data.conversion.manuales.convertidas);
+    console.log('Convertidas IA:', data.conversion.ia.convertidas);
+    console.log('=====================');
+
     // Actualizar cajas de resumen
     document.getElementById('totalOrdenesPendientes').textContent = data.totales.pendientes_total;
     document.getElementById('ordenesManuales').textContent = data.totales.pendientes_manuales;

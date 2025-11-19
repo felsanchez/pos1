@@ -118,6 +118,25 @@ try {
   // =============================================
   // RESPUESTA JSON
   // =============================================
+
+  // Debug: contar todas las ventas que vinieron de órdenes
+  $sqlDebug = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%'";
+  $stmtDebug = $conn->prepare($sqlDebug);
+  $stmtDebug->execute();
+  $debugTotalConvertidas = (int) $stmtDebug->fetch(PDO::FETCH_ASSOC)['total'];
+
+  // Debug: ver cuántas tienen extra con n8n
+  $sqlDebug2 = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%' AND extra LIKE '%n8n%'";
+  $stmtDebug2 = $conn->prepare($sqlDebug2);
+  $stmtDebug2->execute();
+  $debugConExtraN8n = (int) $stmtDebug2->fetch(PDO::FETCH_ASSOC)['total'];
+
+  // Debug: ver cuántas tienen extra NULL o vacío
+  $sqlDebug3 = "SELECT COUNT(*) as total FROM ventas WHERE estado = 'venta' AND notas LIKE '%orden%' AND (extra IS NULL OR extra = '')";
+  $stmtDebug3 = $conn->prepare($sqlDebug3);
+  $stmtDebug3->execute();
+  $debugConExtraNull = (int) $stmtDebug3->fetch(PDO::FETCH_ASSOC)['total'];
+
   echo json_encode([
     'totales' => [
       'pendientes_total' => $pendientesTotal,
@@ -141,6 +160,11 @@ try {
         'pendientes' => $pendientesIA
       ],
       'tasa_general' => $tasaConversionGeneral
+    ],
+    'debug' => [
+      'total_convertidas_historico' => $debugTotalConvertidas,
+      'con_extra_n8n' => $debugConExtraN8n,
+      'con_extra_null' => $debugConExtraNull
     ]
   ]);
 

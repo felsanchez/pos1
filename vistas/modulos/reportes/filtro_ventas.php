@@ -66,8 +66,10 @@ if (!empty($id_cliente)) {
 }
 
 if (!empty($metodo_pago)) {
-  $where .= " AND metodo_pago = ?";
+  // Usar LIKE porque el método de pago puede incluir código de transacción (ej: "Tarjeta-ABC123")
+  $where .= " AND (metodo_pago = ? OR metodo_pago LIKE ?)";
   $params[$paramIndex++] = $metodo_pago;
+  $params[$paramIndex++] = $metodo_pago . '-%';
 }
 
 // Filtro por producto (buscar en el campo JSON de productos)

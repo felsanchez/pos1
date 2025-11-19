@@ -14,11 +14,23 @@ $usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
 // Obtener clientes
 $clientes = ModeloClientes::mdlMostrarClientes("clientes", null, null);
 
-// Obtener métodos de pago únicos
+// Obtener métodos de pago únicos (extraer solo el nombre antes del guión)
 $conn = Conexion::conectar();
 $stmtMetodos = $conn->prepare("SELECT DISTINCT metodo_pago FROM ventas WHERE metodo_pago IS NOT NULL AND metodo_pago != '' ORDER BY metodo_pago");
 $stmtMetodos->execute();
-$metodosPago = $stmtMetodos->fetchAll(PDO::FETCH_COLUMN);
+$metodosPagoRaw = $stmtMetodos->fetchAll(PDO::FETCH_COLUMN);
+
+// Extraer solo el nombre del método (antes del guión con código de transacción)
+$metodosPago = [];
+foreach ($metodosPagoRaw as $metodo) {
+    // Si contiene guión, extraer solo la primera parte
+    $nombreMetodo = explode('-', $metodo)[0];
+    $nombreMetodo = trim($nombreMetodo);
+    if (!empty($nombreMetodo) && !in_array($nombreMetodo, $metodosPago)) {
+        $metodosPago[] = $nombreMetodo;
+    }
+}
+sort($metodosPago);
 
 // Obtener productos únicos (de la tabla productos)
 $stmtProductos = $conn->prepare("SELECT id, descripcion FROM productos ORDER BY descripcion ASC");

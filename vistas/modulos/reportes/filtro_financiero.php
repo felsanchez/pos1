@@ -15,30 +15,31 @@ if (!$tipo) {
   exit;
 }
 
-// Construir la condición de fecha
+// Construir la condición de fecha para ventas y gastos
 $condicionFechaVentas = "";
 $condicionFechaGastos = "";
-$paramsVentas = [];
-$paramsGastos = [];
-$paramIndexVentas = 1;
-$paramIndexGastos = 1;
+$condicionFechaGastosAlias = ""; // Para consultas con alias g.
 
 switch ($tipo) {
   case 'todo':
     $condicionFechaVentas = "1=1";
     $condicionFechaGastos = "1=1";
+    $condicionFechaGastosAlias = "1=1";
     break;
   case 'hoy':
     $condicionFechaVentas = "DATE(fecha) = CURDATE()";
     $condicionFechaGastos = "DATE(fecha) = CURDATE()";
+    $condicionFechaGastosAlias = "DATE(g.fecha) = CURDATE()";
     break;
   case 'ayer':
     $condicionFechaVentas = "DATE(fecha) = CURDATE() - INTERVAL 1 DAY";
     $condicionFechaGastos = "DATE(fecha) = CURDATE() - INTERVAL 1 DAY";
+    $condicionFechaGastosAlias = "DATE(g.fecha) = CURDATE() - INTERVAL 1 DAY";
     break;
   case 'mes':
     $condicionFechaVentas = "MONTH(fecha) = MONTH(CURDATE()) AND YEAR(fecha) = YEAR(CURDATE())";
     $condicionFechaGastos = "MONTH(fecha) = MONTH(CURDATE()) AND YEAR(fecha) = YEAR(CURDATE())";
+    $condicionFechaGastosAlias = "MONTH(g.fecha) = MONTH(CURDATE()) AND YEAR(g.fecha) = YEAR(CURDATE())";
     break;
   case 'personalizado':
     if (!$fecha_inicio || !$fecha_fin) {
@@ -46,12 +47,9 @@ switch ($tipo) {
       echo json_encode(["error" => "Fechas personalizadas incompletas"]);
       exit;
     }
-    $condicionFechaVentas = "DATE(fecha) BETWEEN ? AND ?";
-    $condicionFechaGastos = "DATE(fecha) BETWEEN ? AND ?";
-    $paramsVentas[$paramIndexVentas++] = $fecha_inicio;
-    $paramsVentas[$paramIndexVentas++] = $fecha_fin;
-    $paramsGastos[$paramIndexGastos++] = $fecha_inicio;
-    $paramsGastos[$paramIndexGastos++] = $fecha_fin;
+    $condicionFechaVentas = "DATE(fecha) BETWEEN :fecha_inicio AND :fecha_fin";
+    $condicionFechaGastos = "DATE(fecha) BETWEEN :fecha_inicio AND :fecha_fin";
+    $condicionFechaGastosAlias = "DATE(g.fecha) BETWEEN :fecha_inicio AND :fecha_fin";
     break;
   default:
     http_response_code(400);
@@ -64,10 +62,9 @@ switch ($tipo) {
 // =============================================
 $sqlIngresos = "SELECT COALESCE(SUM(total), 0) as total FROM ventas WHERE estado = 'venta' AND $condicionFechaVentas";
 $stmtIngresos = $conn->prepare($sqlIngresos);
-if (!empty($paramsVentas)) {
-  foreach ($paramsVentas as $key => $value) {
-    $stmtIngresos->bindValue($key, $value);
-  }
+if ($tipo === 'personalizado') {
+  $stmtIngresos->bindValue(':fecha_inicio', $fecha_inicio);
+  $stmtIngresos->bindValue(':fecha_fin', $fecha_fin);
 }
 $stmtIngresos->execute();
 $totalIngresos = (float) $stmtIngresos->fetch(PDO::FETCH_ASSOC)['total'];
@@ -79,16 +76,17 @@ $whereGastos = "estado = 'aprobado' AND $condicionFechaGastos";
 
 // Filtro por categoría
 if (!empty($id_categoria)) {
-  $whereGastos .= " AND id_categoria_gasto = ?";
-  $paramsGastos[$paramIndexGastos++] = $id_categoria;
+  $whereGastos .= " AND id_categoria_gasto = :id_categoria";
 }
 
 $sqlGastos = "SELECT COALESCE(SUM(monto), 0) as total FROM gastos WHERE $whereGastos";
 $stmtGastos = $conn->prepare($sqlGastos);
-if (!empty($paramsGastos)) {
-  foreach ($paramsGastos as $key => $value) {
-    $stmtGastos->bindValue($key, $value);
-  }
+if ($tipo === 'personalizado') {
+  $stmtGastos->bindValue(':fecha_inicio', $fecha_inicio);
+  $stmtGastos->bindValue(':fecha_fin', $fecha_fin);
+}
+if (!empty($id_categoria)) {
+  $stmtGastos->bindValue(':id_categoria', $id_categoria);
 }
 $stmtGastos->execute();
 $totalGastos = (float) $stmtGastos->fetch(PDO::FETCH_ASSOC)['total'];
@@ -110,11 +108,9 @@ $sqlEvolucionIngresos = "
   ORDER BY fecha ASC
 ";
 $stmtEvolucionIngresos = $conn->prepare($sqlEvolucionIngresos);
-if (!empty($paramsVentas)) {
-  $idx = 1;
-  foreach ($paramsVentas as $key => $value) {
-    $stmtEvolucionIngresos->bindValue($idx++, $value);
-  }
+if ($tipo === 'personalizado') {
+  $stmtEvolucionIngresos->bindValue(':fecha_inicio', $fecha_inicio);
+  $stmtEvolucionIngresos->bindValue(':fecha_fin', $fecha_fin);
 }
 $stmtEvolucionIngresos->execute();
 $ingresosEvolucion = [];
@@ -131,13 +127,9 @@ $sqlEvolucionGastos = "
   ORDER BY fecha ASC
 ";
 $stmtEvolucionGastos = $conn->prepare($sqlEvolucionGastos);
-if (!empty($paramsGastos)) {
-  $idx = 1;
-  // Solo usar los parámetros de fecha, no categoría
-  if ($tipo === 'personalizado') {
-    $stmtEvolucionGastos->bindValue(1, $fecha_inicio);
-    $stmtEvolucionGastos->bindValue(2, $fecha_fin);
-  }
+if ($tipo === 'personalizado') {
+  $stmtEvolucionGastos->bindValue(':fecha_inicio', $fecha_inicio);
+  $stmtEvolucionGastos->bindValue(':fecha_fin', $fecha_fin);
 }
 $stmtEvolucionGastos->execute();
 $gastosEvolucion = [];
@@ -160,32 +152,19 @@ foreach ($todasFechas as $fecha) {
 // =============================================
 // GASTOS POR CATEGORÍA
 // =============================================
-$paramsCategoria = [];
-$paramIdxCat = 1;
-
 $sqlGastosCategoria = "
   SELECT c.nombre, c.color, COALESCE(SUM(g.monto), 0) as total
   FROM gastos g
   INNER JOIN categorias_gastos c ON g.id_categoria_gasto = c.id
-  WHERE g.estado = 'aprobado' AND $condicionFechaGastos
-  GROUP BY g.id_categoria_gasto
+  WHERE g.estado = 'aprobado' AND $condicionFechaGastosAlias
+  GROUP BY g.id_categoria_gasto, c.nombre, c.color
   ORDER BY total DESC
 ";
 
-// Reemplazar la condición de fecha para la consulta de categorías
-if ($tipo === 'personalizado') {
-  $sqlGastosCategoria = str_replace($condicionFechaGastos, "DATE(g.fecha) BETWEEN ? AND ?", $sqlGastosCategoria);
-  $paramsCategoria[$paramIdxCat++] = $fecha_inicio;
-  $paramsCategoria[$paramIdxCat++] = $fecha_fin;
-} else {
-  $sqlGastosCategoria = str_replace($condicionFechaGastos, str_replace("fecha", "g.fecha", $condicionFechaGastos), $sqlGastosCategoria);
-}
-
 $stmtGastosCategoria = $conn->prepare($sqlGastosCategoria);
-if (!empty($paramsCategoria)) {
-  foreach ($paramsCategoria as $key => $value) {
-    $stmtGastosCategoria->bindValue($key, $value);
-  }
+if ($tipo === 'personalizado') {
+  $stmtGastosCategoria->bindValue(':fecha_inicio', $fecha_inicio);
+  $stmtGastosCategoria->bindValue(':fecha_fin', $fecha_fin);
 }
 $stmtGastosCategoria->execute();
 $gastosCategoria = $stmtGastosCategoria->fetchAll(PDO::FETCH_ASSOC);

@@ -6,6 +6,10 @@ $conn = Conexion::conectar();
 $tipo = $_POST['tipo'] ?? null;
 $fecha_inicio = $_POST['fecha_inicio'] ?? null;
 $fecha_fin = $_POST['fecha_fin'] ?? null;
+$vendedor = $_POST['vendedor'] ?? null;
+$cliente = $_POST['cliente'] ?? null;
+$producto = $_POST['producto'] ?? null;
+$metodo_pago = $_POST['metodo_pago'] ?? null;
 
 // Validación básica
 if (!$tipo) {
@@ -17,6 +21,7 @@ if (!$tipo) {
 // Construir la condición de fecha
 $condicionFecha = "";
 $params = [];
+$paramIndex = 1;
 
 switch ($tipo) {
   case 'hoy':
@@ -35,7 +40,8 @@ switch ($tipo) {
       exit;
     }
     $condicionFecha = "DATE(fecha) BETWEEN ? AND ?";
-    $params = [$fecha_inicio, $fecha_fin];
+    $params[$paramIndex++] = $fecha_inicio;
+    $params[$paramIndex++] = $fecha_fin;
     break;
   default:
     http_response_code(400);
@@ -46,9 +52,38 @@ switch ($tipo) {
 // Agregar condición del estado
 $where = "estado = 'venta' AND $condicionFecha";
 
+// Agregar filtro de vendedor
+if ($vendedor && $vendedor !== '') {
+  $where .= " AND id_vendedor = ?";
+  $params[$paramIndex++] = $vendedor;
+}
+
+// Agregar filtro de cliente
+if ($cliente && $cliente !== '') {
+  $where .= " AND id_cliente = ?";
+  $params[$paramIndex++] = $cliente;
+}
+
+// Agregar filtro de producto (buscar en el JSON de productos)
+if ($producto && $producto !== '') {
+  // Buscar el ID del producto dentro del JSON de productos
+  // El JSON tiene formato: [{"id":"1",...}, {"id":"2",...}]
+  $where .= " AND (productos LIKE ? OR productos LIKE ?)";
+  $params[$paramIndex++] = '%"id":"' . $producto . '"%';
+  $params[$paramIndex++] = '%"id":' . $producto . '%';
+}
+
+// Agregar filtro de método de pago
+if ($metodo_pago && $metodo_pago !== '') {
+  // El campo metodo_pago puede contener el valor directamente o en un JSON
+  $where .= " AND (metodo_pago LIKE ? OR metodo_pago = ?)";
+  $params[$paramIndex++] = '%' . $metodo_pago . '%';
+  $params[$paramIndex++] = $metodo_pago;
+}
+
 // Consulta preparada
 $sql = "
-  SELECT 
+  SELECT
     DATE(fecha) as fecha,
     SUM(total) as total_ventas
   FROM ventas
@@ -59,10 +94,10 @@ $sql = "
 
 $stmt = $conn->prepare($sql);
 
-// Si hay parámetros (solo en personalizado)
+// Bind de parámetros
 if ($params) {
   foreach ($params as $key => $value) {
-    $stmt->bindValue($key + 1, $value);
+    $stmt->bindValue($key, $value);
   }
 }
 

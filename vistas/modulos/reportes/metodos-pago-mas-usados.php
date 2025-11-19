@@ -1,14 +1,34 @@
 <?php
 
+require_once __DIR__ . "/../../../modelos/configuracion.modelo.php";
+
 $item = null;
 $valor = null;
 
 // Traemos todas las ventas con estado "venta"
 $ventas = ControladorVentas::ctrMostrarVentas($item, $valor);
 
+// Obtener métodos de pago desde la configuración
+$configuracion = ModeloConfiguracion::mdlObtenerConfiguracion();
+$metodosConfigurados = [];
+if (!empty($configuracion["medios_pago"])) {
+    $metodosPagoRaw = explode(',', $configuracion["medios_pago"]);
+    foreach ($metodosPagoRaw as $metodo) {
+        $metodo = trim($metodo);
+        if (!empty($metodo)) {
+            $metodosConfigurados[] = $metodo;
+        }
+    }
+}
+
 // Array para acumular conteo por método de pago
 $metodosPagoConteo = array();
 $totalVentas = 0;
+
+// Inicializar contadores para cada método configurado
+foreach ($metodosConfigurados as $metodo) {
+    $metodosPagoConteo[$metodo] = 0;
+}
 
 foreach ($ventas as $venta) {
 
@@ -25,19 +45,23 @@ foreach ($ventas as $venta) {
 
     if (empty($nombreMetodo)) continue;
 
-    if (!isset($metodosPagoConteo[$nombreMetodo])) {
-        $metodosPagoConteo[$nombreMetodo] = 0;
+    // Solo contar si está en los métodos configurados
+    if (in_array($nombreMetodo, $metodosConfigurados)) {
+        $metodosPagoConteo[$nombreMetodo]++;
+        $totalVentas++;
     }
-
-    $metodosPagoConteo[$nombreMetodo]++;
-    $totalVentas++;
 }
 
 // Ordenamos los métodos por cantidad de uso (descendente)
 arsort($metodosPagoConteo);
 
-// Tomamos los 10 métodos más usados
-$metodosTop10 = array_slice($metodosPagoConteo, 0, 10, true);
+// Filtramos solo los que tienen al menos una venta
+$metodosTop10 = array_filter($metodosPagoConteo, function($cantidad) {
+    return $cantidad > 0;
+});
+
+// Tomamos los 10 primeros
+$metodosTop10 = array_slice($metodosTop10, 0, 10, true);
 
 // Colores para la gráfica
 $colores = array("blue", "green", "yellow", "red", "aqua", "purple", "teal", "orange", "fuchsia", "maroon");

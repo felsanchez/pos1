@@ -69,7 +69,7 @@ class Logger {
                 'level' => $level,
                 'message' => $message,
                 'context' => $context,
-                'user' => isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'guest',
+                'user' => isset($_SESSION['nombre']) ? $_SESSION['nombre'] : (isset($_SESSION['usuario']) ? $_SESSION['usuario'] : 'guest'),
                 'ip' => self::getClientIP(),
                 'url' => isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : 'CLI',
                 'method' => isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'CLI'
@@ -147,8 +147,8 @@ class Logger {
                 continue;
             }
 
-            // Filtrar por nivel si se especifica
-            if ($level !== null && $entry['level'] !== $level) {
+            // Filtrar por nivel si se especifica (y no es vacío)
+            if ($level !== null && $level !== '' && $entry['level'] !== $level) {
                 continue;
             }
 
@@ -208,6 +208,75 @@ class Logger {
             if (filemtime($file) < $threshold) {
                 unlink($file);
                 $deleted++;
+            }
+        }
+
+        return $deleted;
+    }
+
+     /**
+     * Elimina logs específicos por timestamp
+     * @param array $logsToDelete Array de objetos con timestamp y fecha
+     * @return int Número de logs eliminados
+     */
+
+    public static function deleteLogs($logsToDelete) {
+
+        if (!is_array($logsToDelete) || empty($logsToDelete)) {
+            return 0;
+        }
+
+         $deleted = 0; 
+
+        // Agrupar logs por fecha para optimizar el proceso
+        $logsByDate = [];
+        foreach ($logsToDelete as $log) {
+            $fecha = isset($log['fecha']) ? $log['fecha'] : date('Y-m-d');
+            if (!isset($logsByDate[$fecha])) {
+                $logsByDate[$fecha] = [];
+            }
+
+            $logsByDate[$fecha][] = $log['timestamp'];
+        }
+
+
+        // Procesar cada archivo de log
+        foreach ($logsByDate as $fecha => $timestamps) {
+            $filename = self::$logDir . $fecha . '.log';
+ 
+            if (!file_exists($filename)) {
+                continue;
+            }
+ 
+            // Leer todas las líneas del archivo
+            $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $newLines = [];
+ 
+            foreach ($lines as $line) {
+                $entry = json_decode($line, true); 
+
+                if ($entry === null) {
+                    // Mantener líneas que no se puedan decodificar
+
+                    $newLines[] = $line;
+                    continue;
+                } 
+
+                // Si el timestamp no está en la lista de eliminación, mantener la línea
+                if (!in_array($entry['timestamp'], $timestamps)) {
+                    $newLines[] = $line;
+
+                } else {
+                    $deleted++;
+                }
+            }
+
+             // Reescribir el archivo sin los logs eliminados
+            if (count($newLines) > 0) {
+                file_put_contents($filename, implode(PHP_EOL, $newLines) . PHP_EOL, LOCK_EX);
+            } else {
+                // Si no quedan logs, eliminar el archivo
+                unlink($filename);
             }
         }
 

@@ -51,7 +51,7 @@
                         <th>Título</th>
                         <th>Mensaje</th>
                         <th>Fecha</th>
-                        <th style="width: 100px">Acciones</th>
+                        <th style="width: 100px">Verificar</th>
                       </tr>
                     </thead>
                     <tbody>';
@@ -105,13 +105,10 @@
             if($notif["leida"] == 0){
               echo '<button class="btn btn-xs btn-primary btnMarcarLeida" data-id="'.$notif["id"].'">
                       <i class="fa fa-check"></i>
-                    </button> ';
-            }
+                    </button>';
+            } 
 
-            echo '<button class="btn btn-xs btn-danger btnEliminarNotificacion" data-id="'.$notif["id"].'">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </td>
+            echo '</td>
               </tr>';
           }
 
@@ -185,54 +182,7 @@ $(document).ready(function(){
 
   });
 
-  // Eliminar notificación
-  $(document).on("click", ".btnEliminarNotificacion", function(){
-
-    var idNotificacion = $(this).attr("data-id");
-
-    swal({
-      title: '¿Está seguro de eliminar esta notificación?',
-      text: "Esta acción no se puede revertir",
-      type: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Sí, eliminar'
-    }).then(function(result){
-      if(result.value){
-
-        var datos = new FormData();
-        datos.append("idEliminarNotificacion", idNotificacion);
-
-        $.ajax({
-          url: "ajax/notificaciones.ajax.php",
-          method: "POST",
-          data: datos,
-          cache: false,
-          contentType: false,
-          processData: false,
-          success: function(respuesta){
-            if(respuesta == "ok"){
-              swal({
-                type: "success",
-                title: "Notificación eliminada correctamente",
-                showConfirmButton: true,
-                confirmButtonText: "Cerrar"
-              }).then(function(result){
-                if(result.value){
-                  window.location = "notificaciones";
-                }
-              });
-            }
-          }
-        });
-      }
-    });
-
-  });
-
-
+  
   // Seleccionar/deseleccionar todas las notificaciones
   $("#checkTodos").change(function(){
     $(".checkNotificacion").prop('checked', $(this).prop('checked'));

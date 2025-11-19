@@ -135,7 +135,11 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
             <tr>
               <th style="width: 10px">#</th>
               <th>Concepto</th>
+              <th>Fecha</th>
+              <th>Monto</th>
               <th>Categoría</th>
+               <th>Proveedor</th>
+              <th>Imagen</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -159,7 +163,14 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                   $categoriaBadge = '-';
                 }
 
-                echo '<tr>';
+                // Verificar si el gasto es de hoy para resaltarlo
+                $fechaHoy = date('Y-m-d');
+
+                $esHoy = (!empty($value["fecha"]) && $value["fecha"] == $fechaHoy);
+
+                $rowStyle = $esHoy ? 'style="border-left: 6px solid #28a745 !important; background-color: #f0f9f4; box-shadow: inset 6px 0 0 #28a745;"' : '';
+
+                echo '<tr '.$rowStyle.'>';
 
                 // Columna 1: Número
                 echo '<td>'.($key+1).'</td>';
@@ -167,10 +178,29 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 // Columna 2: Concepto
                 echo '<td>'.$value["concepto"].'</td>';
 
-                // Columna 3: Categoría
+                // Columna 3: Fecha
+                $fecha = !empty($value["fecha"]) ? date("d/m/Y", strtotime($value["fecha"])) : '-';
+                echo '<td>'.$fecha.'</td>';
+ 
+                // Columna 4: Monto
+                $monto = !empty($value["monto"]) ? '$'.number_format($value["monto"], 2, ',', '.') : '-';
+                echo '<td><strong>'.$monto.'</strong></td>';
+ 
+                // Columna 5: Categoría
                 echo '<td>'.$categoriaBadge.'</td>';
 
-                // Columna 4: Acciones
+               // Columna 6: Proveedor
+                $proveedor = !empty($value["proveedor_nombre"]) ? $value["proveedor_nombre"] : '-';
+                echo '<td>'.$proveedor.'</td>';
+ 
+                // Columna 7: Imagen
+                if(!empty($value["imagen_comprobante"])){
+                  echo '<td><img src="'.$value["imagen_comprobante"].'" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;"></td>';
+                } else {
+                  echo '<td>-</td>';
+                } 
+
+                // Columna 8: Acciones
                 echo '<td>
                   <div class="btn-group">
                     <button class="btn btn-warning btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto"><i class="fa fa-pencil"></i></button>
@@ -813,6 +843,37 @@ MODAL VER COMPROBANTE
   </div>
 
 </div>
+
+
+<!--=====================================
+MODAL AMPLIAR IMAGEN COMPROBANTE
+======================================--> 
+
+<div id="modalAmpliarComprobanteGasto" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#3c8dbc; color: white">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Comprobante de Gasto</h4>
+      </div>
+      <div class="modal-body text-center">
+        <img id="imagenComprobanteAmpliada" src="" class="img-responsive" style="max-width: 100%; margin: 0 auto;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Script para ampliar imagen del comprobante desde modal editar -->
+<script>
+$(document).on("click", ".img-ampliar-gasto", function(){
+    var rutaImagen = $(this).attr("src");
+    $("#imagenComprobanteAmpliada").attr("src", rutaImagen);
+    $("#modalAmpliarComprobanteGasto").modal("show");
+});
+</script>
+
 
 <?php
 

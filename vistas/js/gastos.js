@@ -75,7 +75,7 @@ $(".tablas1").on("click", ".btnEditarGasto", function(){
 
             // Mostrar preview de imagen si existe
             if(respuesta["imagen_comprobante"] != "" && respuesta["imagen_comprobante"] != null){
-                $("#previsualizarImagen").html('<img src="'+respuesta["imagen_comprobante"]+'" style="width: 100px; height: 100px; object-fit: cover;">');
+                 $("#previsualizarImagen").html('<img src="'+respuesta["imagen_comprobante"]+'" class="img-thumbnail img-ampliar-gasto" style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">');
             } else {
                 $("#previsualizarImagen").html('');
             }
@@ -187,12 +187,12 @@ $("#modalGestionarCategorias").on("click", ".btnEliminarCategoriaGasto", functio
 })
 
 /*=============================================
-VER COMPROBANTE
-=============================================*/
+VER COMPROBANTE DESDE TABLA
+=============================================*/ 
 
-$(".tablas1").on("click", ".btnVerComprobante", function(){
+$(".tablas1").on("click", ".img-comprobante-clickeable", function(){ 
 
-	var imagen = $(this).attr("imagen");
+	var imagen = $(this).attr("src");
 
     $("#imagenComprobante").attr("src", imagen);
     $("#modalVerComprobante").modal("show");

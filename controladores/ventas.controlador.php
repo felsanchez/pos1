@@ -671,7 +671,26 @@ static public function ctrEditarVenta(){
 		date_default_timezone_set('America/Bogota');
 		$fechaHoraActual = date('Y-m-d H:i:s');
 
+		// Si era orden y pasa a venta, agregar origen a las notas
+		$notasFinales = $_POST["notas"];
+		if($traerVenta["estado"] == "orden" && $_POST["estado"] == "venta"){
+
+			// Determinar si es orden de Agente IA o manual
+			$origenTexto = "Desde orden";
+			if(!empty($traerVenta["extra"]) && strpos($traerVenta["extra"], 'n8n') !== false){
+				$origenTexto = "Desde Agente IA";
+			} 
+
+			if(!empty($notasFinales)){
+				$notasFinales = $notasFinales . " | " . $origenTexto;
+
+			} else {
+				$notasFinales = $origenTexto;
+			}
+		} 
+
 		$datos = array(
+
 			"id_vendedor"=>$_POST["idVendedor"],
 			"id_cliente"=>$_POST["seleccionarCliente"],
 			"codigo"=>$_POST["editarVenta"],
@@ -679,13 +698,13 @@ static public function ctrEditarVenta(){
 			"impuesto"=>$_POST["nuevoPrecioImpuesto"],
 			"neto"=>$_POST["nuevoPrecioNeto"],
 			"total"=>$_POST["totalVenta"],
-			"notas" => $_POST["notas"],
+			"notas" => $notasFinales,
 			"imagen" => $_POST["nuevaimagen"],
 			"estado" => $_POST["estado"],
 			"fecha" => $fechaHoraActual,
 			"metodo_pago"=>$_POST["listaMetodoPago"],
         	"recibe" => isset($_POST["recibe"]) ? $_POST["recibe"] : null,
-			"extra" => null
+			"extra" => $traerVenta["extra"]
     	);
 
 		$respuesta = ModeloVentas::mdlEditarVenta($tabla, $datos);

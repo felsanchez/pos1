@@ -188,11 +188,13 @@ class ModeloNotificaciones{
 
 	static public function mdlExisteNotificacionStock($tipo, $idProducto){
 
+		// Verificar si existe la notificación independientemente de si está leída o no
+		// Esto evita duplicar notificaciones de stock bajo/agotado aunque se marquen como leídas
+
 		$stmt = Conexion::conectar()->prepare("SELECT id FROM notificaciones
 												WHERE tipo = :tipo
 												AND referencia_tipo = 'producto'
 												AND referencia_id = :referencia_id
-												AND leida = 0
 												LIMIT 1");
 
 		$stmt->bindParam(":tipo", $tipo, PDO::PARAM_STR);
@@ -216,13 +218,21 @@ class ModeloNotificaciones{
 
 	static public function mdlExisteNotificacion($tipo, $referenciaId, $referenciaTipo){
 
-		$stmt = Conexion::conectar()->prepare("SELECT id FROM notificaciones
-												WHERE tipo = :tipo
-												AND referencia_tipo = :referencia_tipo
-												AND referencia_id = :referencia_id
-												AND leida = 0
-												LIMIT 1");
+		// Para notificaciones de tipo "orden_agente_ia", verificar si existe independientemente de si está leída o no
+		// Para otros tipos, solo verificar las no leídas
 
+		$sql = "SELECT id FROM notificaciones
+				WHERE tipo = :tipo
+				AND referencia_tipo = :referencia_tipo
+				AND referencia_id = :referencia_id";
+
+		if($tipo != "orden_agente_ia"){
+			$sql .= " AND leida = 0";
+		}
+
+ 		$sql .= " LIMIT 1"; 
+
+		$stmt = Conexion::conectar()->prepare($sql);
 		$stmt->bindParam(":tipo", $tipo, PDO::PARAM_STR);
 		$stmt->bindParam(":referencia_tipo", $referenciaTipo, PDO::PARAM_STR);
 		$stmt->bindParam(":referencia_id", $referenciaId, PDO::PARAM_INT);

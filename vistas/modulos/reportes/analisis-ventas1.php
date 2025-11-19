@@ -2,31 +2,65 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
+// Cargar datos para los filtros
+require_once __DIR__ . "/../../../modelos/conexion.php";
+require_once __DIR__ . "/../../../modelos/usuarios.modelo.php";
+require_once __DIR__ . "/../../../modelos/clientes.modelo.php";
+
+// Obtener usuarios/vendedores
+$usuarios = ModeloUsuarios::mdlMostrarUsuarios("usuarios", null, null);
+
+// Obtener clientes
+$clientes = ModeloClientes::mdlMostrarClientes("clientes", null, null);
+
+// Obtener métodos de pago únicos
+$conn = Conexion::conectar();
+$stmtMetodos = $conn->prepare("SELECT DISTINCT metodo_pago FROM ventas WHERE metodo_pago IS NOT NULL AND metodo_pago != '' ORDER BY metodo_pago");
+$stmtMetodos->execute();
+$metodosPago = $stmtMetodos->fetchAll(PDO::FETCH_COLUMN);
+
+// Obtener productos únicos (de la tabla productos)
+$stmtProductos = $conn->prepare("SELECT id, descripcion FROM productos ORDER BY descripcion ASC");
+$stmtProductos->execute();
+$productos = $stmtProductos->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!--Estilo Filtro de fechas -->
   <style>
-    .formulario-fechas-container {
-      max-width: 300px;
+    .formulario-filtros-container {
+      max-width: 100%;
       padding: 15px;
       border-radius: 10px;
       background-color: #ffffff;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       margin-bottom: 20px;
     }
-    .formulario-fechas label {
+    .formulario-filtros label {
       font-weight: 600;
       margin-top: 10px;
+      font-size: 12px;
     }
-    .formulario-fechas select,
-    .formulario-fechas input[type="date"] {
+    .formulario-filtros select,
+    .formulario-filtros input[type="date"] {
       border-radius: 8px;
       margin-bottom: 10px;
     }
     .d-none {
       display: none !important;
     }
-  </style> 
+    .filtros-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+    .filtro-grupo {
+      min-width: 0;
+    }
+    .btn-filtrar {
+      margin-top: 25px;
+    }
+  </style>
 
 <style>
   .d-none {
@@ -34,31 +68,85 @@ error_reporting(E_ALL);
   }
 </style>
 
-  <div class="row">      
+  <div class="row">
       <div class="card-body">
 
-              <!-- Filtro de fechas -->
-             <div class="formulario-fechas-container">
-                <form id="filtro-fechas" class="formulario-fechas">
-                  <label for="tipo-fecha">Filtrar por fecha</label>
-                  <select id="tipo-fecha" name="tipo" class="form-control">
-                    <option value="hoy">Hoy</option>
-                    <option value="ayer">Ayer</option>
-                    <option value="mes">Mes actual</option>
-                    <option value="personalizado">Personalizado</option>
-                  </select>
+              <!-- Filtros combinados -->
+             <div class="formulario-filtros-container">
+                <form id="filtro-fechas" class="formulario-filtros">
+                  <div class="filtros-grid">
 
-                  <div id="campo-desde" class="form-group d-none">
-                    <label for="fecha-desde">Desde</label>
-                    <input type="date" id="fecha-desde" name="fecha_inicio" class="form-control">
+                    <!-- Filtro de fecha -->
+                    <div class="filtro-grupo">
+                      <label for="tipo-fecha">Filtrar por fecha</label>
+                      <select id="tipo-fecha" name="tipo" class="form-control">
+                        <option value="hoy">Hoy</option>
+                        <option value="ayer">Ayer</option>
+                        <option value="mes">Mes actual</option>
+                        <option value="personalizado">Personalizado</option>
+                      </select>
+
+                      <div id="campo-desde" class="form-group d-none">
+                        <label for="fecha-desde">Desde</label>
+                        <input type="date" id="fecha-desde" name="fecha_inicio" class="form-control">
+                      </div>
+
+                      <div id="campo-hasta" class="form-group d-none">
+                        <label for="fecha-hasta">Hasta</label>
+                        <input type="date" id="fecha-hasta" name="fecha_fin" class="form-control">
+                      </div>
+                    </div>
+
+                    <!-- Filtro por vendedor -->
+                    <div class="filtro-grupo">
+                      <label for="filtro-vendedor">Vendedor</label>
+                      <select id="filtro-vendedor" name="id_vendedor" class="form-control">
+                        <option value="">Todos los vendedores</option>
+                        <?php foreach($usuarios as $usuario): ?>
+                          <option value="<?php echo $usuario['id']; ?>"><?php echo htmlspecialchars($usuario['nombre']); ?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+
+                    <!-- Filtro por cliente -->
+                    <div class="filtro-grupo">
+                      <label for="filtro-cliente">Cliente</label>
+                      <select id="filtro-cliente" name="id_cliente" class="form-control">
+                        <option value="">Todos los clientes</option>
+                        <?php foreach($clientes as $cliente): ?>
+                          <option value="<?php echo $cliente['id']; ?>"><?php echo htmlspecialchars($cliente['nombre']); ?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+
+                    <!-- Filtro por producto -->
+                    <div class="filtro-grupo">
+                      <label for="filtro-producto">Producto</label>
+                      <select id="filtro-producto" name="id_producto" class="form-control">
+                        <option value="">Todos los productos</option>
+                        <?php foreach($productos as $producto): ?>
+                          <option value="<?php echo $producto['id']; ?>"><?php echo htmlspecialchars($producto['descripcion']); ?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+
+                    <!-- Filtro por método de pago -->
+                    <div class="filtro-grupo">
+                      <label for="filtro-metodo-pago">Método de pago</label>
+                      <select id="filtro-metodo-pago" name="metodo_pago" class="form-control">
+                        <option value="">Todos los métodos</option>
+                        <?php foreach($metodosPago as $metodo): ?>
+                          <option value="<?php echo htmlspecialchars($metodo); ?>"><?php echo htmlspecialchars($metodo); ?></option>
+                        <?php endforeach; ?>
+                      </select>
+                    </div>
+
+                    <!-- Botón de filtrar -->
+                    <div class="filtro-grupo">
+                      <button type="submit" class="btn btn-primary w-100 btn-filtrar">Aplicar filtros</button>
+                    </div>
+
                   </div>
-
-                  <div id="campo-hasta" class="form-group d-none">
-                    <label for="fecha-hasta">Hasta</label>
-                    <input type="date" id="fecha-hasta" name="fecha_fin" class="form-control">
-                  </div>
-
-                  <button type="submit" class="btn btn-primary w-100 mt-2">Aplicar filtro</button>
                 </form>
               </div>
 
@@ -132,6 +220,12 @@ window.addEventListener('DOMContentLoaded', function () {
     const fechaInicio = document.getElementById('fecha-desde').value;
     const fechaFin = document.getElementById('fecha-hasta').value;
 
+    // Obtener los nuevos filtros
+    const idVendedor = document.getElementById('filtro-vendedor').value;
+    const idCliente = document.getElementById('filtro-cliente').value;
+    const idProducto = document.getElementById('filtro-producto').value;
+    const metodoPago = document.getElementById('filtro-metodo-pago').value;
+
     const formData = new FormData();
     formData.append('tipo', tipo);
 
@@ -144,10 +238,16 @@ window.addEventListener('DOMContentLoaded', function () {
       formData.append('fecha_fin', fechaFin);
     }
 
-  
+    // Agregar los nuevos filtros al FormData
+    if (idVendedor) formData.append('id_vendedor', idVendedor);
+    if (idCliente) formData.append('id_cliente', idCliente);
+    if (idProducto) formData.append('id_producto', idProducto);
+    if (metodoPago) formData.append('metodo_pago', metodoPago);
+
+
     //fetch('/pos/vistas/modulos/reportes/filtro_ventas.php', {
-    let rutaBase = window.location.hostname.includes("localhost") 
-      ? "/pos" 
+    let rutaBase = window.location.hostname.includes("localhost")
+      ? "/pos"
       : ""; // en producción no va "/pos"
 
     fetch(`${rutaBase}/vistas/modulos/reportes/filtro_ventas.php`, {

@@ -91,6 +91,17 @@
 
        </div>
 
+       <!-- REPORTE FINANCIERO -->
+       <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title"><i class="fa fa-balance-scale"></i> Estado de Resultados</h3>
+          </div>
+
+          <div class="box-body">
+            <?php include "reportes/estado-resultados.php"; ?>
+          </div>
+       </div>
+
 
     </section>
 

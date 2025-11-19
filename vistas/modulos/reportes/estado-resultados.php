@@ -1,8 +1,6 @@
 <?php
-require_once "controladores/gastos.controlador.php";
-require_once "modelos/gastos.modelo.php";
-require_once "controladores/categorias-gastos.controlador.php";
-require_once "modelos/categorias-gastos.modelo.php";
+require_once __DIR__ . "/../../../controladores/categorias-gastos.controlador.php";
+require_once __DIR__ . "/../../../modelos/categorias-gastos.modelo.php";
 ?>
 
 <style>
@@ -14,8 +12,7 @@ require_once "modelos/categorias-gastos.modelo.php";
     max-width: 100%;
     padding: 15px;
     border-radius: 10px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #f9f9f9;
     margin-bottom: 20px;
   }
   .filtro-financiero label {
@@ -28,210 +25,184 @@ require_once "modelos/categorias-gastos.modelo.php";
     border-radius: 8px;
     margin-bottom: 10px;
   }
-  .d-none {
-    display: none !important;
-  }
-  .filtros-grid {
+  .filtros-grid-fin {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
   }
-  .filtro-grupo {
+  .filtro-grupo-fin {
     min-width: 0;
   }
-  .btn-filtrar {
+  .btn-filtrar-fin {
     margin-top: 25px;
-  }
-  .utilidad-positiva {
-    color: #00a65a;
-  }
-  .utilidad-negativa {
-    color: #dd4b39;
   }
 </style>
 
-<div class="content-wrapper">
+<!-- Filtros del reporte financiero -->
+<div class="filtro-financiero-container">
+  <form id="filtro-financiero" class="filtro-financiero">
+    <div class="filtros-grid-fin">
 
-  <section class="content-header">
-    <h1>
-      Reporte Financiero
-      <small>Estado de Resultados</small>
-    </h1>
-    <ol class="breadcrumb">
-      <li><a href="inicio"><i class="fa fa-dashboard"></i> Inicio</a></li>
-      <li class="active">Reporte Financiero</li>
-    </ol>
-  </section>
+      <!-- Filtro de fecha -->
+      <div class="filtro-grupo-fin">
+        <label for="tipo-fecha-fin">Filtrar por fecha</label>
+        <select id="tipo-fecha-fin" name="tipo" class="form-control">
+          <option value="todo">Todas las fechas</option>
+          <option value="hoy">Hoy</option>
+          <option value="ayer">Ayer</option>
+          <option value="mes" selected>Mes actual</option>
+          <option value="personalizado">Personalizado</option>
+        </select>
 
-  <section class="content">
-
-    <!-- Filtros -->
-    <div class="filtro-financiero-container">
-      <form id="filtro-financiero" class="filtro-financiero">
-        <div class="filtros-grid">
-
-          <!-- Filtro de fecha -->
-          <div class="filtro-grupo">
-            <label for="tipo-fecha-fin">Filtrar por fecha</label>
-            <select id="tipo-fecha-fin" name="tipo" class="form-control">
-              <option value="todo">Todas las fechas</option>
-              <option value="hoy">Hoy</option>
-              <option value="ayer">Ayer</option>
-              <option value="mes" selected>Mes actual</option>
-              <option value="personalizado">Personalizado</option>
-            </select>
-
-            <div id="campo-desde-fin" class="form-group d-none">
-              <label for="fecha-desde-fin">Desde</label>
-              <input type="date" id="fecha-desde-fin" name="fecha_inicio" class="form-control">
-            </div>
-
-            <div id="campo-hasta-fin" class="form-group d-none">
-              <label for="fecha-hasta-fin">Hasta</label>
-              <input type="date" id="fecha-hasta-fin" name="fecha_fin" class="form-control">
-            </div>
-          </div>
-
-          <!-- Filtro por categoría de gasto -->
-          <div class="filtro-grupo">
-            <label for="filtro-categoria-gasto">Categoría de gasto</label>
-            <select id="filtro-categoria-gasto" name="id_categoria" class="form-control">
-              <option value="">Todas las categorías</option>
-              <?php
-                $categorias = ControladorCategoriasGastos::ctrMostrarCategoriasGastos(null, null);
-                foreach ($categorias as $categoria) {
-                  echo '<option value="'.$categoria['id'].'">'.htmlspecialchars($categoria['nombre']).'</option>';
-                }
-              ?>
-            </select>
-          </div>
-
-          <!-- Botón de filtrar -->
-          <div class="filtro-grupo">
-            <button type="submit" class="btn btn-primary w-100 btn-filtrar">Aplicar filtros</button>
-          </div>
-
+        <div id="campo-desde-fin" class="form-group" style="display:none;">
+          <label for="fecha-desde-fin">Desde</label>
+          <input type="date" id="fecha-desde-fin" name="fecha_inicio" class="form-control">
         </div>
-      </form>
-    </div>
 
-    <!-- Cajas Superiores: Ingresos, Gastos, Utilidad -->
-    <div class="row">
-
-      <!-- Ingresos -->
-      <div class="col-md-4 col-sm-6 col-xs-12">
-        <div class="info-box bg-green">
-          <span class="info-box-icon"><i class="fa fa-arrow-up"></i></span>
-          <div class="info-box-content">
-            <span class="info-box-text">Ingresos (Ventas)</span>
-            <span class="info-box-number info-box-number-lg" id="total-ingresos">$0</span>
-          </div>
+        <div id="campo-hasta-fin" class="form-group" style="display:none;">
+          <label for="fecha-hasta-fin">Hasta</label>
+          <input type="date" id="fecha-hasta-fin" name="fecha_fin" class="form-control">
         </div>
       </div>
 
-      <!-- Gastos -->
-      <div class="col-md-4 col-sm-6 col-xs-12">
-        <div class="info-box bg-red">
-          <span class="info-box-icon"><i class="fa fa-arrow-down"></i></span>
-          <div class="info-box-content">
-            <span class="info-box-text">Gastos</span>
-            <span class="info-box-number info-box-number-lg" id="total-gastos">$0</span>
-          </div>
-        </div>
+      <!-- Filtro por categoría de gasto -->
+      <div class="filtro-grupo-fin">
+        <label for="filtro-categoria-gasto">Categoría de gasto</label>
+        <select id="filtro-categoria-gasto" name="id_categoria" class="form-control">
+          <option value="">Todas las categorías</option>
+          <?php
+            $categorias = ControladorCategoriasGastos::ctrMostrarCategoriasGastos(null, null);
+            if ($categorias) {
+              foreach ($categorias as $categoria) {
+                echo '<option value="'.$categoria['id'].'">'.htmlspecialchars($categoria['nombre']).'</option>';
+              }
+            }
+          ?>
+        </select>
       </div>
 
-      <!-- Utilidad -->
-      <div class="col-md-4 col-sm-6 col-xs-12">
-        <div class="info-box bg-aqua" id="box-utilidad">
-          <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
-          <div class="info-box-content">
-            <span class="info-box-text">Utilidad Neta</span>
-            <span class="info-box-number info-box-number-lg" id="total-utilidad">$0</span>
-          </div>
-        </div>
+      <!-- Botón de filtrar -->
+      <div class="filtro-grupo-fin">
+        <button type="submit" class="btn btn-primary w-100 btn-filtrar-fin">Aplicar filtros</button>
       </div>
 
     </div>
+  </form>
+</div>
 
-    <!-- Gráfica de Evolución Temporal -->
-    <div class="row">
-      <div class="col-md-12">
-        <div class="box box-primary">
-          <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-line-chart"></i> Evolución de Ingresos vs Gastos</h3>
-          </div>
-          <div class="box-body">
-            <div id="chart-evolucion"></div>
-          </div>
-        </div>
+<!-- Cajas Superiores: Ingresos, Gastos, Utilidad -->
+<div class="row">
+
+  <!-- Ingresos -->
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box bg-green">
+      <span class="info-box-icon"><i class="fa fa-arrow-up"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Ingresos (Ventas)</span>
+        <span class="info-box-number info-box-number-lg" id="total-ingresos">$0</span>
       </div>
     </div>
+  </div>
 
-    <!-- Gráficas inferiores -->
-    <div class="row">
+  <!-- Gastos -->
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box bg-red">
+      <span class="info-box-icon"><i class="fa fa-arrow-down"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Gastos</span>
+        <span class="info-box-number info-box-number-lg" id="total-gastos">$0</span>
+      </div>
+    </div>
+  </div>
 
-      <!-- Dona de Gastos por Categoría -->
-      <div class="col-md-6">
-        <div class="box box-danger">
-          <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-pie-chart"></i> Gastos por Categoría</h3>
-          </div>
-          <div class="box-body">
-            <div class="row">
-              <div class="col-md-7">
-                <div class="chart-responsive">
-                  <canvas id="pieChartGastos" height="200"></canvas>
-                </div>
-              </div>
-              <div class="col-md-5">
-                <ul class="chart-legend clearfix" id="leyenda-gastos">
-                  <!-- Se llena dinámicamente -->
-                </ul>
-              </div>
+  <!-- Utilidad -->
+  <div class="col-md-4 col-sm-6 col-xs-12">
+    <div class="info-box bg-aqua" id="box-utilidad">
+      <span class="info-box-icon"><i class="fa fa-balance-scale"></i></span>
+      <div class="info-box-content">
+        <span class="info-box-text">Utilidad Neta</span>
+        <span class="info-box-number info-box-number-lg" id="total-utilidad">$0</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Gráfica de Evolución Temporal -->
+<div class="row">
+  <div class="col-md-12">
+    <div class="box box-success">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-line-chart"></i> Evolución de Ingresos vs Gastos</h3>
+      </div>
+      <div class="box-body">
+        <div id="chart-evolucion"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Gráficas inferiores -->
+<div class="row">
+
+  <!-- Dona de Gastos por Categoría -->
+  <div class="col-md-6">
+    <div class="box box-danger">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-pie-chart"></i> Gastos por Categoría</h3>
+      </div>
+      <div class="box-body">
+        <div class="row">
+          <div class="col-md-7">
+            <div class="chart-responsive">
+              <canvas id="pieChartGastos" height="200"></canvas>
             </div>
           </div>
-          <div class="box-footer no-padding">
-            <ul class="nav nav-pills nav-stacked" id="lista-gastos-categoria">
+          <div class="col-md-5">
+            <ul class="chart-legend clearfix" id="leyenda-gastos">
               <!-- Se llena dinámicamente -->
             </ul>
           </div>
         </div>
       </div>
-
-      <!-- Resumen de Margen -->
-      <div class="col-md-6">
-        <div class="box box-info">
-          <div class="box-header with-border">
-            <h3 class="box-title"><i class="fa fa-calculator"></i> Resumen Financiero</h3>
-          </div>
-          <div class="box-body">
-            <table class="table table-bordered">
-              <tbody>
-                <tr>
-                  <td><strong>Total Ingresos</strong></td>
-                  <td class="text-right text-green" id="resumen-ingresos">$0</td>
-                </tr>
-                <tr>
-                  <td><strong>Total Gastos</strong></td>
-                  <td class="text-right text-red" id="resumen-gastos">$0</td>
-                </tr>
-                <tr class="active">
-                  <td><strong>Utilidad Bruta</strong></td>
-                  <td class="text-right" id="resumen-utilidad">$0</td>
-                </tr>
-                <tr>
-                  <td><strong>Margen de Utilidad</strong></td>
-                  <td class="text-right" id="resumen-margen">0%</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <div class="box-footer no-padding">
+        <ul class="nav nav-pills nav-stacked" id="lista-gastos-categoria">
+          <!-- Se llena dinámicamente -->
+        </ul>
       </div>
-
     </div>
+  </div>
 
-  </section>
+  <!-- Resumen de Margen -->
+  <div class="col-md-6">
+    <div class="box box-info">
+      <div class="box-header with-border">
+        <h3 class="box-title"><i class="fa fa-calculator"></i> Resumen Financiero</h3>
+      </div>
+      <div class="box-body">
+        <table class="table table-bordered">
+          <tbody>
+            <tr>
+              <td><strong>Total Ingresos</strong></td>
+              <td class="text-right text-green" id="resumen-ingresos">$0</td>
+            </tr>
+            <tr>
+              <td><strong>Total Gastos</strong></td>
+              <td class="text-right text-red" id="resumen-gastos">$0</td>
+            </tr>
+            <tr class="active">
+              <td><strong>Utilidad Bruta</strong></td>
+              <td class="text-right" id="resumen-utilidad">$0</td>
+            </tr>
+            <tr>
+              <td><strong>Margen de Utilidad</strong></td>
+              <td class="text-right" id="resumen-margen">0%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
 </div>
 
@@ -289,8 +260,8 @@ const coloresCategoria = ['#dd4b39', '#f39c12', '#00c0ef', '#00a65a', '#605ca8',
 // Mostrar campos personalizados
 document.getElementById('tipo-fecha-fin').addEventListener('change', function() {
   const tipo = this.value;
-  document.getElementById('campo-desde-fin').classList.toggle('d-none', tipo !== 'personalizado');
-  document.getElementById('campo-hasta-fin').classList.toggle('d-none', tipo !== 'personalizado');
+  document.getElementById('campo-desde-fin').style.display = tipo === 'personalizado' ? 'block' : 'none';
+  document.getElementById('campo-hasta-fin').style.display = tipo === 'personalizado' ? 'block' : 'none';
 });
 
 // Cargar datos al inicio

@@ -245,13 +245,6 @@
                         <span>Reporte de ventas</span>
                       </a>
                     </li>';
-
-              echo '<li>
-                      <a href="reporte-financiero">
-                        <i class="fa fa-circle-o"></i>
-                        <span>Reporte financiero</span>
-                      </a>
-                    </li>';
         }
       
            echo '</ul> 

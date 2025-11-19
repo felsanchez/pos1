@@ -167,7 +167,6 @@ INICIO
              $_GET["ruta"] == "estados-actividades" ||
              $_GET["ruta"] == "tipos-actividades" ||
              $_GET["ruta"] == "gastos" ||
-             $_GET["ruta"] == "reporte-financiero" ||
              $_GET["ruta"] == "configuracion" ||
              $_GET["ruta"] == "notificaciones" ||
              $_GET["ruta"] == "logs" ||

@@ -6,7 +6,7 @@ $conn = Conexion::conectar();
 $tipo = $_POST['tipo'] ?? null;
 $fecha_inicio = $_POST['fecha_inicio'] ?? null;
 $fecha_fin = $_POST['fecha_fin'] ?? null;
-$id_categoria = $_POST['id_categoria'] ?? null;
+$id_categoria = isset($_POST['id_categoria']) && $_POST['id_categoria'] !== '' ? (int)$_POST['id_categoria'] : null;
 
 // Validación básica
 if (!$tipo) {
@@ -19,6 +19,7 @@ if (!$tipo) {
 $condicionFechaVentas = "";
 $condicionFechaGastos = "";
 $condicionFechaGastosAlias = ""; // Para consultas con alias g.
+$usaParametrosFecha = false;
 
 switch ($tipo) {
   case 'todo':
@@ -50,6 +51,7 @@ switch ($tipo) {
     $condicionFechaVentas = "DATE(fecha) BETWEEN :fecha_inicio AND :fecha_fin";
     $condicionFechaGastos = "DATE(fecha) BETWEEN :fecha_inicio AND :fecha_fin";
     $condicionFechaGastosAlias = "DATE(g.fecha) BETWEEN :fecha_inicio AND :fecha_fin";
+    $usaParametrosFecha = true;
     break;
   default:
     http_response_code(400);
@@ -62,7 +64,7 @@ switch ($tipo) {
 // =============================================
 $sqlIngresos = "SELECT COALESCE(SUM(total), 0) as total FROM ventas WHERE estado = 'venta' AND $condicionFechaVentas";
 $stmtIngresos = $conn->prepare($sqlIngresos);
-if ($tipo === 'personalizado') {
+if ($usaParametrosFecha) {
   $stmtIngresos->bindValue(':fecha_inicio', $fecha_inicio);
   $stmtIngresos->bindValue(':fecha_fin', $fecha_fin);
 }
@@ -75,18 +77,18 @@ $totalIngresos = (float) $stmtIngresos->fetch(PDO::FETCH_ASSOC)['total'];
 $whereGastos = "estado = 'aprobado' AND $condicionFechaGastos";
 
 // Filtro por categoría
-if (!empty($id_categoria)) {
+if ($id_categoria !== null) {
   $whereGastos .= " AND id_categoria_gasto = :id_categoria";
 }
 
 $sqlGastos = "SELECT COALESCE(SUM(monto), 0) as total FROM gastos WHERE $whereGastos";
 $stmtGastos = $conn->prepare($sqlGastos);
-if ($tipo === 'personalizado') {
+if ($usaParametrosFecha) {
   $stmtGastos->bindValue(':fecha_inicio', $fecha_inicio);
   $stmtGastos->bindValue(':fecha_fin', $fecha_fin);
 }
-if (!empty($id_categoria)) {
-  $stmtGastos->bindValue(':id_categoria', $id_categoria);
+if ($id_categoria !== null) {
+  $stmtGastos->bindValue(':id_categoria', $id_categoria, PDO::PARAM_INT);
 }
 $stmtGastos->execute();
 $totalGastos = (float) $stmtGastos->fetch(PDO::FETCH_ASSOC)['total'];
@@ -108,7 +110,7 @@ $sqlEvolucionIngresos = "
   ORDER BY fecha ASC
 ";
 $stmtEvolucionIngresos = $conn->prepare($sqlEvolucionIngresos);
-if ($tipo === 'personalizado') {
+if ($usaParametrosFecha) {
   $stmtEvolucionIngresos->bindValue(':fecha_inicio', $fecha_inicio);
   $stmtEvolucionIngresos->bindValue(':fecha_fin', $fecha_fin);
 }
@@ -127,7 +129,7 @@ $sqlEvolucionGastos = "
   ORDER BY fecha ASC
 ";
 $stmtEvolucionGastos = $conn->prepare($sqlEvolucionGastos);
-if ($tipo === 'personalizado') {
+if ($usaParametrosFecha) {
   $stmtEvolucionGastos->bindValue(':fecha_inicio', $fecha_inicio);
   $stmtEvolucionGastos->bindValue(':fecha_fin', $fecha_fin);
 }
@@ -162,7 +164,7 @@ $sqlGastosCategoria = "
 ";
 
 $stmtGastosCategoria = $conn->prepare($sqlGastosCategoria);
-if ($tipo === 'personalizado') {
+if ($usaParametrosFecha) {
   $stmtGastosCategoria->bindValue(':fecha_inicio', $fecha_inicio);
   $stmtGastosCategoria->bindValue(':fecha_fin', $fecha_fin);
 }

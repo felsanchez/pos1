@@ -13,50 +13,58 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
 
 .card-gasto {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
-  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  padding: 10px;
   position: relative;
   border-left: 4px solid #3c8dbc;
 }
 
 .card-gasto.gasto-hoy {
-  border-left: 6px solid #28a745 !important;
+  border-left: 5px solid #28a745 !important;
   background-color: #f0f9f4;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
 }
 
 .card-gasto-header {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .card-gasto-concepto {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 15px;
+  margin: 0;
+  flex: 1;
+  padding-right: 10px;
 }
 
 .card-gasto-detalles {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.card-gasto-fila {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 .card-gasto-imagen-icono {
   display: inline-block;
-  padding: 5px 10px;
+  padding: 4px 8px;
   background: #3c8dbc;
   color: white;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 12px;
-  margin-top: 5px;
+  font-size: 11px;
 }
 
 .card-gasto-imagen-icono:hover {
@@ -65,22 +73,27 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
 
 .card-gasto-fecha {
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .card-gasto-monto {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   color: #3c8dbc;
 }
 
 .card-gasto-categoria {
-  margin: 5px 0;
+  margin: 0;
+}
+
+.card-gasto-categoria .label {
+  font-size: 10px;
+  padding: 3px 6px;
 }
 
 .card-gasto-proveedor {
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* Responsive */
@@ -323,32 +336,35 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
             echo '<div class="card-gasto'.$claseHoy.'">
 
                     <div class="card-gasto-header">
+                      <div class="card-gasto-concepto">
+                        '.$value["concepto"].'
+                      </div>
                       <div class="btn-group">
-                        <button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto">
+                        <button class="btn btn-warning btn-xs btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto">
                           <i class="fa fa-pencil"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'" conceptoGasto="'.$value["concepto"].'">
+                        <button class="btn btn-danger btn-xs btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'" conceptoGasto="'.$value["concepto"].'">
                           <i class="fa fa-times"></i>
                         </button>
                       </div>
                     </div>
 
-                    <div class="card-gasto-concepto">
-                      💰 '.$value["concepto"].'
-                    </div>
-
                     <div class="card-gasto-detalles">
-                      <div class="card-gasto-fecha">
-                        <i class="fa fa-calendar"></i> '.$fecha.'
+                      <div class="card-gasto-fila">
+                        <div class="card-gasto-monto">
+                          <i class="fa fa-money"></i> '.$monto.'
+                        </div>
+                        <div class="card-gasto-categoria">
+                          '.$categoriaBadge.'
+                        </div>
                       </div>
-                      <div class="card-gasto-monto">
-                        <i class="fa fa-money"></i> '.$monto.'
-                      </div>
-                      <div class="card-gasto-categoria">
-                        '.$categoriaBadge.'
-                      </div>
-                      <div class="card-gasto-proveedor">
-                        <i class="fa fa-user"></i> '.$proveedor.'
+                      <div class="card-gasto-fila">
+                        <div class="card-gasto-fecha">
+                          <i class="fa fa-calendar"></i> '.$fecha.'
+                        </div>
+                        <div class="card-gasto-proveedor">
+                          <i class="fa fa-user"></i> '.$proveedor.'
+                        </div>
                       </div>
                     </div>';
 

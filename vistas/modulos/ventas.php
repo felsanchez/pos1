@@ -35,10 +35,10 @@
 
 .card-venta {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
-  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  padding: 10px;
   position: relative;
   border-left: 4px solid #00a65a;
 }
@@ -47,75 +47,91 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #eee;
 }
 
 .card-venta-codigo {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #00a65a;
 }
 
 .card-venta-acciones .btn-group {
   display: flex;
-  gap: 5px;
+  gap: 3px;
+}
+
+.card-venta-info-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 10px;
 }
 
 .card-venta-cliente {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 5px;
+  flex: 1;
+  margin: 0;
 }
 
 .card-venta-total {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: bold;
   color: #00a65a;
-  margin-bottom: 10px;
+  white-space: nowrap;
+  margin: 0;
 }
 
 .card-venta-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.card-venta-info-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .card-venta-info-item {
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
+  flex: 1;
 }
 
 .card-venta-info-item i {
-  margin-right: 8px;
-  width: 20px;
+  margin-right: 5px;
+  width: 15px;
   text-align: center;
 }
 
 .card-venta-notas {
   background: #f9f9f9;
-  padding: 10px;
-  border-radius: 4px;
-  margin-top: 10px;
-  font-size: 13px;
+  padding: 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  font-size: 12px;
   color: #666;
-  border-left: 3px solid #3c8dbc;
+  border-left: 2px solid #3c8dbc;
 }
 
 .card-venta-imagen-icono {
   display: inline-block;
-  padding: 5px 10px;
+  padding: 4px 8px;
   background: #3c8dbc;
   color: white;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 12px;
-  margin-top: 5px;
+  font-size: 11px;
 }
 
 .card-venta-imagen-icono:hover {
@@ -445,19 +461,19 @@
 
                       <div class="card-venta-header">
                         <div class="card-venta-codigo">
-                          🧾 '.$formatoCodigoVenta.$value["codigo"].'
+                          '.$formatoCodigoVenta.$value["codigo"].'
                         </div>
                         <div class="card-venta-acciones">
                           <div class="btn-group">
-                            <button class="btn btn-info btn-sm btnImprimirFactura" codigoVenta="'.$value["codigo"].'">
+                            <button class="btn btn-info btn-xs btnImprimirFactura" codigoVenta="'.$value["codigo"].'">
                               <i class="fa fa-print"></i>
                             </button>
-                            <button class="btn btn-warning btn-sm btnEditarVenta" idVenta="'.$value["id"].'">
+                            <button class="btn btn-warning btn-xs btnEditarVenta" idVenta="'.$value["id"].'">
                               <i class="fa fa-eye"></i>
                             </button>';
 
               if ($_SESSION["perfil"] == "Administrador") {
-                echo '<button class="btn btn-danger btn-sm btnEliminarVenta" idVenta="'.$value["id"].'">
+                echo '<button class="btn btn-danger btn-xs btnEliminarVenta" idVenta="'.$value["id"].'">
                         <i class="fa fa-times"></i>
                       </button>';
               }
@@ -466,32 +482,37 @@
                         </div>
                       </div>
 
-                      <div class="card-venta-cliente">
-                        👤 <span class="btnVerClienteDesdeVenta"
-                                  data-toggle="modal"
-                                  data-target="#modalEditarCliente"
-                                  idCliente="'.$value["id_cliente"].'"
-                                  style="cursor: pointer; color: #337ab7; text-decoration: underline;">
+                      <div class="card-venta-info-principal">
+                        <div class="card-venta-cliente">
+                          <span class="btnVerClienteDesdeVenta"
+                                data-toggle="modal"
+                                data-target="#modalEditarCliente"
+                                idCliente="'.$value["id_cliente"].'"
+                                style="cursor: pointer; color: #337ab7; text-decoration: underline;">
                             '.$nombreCliente.'
                           </span>
-                      </div>
-
-                      <div class="card-venta-total">
-                        💵 Total: '.$moneda.' '.number_format($value["total"],2).'
+                        </div>
+                        <div class="card-venta-total">
+                          '.$moneda.' '.number_format($value["total"],2).'
+                        </div>
                       </div>
 
                       <div class="card-venta-info">
-                        <div class="card-venta-info-item">
-                          <i class="fa fa-calendar"></i> '.$value["fecha"].'
+                        <div class="card-venta-info-fila">
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-calendar"></i> '.$value["fecha"].'
+                          </div>
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-credit-card"></i> '.$value["metodo_pago"].'
+                          </div>
                         </div>
-                        <div class="card-venta-info-item">
-                          <i class="fa fa-credit-card"></i> '.$value["metodo_pago"].'
-                        </div>
-                        <div class="card-venta-info-item">
-                          <i class="fa fa-user"></i> Vendedor: '.$nombreVendedor.'
-                        </div>
-                        <div class="card-venta-info-item">
-                          <i class="fa fa-money"></i> Neto: '.$moneda.' '.number_format($value["neto"],2).'
+                        <div class="card-venta-info-fila">
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-user"></i> '.$nombreVendedor.'
+                          </div>
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-money"></i> '.$moneda.' '.number_format($value["neto"],2).'
+                          </div>
                         </div>
                       </div>
 
@@ -504,7 +525,7 @@
               // Notas solo visualización
               if(!empty($value["notas"])){
                 echo '<div class="card-venta-notas">
-                        📝 '.$value["notas"].'
+                        <i class="fa fa-sticky-note-o"></i> '.$value["notas"].'
                       </div>';
               }
 

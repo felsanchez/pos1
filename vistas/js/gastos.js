@@ -97,10 +97,11 @@ $(document).on("click", ".btnEliminarGasto", function(){
 
 	var idGasto = $(this).attr("idGasto");
 	var codigoGasto = $(this).attr("codigoGasto");
+	var conceptoGasto = $(this).attr("conceptoGasto");
 
 	swal({
 
-		title: '¿Está seguro de eliminar el gasto '+codigoGasto+'?',
+		title: '¿Está seguro de eliminar el gasto: "'+conceptoGasto+'"?',
 		text: "¡Si no lo está puede cancelar la acción!",
 		type: 'warning',
 		showCancelButton: true,
@@ -305,7 +306,7 @@ $("#btnFiltrarGastos").on("click", function(){
                     fila += '<td>';
                     fila += '<div class="btn-group">';
                     fila += '<button class="btn btn-warning btnEditarGasto" idGasto="'+gasto.id+'" data-toggle="modal" data-target="#modalEditarGasto"><i class="fa fa-pencil"></i></button>';
-                    fila += '<button class="btn btn-danger btnEliminarGasto" idGasto="'+gasto.id+'" codigoGasto="'+gasto.codigo+'"><i class="fa fa-times"></i></button>';
+                    fila += '<button class="btn btn-danger btnEliminarGasto" idGasto="'+gasto.id+'" codigoGasto="'+gasto.codigo+'" conceptoGasto="'+gasto.concepto+'"><i class="fa fa-times"></i></button>';
                     fila += '</div>';
                     fila += '</td>';
 
@@ -328,7 +329,7 @@ $("#btnFiltrarGastos").on("click", function(){
                     card += '<button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'+gasto.id+'" data-toggle="modal" data-target="#modalEditarGasto">';
                     card += '<i class="fa fa-pencil"></i>';
                     card += '</button>';
-                    card += '<button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'+gasto.id+'" codigoGasto="'+gasto.codigo+'">';
+                    card += '<button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'+gasto.id+'" codigoGasto="'+gasto.codigo+'" conceptoGasto="'+gasto.concepto+'">';
                     card += '<i class="fa fa-times"></i>';
                     card += '</button>';
                     card += '</div>';

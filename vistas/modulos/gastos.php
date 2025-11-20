@@ -297,7 +297,7 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                 echo '<td>
                   <div class="btn-group">
                     <button class="btn btn-warning btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-danger btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'"><i class="fa fa-times"></i></button>
+                    <button class="btn btn-danger btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'" conceptoGasto="'.$value["concepto"].'"><i class="fa fa-times"></i></button>
                   </div>
                 </td>
 
@@ -341,7 +341,7 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                         <button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto">
                           <i class="fa fa-pencil"></i>
                         </button>
-                        <button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'">
+                        <button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'" conceptoGasto="'.$value["concepto"].'">
                           <i class="fa fa-times"></i>
                         </button>
                       </div>

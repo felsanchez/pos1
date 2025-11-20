@@ -107,11 +107,6 @@
   border-left: 3px solid #3c8dbc;
 }
 
-.card-venta-notas.editable {
-  cursor: text;
-  border-left-color: #00a65a;
-}
-
 .card-venta-imagen-icono {
   display: inline-block;
   padding: 5px 10px;
@@ -372,11 +367,11 @@
                             echo '<td><img src="vistas/img/ventas/default/sinventa.png" class="img-thumbnail img-ampliar-venta" width="40px" style="cursor: pointer;" data-imagen="vistas/img/ventas/default/sinventa.png" data-idventa="'.$value["id"].'"></td>';
                         }
 
-                        echo '<td>'.$moneda.' '.number_format($value["neto"],2).'</td> 
+                        echo '<td>'.$moneda.' '.number_format($value["neto"],2).'</td>
 
                         <td>'.$moneda.' '.number_format($value["total"],2).'</td>
 
-                        <td contenteditable="true" class="celda-nota" data-id="'.$value['id'].'">'.$value['notas'].'</td>
+                        <td>'.$value['notas'].'</td>
                         
                        <td>'.$value["fecha"];
 
@@ -515,9 +510,9 @@
                         <i class="fa fa-image"></i> Ver comprobante
                       </div>';
 
-              // Notas editables
+              // Notas solo visualización
               if(!empty($value["notas"])){
-                echo '<div class="card-venta-notas editable celda-nota" data-id="'.$value["id"].'">
+                echo '<div class="card-venta-notas">
                         📝 '.$value["notas"].'
                       </div>';
               }
@@ -737,7 +732,8 @@ $('#daterange-btn').daterangepicker(
 );
 </script>
 
-<!--Guarddar notas-->
+<!--Guarddar notas - DESACTIVADO: Notas ya no son editables-->
+<!--
 <script>
 $(document).on('blur', '.celda-nota', function() {
   const idVenta = $(this).data('id');
@@ -761,6 +757,7 @@ $(document).on('blur', '.celda-nota', function() {
   });
 });
 </script>
+-->
 
 
 <!-- Ampliar foto -->

@@ -9,9 +9,9 @@ $('.sidebar-menu').tree()
 Data Table
 =============================================*/
 
-// Inicializar todas las tablas con clase .tablas EXCEPTO .tablas1 y .tablas2
-// (esas tienen inicialización personalizada en clientes.js)
-$(".tablas").not('.tablas1, .tablas2').DataTable({
+// Inicializar todas las tablas con clase .tablas EXCEPTO .tablas1, .tablas2 y #example
+// (esas tienen inicialización personalizada)
+$(".tablas").not('.tablas1, .tablas2, #example').DataTable({
 
 	"language": {
 
@@ -41,6 +41,47 @@ $(".tablas").not('.tablas1, .tablas2').DataTable({
 	}
 
 });
+
+// Inicialización específica para tabla de ventas (#example)
+// Oculta la tabla hasta que esté completamente procesada para evitar el efecto de "acomodamiento"
+if($('#example').length > 0){
+	$('#example').DataTable({
+		"language": {
+			"sProcessing":     "Procesando...",
+			"sLengthMenu":     "Mostrar _MENU_ registros",
+			"sZeroRecords":    "No se encontraron resultados",
+			"sEmptyTable":     "Ningún dato disponible en esta tabla",
+			"sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+			"sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0",
+			"sInfoFiltered":   "(filtrado de un total de _MAX_ registros",
+			"sInfoPostFix":    "",
+			"sSearch":         "Buscar",
+			"sUrl":            "",
+			"sInfoThousands":  ",",
+			"sLoadingRecords": "Cargando...",
+			"oPaginate":       {
+			"sFirst":          "Primero",
+			"sLast":           "Último",
+			"sNext":           "Siguiente",
+			"sPrevious":       "Anterior"
+				},
+			"oAria":  {
+				"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+				"sSortDescending": ": Activar para ordenar la columna de manera descendente"
+			}
+		},
+		"preDrawCallback": function() {
+			// Ocultar tabla antes de dibujarla por primera vez
+			if (!$(this).hasClass('datatable-ready')) {
+				$(this).css('visibility', 'hidden');
+			}
+		},
+		"initComplete": function() {
+			// Mostrar tabla solo cuando esté completamente inicializada
+			$(this).addClass('datatable-ready').css('visibility', 'visible');
+		}
+	});
+}
 
 
 /*=============================================

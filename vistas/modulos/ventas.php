@@ -19,6 +19,14 @@
 .d-none {
   display: none !important;
 }
+/* Ocultar tabla de ventas hasta que DataTables termine de procesarla */
+#example:not(.datatable-ready) {
+  visibility: hidden;
+}
+/* Mostrar un indicador de carga mientras se procesa */
+#example:not(.datatable-ready) + .dataTables_wrapper {
+  position: relative;
+}
 </style>
 
 

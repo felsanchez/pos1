@@ -41,40 +41,26 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
   margin-bottom: 15px;
 }
 
-.card-gasto-contenido {
-  display: flex;
-  gap: 15px;
-}
-
-.card-gasto-imagen {
-  flex-shrink: 0;
-  width: 120px;
-}
-
-.card-gasto-imagen img {
-  width: 100%;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-.card-gasto-imagen.sin-imagen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f5f5f5;
-  border: 2px dashed #ddd;
-  border-radius: 4px;
-  color: #999;
-  font-size: 12px;
-  text-align: center;
-  padding: 10px;
-}
-
 .card-gasto-detalles {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom: 10px;
+}
+
+.card-gasto-imagen-icono {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #3c8dbc;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.card-gasto-imagen-icono:hover {
+  background: #2e6da4;
 }
 
 .card-gasto-fecha {
@@ -351,36 +337,30 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
                       💰 '.$value["concepto"].'
                     </div>
 
-                    <div class="card-gasto-contenido">';
-
-            // Imagen
-            if(!empty($value["imagen_comprobante"])){
-              echo '<div class="card-gasto-imagen">
-                      <img src="'.$value["imagen_comprobante"].'" class="img-comprobante-clickeable" style="cursor: pointer;" data-imagen="'.$value["imagen_comprobante"].'" data-idgasto="'.$value["id"].'" data-concepto="'.$value["concepto"].'">
+                    <div class="card-gasto-detalles">
+                      <div class="card-gasto-fecha">
+                        <i class="fa fa-calendar"></i> '.$fecha.'
+                      </div>
+                      <div class="card-gasto-monto">
+                        <i class="fa fa-money"></i> '.$monto.'
+                      </div>
+                      <div class="card-gasto-categoria">
+                        '.$categoriaBadge.'
+                      </div>
+                      <div class="card-gasto-proveedor">
+                        <i class="fa fa-user"></i> '.$proveedor.'
+                      </div>
                     </div>';
-            } else {
-              echo '<div class="card-gasto-imagen sin-imagen img-comprobante-clickeable" style="cursor: pointer;" data-imagen="" data-idgasto="'.$value["id"].'" data-concepto="'.$value["concepto"].'">
-                      <i class="fa fa-image fa-2x"></i><br>
-                      Sin imagen
-                    </div>';
-            }
 
-            echo '<div class="card-gasto-detalles">
-                    <div class="card-gasto-fecha">
-                      <i class="fa fa-calendar"></i> '.$fecha.'
-                    </div>
-                    <div class="card-gasto-monto">
-                      <i class="fa fa-money"></i> '.$monto.'
-                    </div>
-                    <div class="card-gasto-categoria">
-                      '.$categoriaBadge.'
-                    </div>
-                    <div class="card-gasto-proveedor">
-                      <i class="fa fa-user"></i> '.$proveedor.'
-                    </div>
+            // Icono de imagen clickeable
+            $imagenGasto = !empty($value["imagen_comprobante"]) ? $value["imagen_comprobante"] : "";
+
+            echo '<div class="card-gasto-imagen-icono img-comprobante-clickeable"
+                       data-imagen="'.$imagenGasto.'"
+                       data-idgasto="'.$value["id"].'"
+                       data-concepto="'.$value["concepto"].'">
+                    <i class="fa fa-image"></i> Ver comprobante
                   </div>
-
-                    </div>
 
                   </div>';
           }

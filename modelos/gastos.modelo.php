@@ -300,4 +300,31 @@ class ModeloGastos {
 
 	}
 
+	/*=============================================
+	ACTUALIZAR IMAGEN DE COMPROBANTE
+	=============================================*/
+
+	static public function mdlActualizarImagenGasto($tabla, $datos){
+
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET imagen_comprobante = :imagen_comprobante WHERE id = :id");
+
+		$stmt -> bindParam(":imagen_comprobante", $datos["imagen_comprobante"], PDO::PARAM_STR);
+		$stmt -> bindParam(":id", $datos["id"], PDO::PARAM_INT);
+
+		if($stmt -> execute()){
+
+			return "ok";
+
+		}else{
+
+			return "error";
+
+		}
+
+		$stmt -> close();
+
+		$stmt = null;
+
+	}
+
 }

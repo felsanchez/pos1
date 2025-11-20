@@ -273,9 +273,9 @@ $("#btnFiltrarGastos").on("click", function(){
                     // Imagen
                     var imagen = '';
                     if(gasto.imagen_comprobante && gasto.imagen_comprobante != ''){
-                        imagen = '<img src="'+gasto.imagen_comprobante+'" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;">';
+                        imagen = '<img src="'+gasto.imagen_comprobante+'" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;" data-imagen="'+gasto.imagen_comprobante+'" data-idgasto="'+gasto.id+'" data-concepto="'+gasto.concepto+'">';
                     } else {
-                        imagen = '-';
+                        imagen = '<img src="vistas/img/gastos/default/sin-imagen.png" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;" data-imagen="" data-idgasto="'+gasto.id+'" data-concepto="'+gasto.concepto+'">';
                     }
 
                     // Crear fila
@@ -344,10 +344,10 @@ $("#btnFiltrarGastos").on("click", function(){
                     // Imagen
                     if(gasto.imagen_comprobante && gasto.imagen_comprobante != ''){
                         card += '<div class="card-gasto-imagen">';
-                        card += '<img src="'+gasto.imagen_comprobante+'" class="img-comprobante-clickeable" style="cursor: pointer;">';
+                        card += '<img src="'+gasto.imagen_comprobante+'" class="img-comprobante-clickeable" style="cursor: pointer;" data-imagen="'+gasto.imagen_comprobante+'" data-idgasto="'+gasto.id+'" data-concepto="'+gasto.concepto+'">';
                         card += '</div>';
                     } else {
-                        card += '<div class="card-gasto-imagen sin-imagen">';
+                        card += '<div class="card-gasto-imagen sin-imagen img-comprobante-clickeable" style="cursor: pointer;" data-imagen="" data-idgasto="'+gasto.id+'" data-concepto="'+gasto.concepto+'">';
                         card += '<i class="fa fa-image fa-2x"></i><br>Sin imagen';
                         card += '</div>';
                     }

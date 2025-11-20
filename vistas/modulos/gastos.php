@@ -288,9 +288,9 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
  
                 // Columna 7: Imagen
                 if(!empty($value["imagen_comprobante"])){
-                  echo '<td><img src="'.$value["imagen_comprobante"].'" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;"></td>';
+                  echo '<td><img src="'.$value["imagen_comprobante"].'" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;" data-imagen="'.$value["imagen_comprobante"].'" data-idgasto="'.$value["id"].'" data-concepto="'.$value["concepto"].'"></td>';
                 } else {
-                  echo '<td>-</td>';
+                  echo '<td><img src="vistas/img/gastos/default/sin-imagen.png" class="img-thumbnail img-comprobante-clickeable" width="40px" style="cursor: pointer;" data-imagen="" data-idgasto="'.$value["id"].'" data-concepto="'.$value["concepto"].'"></td>';
                 } 
 
                 // Columna 8: Acciones
@@ -356,10 +356,10 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
             // Imagen
             if(!empty($value["imagen_comprobante"])){
               echo '<div class="card-gasto-imagen">
-                      <img src="'.$value["imagen_comprobante"].'" class="img-comprobante-clickeable" style="cursor: pointer;">
+                      <img src="'.$value["imagen_comprobante"].'" class="img-comprobante-clickeable" style="cursor: pointer;" data-imagen="'.$value["imagen_comprobante"].'" data-idgasto="'.$value["id"].'" data-concepto="'.$value["concepto"].'">
                     </div>';
             } else {
-              echo '<div class="card-gasto-imagen sin-imagen">
+              echo '<div class="card-gasto-imagen sin-imagen img-comprobante-clickeable" style="cursor: pointer;" data-imagen="" data-idgasto="'.$value["id"].'" data-concepto="'.$value["concepto"].'">
                       <i class="fa fa-image fa-2x"></i><br>
                       Sin imagen
                     </div>';
@@ -1018,8 +1018,8 @@ MODAL VER COMPROBANTE
 
 
 <!--=====================================
-MODAL AMPLIAR IMAGEN COMPROBANTE
-======================================--> 
+MODAL AMPLIAR Y EDITAR IMAGEN COMPROBANTE
+======================================-->
 
 <div id="modalAmpliarComprobanteGasto" class="modal fade" role="dialog">
   <div class="modal-dialog modal-lg">
@@ -1029,14 +1029,24 @@ MODAL AMPLIAR IMAGEN COMPROBANTE
         <h4 class="modal-title">Comprobante de Gasto</h4>
       </div>
       <div class="modal-body text-center">
-        <img id="imagenComprobanteAmpliada" src="" class="img-responsive" style="max-width: 100%; margin: 0 auto;">
+        <img id="imagenComprobanteAmpliada" src="" class="img-responsive" style="max-width: 100%; margin: 0 auto; margin-bottom: 20px;">
+        <hr>
+        <div class="form-group">
+          <label>Cambiar Imagen del Comprobante</label>
+          <input type="file" class="form-control nuevaImagenComprobante" accept="image/*">
+          <p class="help-block">Peso máximo de la imagen 2MB</p>
+        </div>
+        <input type="hidden" id="idGastoImagen">
+        <input type="hidden" id="conceptoGasto">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary btnGuardarImagenComprobante">Guardar Imagen</button>
       </div>
     </div>
   </div>
 </div>
+
 <!-- Script para ampliar imagen del comprobante desde modal editar -->
 <script>
 $(document).on("click", ".img-ampliar-gasto", function(){
@@ -1044,6 +1054,155 @@ $(document).on("click", ".img-ampliar-gasto", function(){
     $("#imagenComprobanteAmpliada").attr("src", rutaImagen);
     $("#modalAmpliarComprobanteGasto").modal("show");
 });
+</script>
+
+<!--=====================================
+SCRIPT AMPLIAR Y EDITAR IMAGEN DESDE LA TABLA
+======================================-->
+<script>
+    // Ampliar imagen de comprobante al hacer clic desde la tabla
+    $(document).on("click", ".img-comprobante-clickeable", function(){
+        var rutaImagen = $(this).attr("data-imagen");
+        var idGasto = $(this).attr("data-idgasto");
+        var concepto = $(this).attr("data-concepto");
+
+        // Si no hay imagen, mostrar placeholder
+        if(!rutaImagen || rutaImagen === ""){
+            rutaImagen = "vistas/img/gastos/default/sin-imagen.png";
+        }
+
+        console.log("ID Gasto:", idGasto);
+        console.log("Concepto:", concepto);
+        console.log("Ruta Imagen:", rutaImagen);
+
+        $("#imagenComprobanteAmpliada").attr("src", rutaImagen);
+        $("#idGastoImagen").val(idGasto);
+        $("#conceptoGasto").val(concepto);
+        $(".nuevaImagenComprobante").val("");
+        $("#modalAmpliarComprobanteGasto").modal("show");
+    });
+
+    // Previsualizar nueva imagen cuando se selecciona
+    $(".nuevaImagenComprobante").change(function(){
+        var imagen = this.files[0];
+
+        if(imagen){
+            if(imagen["type"] != "image/jpeg" && imagen["type"] != "image/png"){
+                $(".nuevaImagenComprobante").val("");
+                swal({
+                    title: "Error al subir la imagen",
+                    text: "¡La imagen debe estar en formato JPG o PNG!",
+                    type: "error",
+                    confirmButtonText: "¡Cerrar!"
+                });
+            }else if(imagen["size"] > 2000000){
+                $(".nuevaImagenComprobante").val("");
+                swal({
+                    title: "Error al subir la imagen",
+                    text: "¡La imagen no debe pesar más de 2MB!",
+                    type: "error",
+                    confirmButtonText: "¡Cerrar!"
+                });
+            }else{
+                var datosImagen = new FileReader;
+                datosImagen.readAsDataURL(imagen);
+
+                $(datosImagen).on("load", function(event){
+                    var rutaImagen = event.target.result;
+                    $("#imagenComprobanteAmpliada").attr("src", rutaImagen);
+                });
+            }
+        }
+    });
+
+    // Guardar la nueva imagen del comprobante
+    $(document).on("click", ".btnGuardarImagenComprobante", function(){
+
+        var idGasto = $("#idGastoImagen").val();
+        var concepto = $("#conceptoGasto").val();
+        var imagen = $(".nuevaImagenComprobante")[0].files[0];
+
+        console.log("ID al guardar:", idGasto);
+        console.log("Concepto al guardar:", concepto);
+        console.log("Imagen al guardar:", imagen);
+
+        if(!imagen){
+            swal({
+                title: "Advertencia",
+                text: "No has seleccionado ninguna imagen",
+                type: "warning",
+                confirmButtonText: "¡Cerrar!"
+            });
+            return;
+        }
+
+        if(!idGasto){
+            swal({
+                title: "Error",
+                text: "No se pudo obtener el ID del gasto",
+                type: "error",
+                confirmButtonText: "¡Cerrar!"
+            });
+            return;
+        }
+
+        var datos = new FormData();
+        datos.append("idGastoImagen", idGasto);
+        datos.append("conceptoGasto", concepto);
+        datos.append("nuevaImagenComprobante", imagen);
+
+        // Mostrar loading
+        swal({
+            title: 'Cargando...',
+            allowOutsideClick: false,
+            onBeforeOpen: () => {
+                swal.showLoading()
+            }
+        });
+
+        $.ajax({
+            url: "ajax/gastos.ajax.php",
+            method: "POST",
+            data: datos,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function(respuesta){
+                console.log("Respuesta del servidor:", respuesta);
+
+                if(respuesta == "ok"){
+                    swal({
+                        type: "success",
+                        title: "¡La imagen ha sido actualizada correctamente!",
+                        showConfirmButton: true,
+                        confirmButtonText: "Cerrar"
+                    }).then(function(result){
+                        if(result.value){
+                            window.location = "gastos";
+                        }
+                    });
+                } else {
+                    swal({
+                        type: "error",
+                        title: "Error al actualizar la imagen",
+                        text: respuesta,
+                        confirmButtonText: "¡Cerrar!"
+                    });
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                console.error("Error en AJAX:", textStatus, errorThrown);
+                console.error("Respuesta:", jqXHR.responseText);
+                swal({
+                    type: "error",
+                    title: "Error de conexión",
+                    text: "No se pudo conectar con el servidor",
+                    confirmButtonText: "¡Cerrar!"
+                });
+            }
+        });
+    });
 </script>
 
 

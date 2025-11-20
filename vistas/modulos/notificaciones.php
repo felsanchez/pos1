@@ -7,74 +7,79 @@
 
 .card-notificacion {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
-  padding: 15px;
-  padding-top: 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  padding-top: 10px;
   position: relative;
   border-left: 4px solid #3c8dbc;
 }
 
 .card-notificacion-checkbox {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
 }
 
 .card-notificacion.no-leida {
   background-color: #f9f9f9;
   font-weight: bold;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
 }
 
 .card-notificacion-header {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  gap: 10px;
 }
 
 .card-notificacion-icon {
-  font-size: 32px;
-  margin-right: 15px;
+  font-size: 24px;
   flex-shrink: 0;
 }
 
+.card-notificacion-info {
+  flex: 1;
+  padding-right: 25px;
+}
+
 .card-notificacion-tipo {
-  font-size: 11px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #666;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
 }
 
 .card-notificacion-titulo {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #333;
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .card-notificacion-mensaje {
   color: #666;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 1.4;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .card-notificacion-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 10px;
+  padding-top: 8px;
   border-top: 1px solid #eee;
 }
 
 .card-notificacion-fecha {
-  font-size: 12px;
+  font-size: 11px;
   color: #999;
 }
 
@@ -260,7 +265,7 @@
                       <div class="card-notificacion-icon">
                         <i class="fa '.$icono.' '.$color.'"></i>
                       </div>
-                      <div>
+                      <div class="card-notificacion-info">
                         <div class="card-notificacion-tipo">'.$tipoTexto.'</div>
                         <div class="card-notificacion-titulo">'.$notif["titulo"].'</div>
                       </div>
@@ -277,10 +282,10 @@
 
             if($notif["leida"] == 0){
               echo '<button class="btn btn-xs btn-primary btnMarcarLeida" data-id="'.$notif["id"].'">
-                      <i class="fa fa-check"></i> Marcar leída
+                      <i class="fa fa-check"></i>
                     </button>';
             } else {
-              echo '<span class="text-muted"><i class="fa fa-check-circle"></i> Leída</span>';
+              echo '<span class="text-muted" style="font-size: 11px;"><i class="fa fa-check-circle"></i> Leída</span>';
             }
 
             echo '</div>

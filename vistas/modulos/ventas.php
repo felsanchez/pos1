@@ -274,19 +274,13 @@
           <div class="pull-right">
             <button class="btn btn-default" id="daterange-btn">
               <span>
-                <i class="fa fa-calendar"></i> Rango de fecha
+                <i class="fa fa-calendar"></i> Filtrar por rango de fecha
               </span>
               <i class="fa fa-caret-down"></i>
             </button>
 
             <a href="index.php?ruta=ventas" class="btn btn-default">
-              <i class="fa fa-refresh"></i> Últimos 30 días
-            </a>
-
-            <a href="index.php?ruta=ventas&fechaInicial=2000-01-01&fechaFinal=<?php echo date('Y-m-d'); ?>"
-               class="btn btn-warning"
-               onclick="return confirm('Cargar todas las ventas puede tardar. ¿Continuar?');">
-              <i class="fa fa-database"></i> Ver todas
+              <i class="fa fa-refresh"></i> Mostrar todas
             </a>
             <!--<a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-d', strtotime('-1 day')); ?>&fechaFinal=<?php echo date('Y-m-d', strtotime('-1 day')); ?>" class="btn btn-default">Hoy</a>
             <a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-d', strtotime('-2 day')); ?>&fechaFinal=<?php echo date('Y-m-d', strtotime('-2 day')); ?>" class="btn btn-default">Ayer</a>
@@ -326,10 +320,10 @@
                     $fechaFinal = $_GET["fechaFinal"];
                     echo "<p>Filtrando desde $fechaInicial hasta $fechaFinal</p>";
                   } else {
-                    // Por defecto: últimos 30 días para mejorar rendimiento
-                    $fechaInicial = date('Y-m-d', strtotime('-30 days'));
-                    $fechaFinal = date('Y-m-d');
-                    echo "<p>Mostrando ventas de los últimos 30 días (del $fechaInicial al $fechaFinal)</p>";
+                    // Cargar todas las ventas (gracias al JOIN optimizado, es rápido)
+                    $fechaInicial = null;
+                    $fechaFinal = null;
+                    echo "<p>Mostrando todas las ventas</p>";
                   }
 
                   //$respuesta = ControladorVentas::ctrRangoFechasVentas($fechaInicial, $fechaFinal);

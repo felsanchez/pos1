@@ -131,6 +131,26 @@ function cargarTablaMovimientos(){
 					}
 				},
 
+				"responsive": {
+					"details": {
+						"type": "column"
+					}
+				},
+
+				"columnDefs": [
+					{ "responsivePriority": 1, "targets": 0 },  // id - siempre visible
+					{ "responsivePriority": 2, "targets": 1 },  // fecha - alta prioridad
+					{ "responsivePriority": 3, "targets": 2 },  // producto - alta prioridad
+					{ "responsivePriority": 10, "targets": 3 }, // tipo - baja prioridad (se oculta)
+					{ "responsivePriority": 4, "targets": 4 },  // tipo_movimiento - alta prioridad (visible en móvil)
+					{ "responsivePriority": 11, "targets": 5 }, // cantidad - se oculta
+					{ "responsivePriority": 12, "targets": 6 }, // stock_anterior - se oculta
+					{ "responsivePriority": 13, "targets": 7 }, // stock_nuevo - se oculta
+					{ "responsivePriority": 14, "targets": 8 }, // usuario - se oculta
+					{ "responsivePriority": 15, "targets": 9 }, // referencia - se oculta
+					{ "responsivePriority": 16, "targets": 10 } // notas - se oculta
+				],
+
 				"order": [[ 0, "desc" ]],
 				"pageLength": 25
 

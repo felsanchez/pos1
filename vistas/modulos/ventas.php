@@ -19,6 +19,143 @@
 .d-none {
   display: none !important;
 }
+/* Ocultar tabla de ventas hasta que DataTables termine de procesarla */
+#example:not(.datatable-ready) {
+  visibility: hidden;
+}
+/* Mostrar un indicador de carga mientras se procesa */
+#example:not(.datatable-ready) + .dataTables_wrapper {
+  position: relative;
+}
+
+/* Cards para móvil */
+.cards-ventas {
+  display: none;
+}
+
+.card-venta {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  position: relative;
+  border-left: 4px solid #00a65a;
+}
+
+.card-venta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.card-venta-codigo {
+  font-size: 14px;
+  font-weight: bold;
+  color: #00a65a;
+}
+
+.card-venta-acciones .btn-group {
+  display: flex;
+  gap: 3px;
+}
+
+.card-venta-info-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.card-venta-cliente {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  margin: 0;
+}
+
+.card-venta-total {
+  font-size: 16px;
+  font-weight: bold;
+  color: #00a65a;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.card-venta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.card-venta-info-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-venta-info-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  flex: 1;
+}
+
+.card-venta-info-item i {
+  margin-right: 5px;
+  width: 15px;
+  text-align: center;
+}
+
+.card-venta-notas {
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+  border-left: 2px solid #3c8dbc;
+}
+
+.card-venta-imagen-icono {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #3c8dbc;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.card-venta-imagen-icono:hover {
+  background: #2e6da4;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .tabla-ventas {
+    display: none !important;
+  }
+  .cards-ventas {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .tabla-ventas {
+    display: block !important;
+  }
+  .cards-ventas {
+    display: none !important;
+  }
+}
 </style>
 
 
@@ -153,12 +290,14 @@
           <div class="pull-right">
             <button class="btn btn-default" id="daterange-btn">
               <span>
-                <i class="fa fa-calendar"></i> Rango de fecha
+                <i class="fa fa-calendar"></i> Filtrar por rango de fecha
               </span>
               <i class="fa fa-caret-down"></i>
             </button>
 
-            <a href="index.php?ruta=ventas" class="btn btn-default">Mostrar Todo</a>
+            <a href="index.php?ruta=ventas" class="btn btn-default">
+              <i class="fa fa-refresh"></i> Mostrar todas
+            </a>
             <!--<a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-d', strtotime('-1 day')); ?>&fechaFinal=<?php echo date('Y-m-d', strtotime('-1 day')); ?>" class="btn btn-default">Hoy</a>
             <a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-d', strtotime('-2 day')); ?>&fechaFinal=<?php echo date('Y-m-d', strtotime('-2 day')); ?>" class="btn btn-default">Ayer</a>
             <a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-01'); ?>&fechaFinal=<?php echo date('Y-m-d'); ?>" class="btn btn-default">Mes actual</a>-->
@@ -167,9 +306,10 @@
    
         </div>
 
-        <div class="box-body table-responsive">
+        <div class="box-body">
 
-          <table id="example" class="table table-bordered table-striped tablas display nowrap">
+          <div class="tabla-ventas table-responsive">
+            <table id="example" class="table table-bordered table-striped tablas display nowrap">
               
             <thead>
               <tr>
@@ -189,13 +329,14 @@
 
               <tbody>
 
-                <?php 
+                <?php
 
                   if (isset($_GET["fechaInicial"]) && isset($_GET["fechaFinal"])) {
                     $fechaInicial = $_GET["fechaInicial"];
                     $fechaFinal = $_GET["fechaFinal"];
                     echo "<p>Filtrando desde $fechaInicial hasta $fechaFinal</p>";
                   } else {
+                    // Cargar todas las ventas (gracias al JOIN optimizado, es rápido)
                     $fechaInicial = null;
                     $fechaFinal = null;
                     echo "<p>Mostrando todas las ventas</p>";
@@ -206,15 +347,15 @@
 
 
                   foreach ($respuesta as $key => $value) {
-                    
+
                     echo '<tr>
                         <td>'.($key+1).'</td>
 
                          <td>'.$formatoCodigoVenta.$value["codigo"].'</td>';
- 
-                        $itemCliente = "id";
-                        $valorCliente = $value["id_cliente"];
-                        $respuestaCliente = ControladorClientes::ctrMostrarClientes($itemCliente, $valorCliente);
+
+                        // Usar nombres que ya vienen del JOIN en la consulta SQL
+                        $nombreCliente = !empty($value["nombre_cliente"]) ? $value["nombre_cliente"] : "Cliente no encontrado";
+                        $nombreVendedor = !empty($value["nombre_vendedor"]) ? $value["nombre_vendedor"] : "Vendedor no encontrado";
 
                           echo'<td>
 
@@ -223,17 +364,11 @@
                                         data-target="#modalEditarCliente"
                                         idCliente="'.$value["id_cliente"].'"
                                         style="cursor: pointer; color: #337ab7; text-decoration: underline;">
-                                      '.$respuestaCliente["nombre"].'
+                                      '.$nombreCliente.'
                                   </span>
-                              </td>'; 
+                              </td>';
 
-                        $itemUsuario = "id";
-
-                        $valorUsuario = $value["id_vendedor"];
-
-                        $respuestaUsuario = ControladorUsuarios::ctrMostrarUsuarios($itemUsuario, $valorUsuario);
-
-                        echo'<td>'.$respuestaUsuario["nombre"].'</td> 
+                        echo'<td>'.$nombreVendedor.'</td> 
 
                         <td>'.$moneda.' '.$value["metodo_pago"].'</td>';
 
@@ -245,11 +380,11 @@
                             echo '<td><img src="vistas/img/ventas/default/sinventa.png" class="img-thumbnail img-ampliar-venta" width="40px" style="cursor: pointer;" data-imagen="vistas/img/ventas/default/sinventa.png" data-idventa="'.$value["id"].'"></td>';
                         }
 
-                        echo '<td>'.$moneda.' '.number_format($value["neto"],2).'</td> 
+                        echo '<td>'.$moneda.' '.number_format($value["neto"],2).'</td>
 
                         <td>'.$moneda.' '.number_format($value["total"],2).'</td>
 
-                        <td contenteditable="true" class="celda-nota" data-id="'.$value['id'].'">'.$value['notas'].'</td>
+                        <td>'.$value['notas'].'</td>
                         
                        <td>'.$value["fecha"];
 
@@ -304,6 +439,101 @@
               </tbody>
 
           </table>
+          </div>
+
+          <!-- CARDS PARA MÓVIL -->
+          <div class="cards-ventas">
+
+            <?php
+            // Reutilizar la misma consulta de la tabla para evitar duplicar carga
+            // $respuesta ya contiene las ventas, no hacer nueva consulta
+
+            foreach ($respuesta as $key => $value) {
+
+              // Usar nombres que ya vienen del JOIN en la consulta SQL
+              $nombreCliente = !empty($value["nombre_cliente"]) ? $value["nombre_cliente"] : "Cliente no encontrado";
+              $nombreVendedor = !empty($value["nombre_vendedor"]) ? $value["nombre_vendedor"] : "Vendedor no encontrado";
+
+              // Imagen
+              $imagenVenta = !empty($value["imagen"]) ? $value["imagen"] : "vistas/img/ventas/default/sinventa.png";
+
+              echo '<div class="card-venta">
+
+                      <div class="card-venta-header">
+                        <div class="card-venta-codigo">
+                          '.$formatoCodigoVenta.$value["codigo"].'
+                        </div>
+                        <div class="card-venta-acciones">
+                          <div class="btn-group">
+                            <button class="btn btn-info btn-xs btnImprimirFactura" codigoVenta="'.$value["codigo"].'">
+                              <i class="fa fa-print"></i>
+                            </button>
+                            <button class="btn btn-warning btn-xs btnEditarVenta" idVenta="'.$value["id"].'">
+                              <i class="fa fa-eye"></i>
+                            </button>';
+
+              if ($_SESSION["perfil"] == "Administrador") {
+                echo '<button class="btn btn-danger btn-xs btnEliminarVenta" idVenta="'.$value["id"].'">
+                        <i class="fa fa-times"></i>
+                      </button>';
+              }
+
+              echo '      </div>
+                        </div>
+                      </div>
+
+                      <div class="card-venta-info-principal">
+                        <div class="card-venta-cliente">
+                          <span class="btnVerClienteDesdeVenta"
+                                data-toggle="modal"
+                                data-target="#modalEditarCliente"
+                                idCliente="'.$value["id_cliente"].'"
+                                style="cursor: pointer; color: #337ab7; text-decoration: underline;">
+                            '.$nombreCliente.'
+                          </span>
+                        </div>
+                        <div class="card-venta-total">
+                          '.$moneda.' '.number_format($value["total"],2).'
+                        </div>
+                      </div>
+
+                      <div class="card-venta-info">
+                        <div class="card-venta-info-fila">
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-calendar"></i> '.$value["fecha"].'
+                          </div>
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-credit-card"></i> '.$value["metodo_pago"].'
+                          </div>
+                        </div>
+                        <div class="card-venta-info-fila">
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-user"></i> '.$nombreVendedor.'
+                          </div>
+                          <div class="card-venta-info-item">
+                            <i class="fa fa-money"></i> '.$moneda.' '.number_format($value["neto"],2).'
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card-venta-imagen-icono img-ampliar-venta"
+                           data-imagen="'.$imagenVenta.'"
+                           data-idventa="'.$value["id"].'">
+                        <i class="fa fa-image"></i> Ver comprobante
+                      </div>';
+
+              // Notas solo visualización
+              if(!empty($value["notas"])){
+                echo '<div class="card-venta-notas">
+                        <i class="fa fa-sticky-note-o"></i> '.$value["notas"].'
+                      </div>';
+              }
+
+              echo '</div>';
+            }
+            ?>
+
+          </div>
 
 
         <!-- Modal para ampliar/editar imagen de venta -->
@@ -514,7 +744,8 @@ $('#daterange-btn').daterangepicker(
 );
 </script>
 
-<!--Guarddar notas-->
+<!--Guarddar notas - DESACTIVADO: Notas ya no son editables-->
+<!--
 <script>
 $(document).on('blur', '.celda-nota', function() {
   const idVenta = $(this).data('id');
@@ -538,6 +769,7 @@ $(document).on('blur', '.celda-nota', function() {
   });
 });
 </script>
+-->
 
 
 <!-- Ampliar foto -->

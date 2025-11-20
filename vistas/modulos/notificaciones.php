@@ -1,3 +1,110 @@
+<!-- CSS para diseño responsive -->
+<style>
+/* Cards para móvil */
+.cards-notificaciones {
+  display: none;
+}
+
+.card-notificacion {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  padding-top: 10px;
+  position: relative;
+  border-left: 4px solid #3c8dbc;
+}
+
+.card-notificacion-checkbox {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.card-notificacion.no-leida {
+  background-color: #f9f9f9;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}
+
+.card-notificacion-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.card-notificacion-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.card-notificacion-info {
+  flex: 1;
+  padding-right: 25px;
+}
+
+.card-notificacion-tipo {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.card-notificacion-titulo {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.card-notificacion-mensaje {
+  color: #666;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.card-notificacion-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #eee;
+}
+
+.card-notificacion-fecha {
+  font-size: 11px;
+  color: #999;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .tabla-notificaciones {
+    display: none !important;
+  }
+
+  .cards-notificaciones {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .tabla-notificaciones {
+    display: block !important;
+  }
+
+  .cards-notificaciones {
+    display: none !important;
+  }
+}
+</style>
+
 <div class="content-wrapper">
 
   <section class="content-header">
@@ -37,24 +144,25 @@
 
         if($notificaciones && count($notificaciones) > 0){
 
-          echo '<div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
+          echo '<div class="tabla-notificaciones">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
 
-                      <th style="width: 30px">
-                          <input type="checkbox" id="checkTodos">
-                        </th>
+                        <th style="width: 30px">
+                            <input type="checkbox" id="checkTodos">
+                          </th>
 
-                        <th style="width: 50px"></th>
-                        <th>Tipo</th>
-                        <th>Título</th>
-                        <th>Mensaje</th>
-                        <th>Fecha</th>
-                        <th style="width: 100px">Verificar</th>
-                      </tr>
-                    </thead>
-                    <tbody>';
+                          <th style="width: 50px"></th>
+                          <th>Tipo</th>
+                          <th>Título</th>
+                          <th>Mensaje</th>
+                          <th>Fecha</th>
+                          <th style="width: 100px">Verificar</th>
+                        </tr>
+                      </thead>
+                      <tbody>';
 
           foreach($notificaciones as $notif){
 
@@ -112,7 +220,79 @@
               </tr>';
           }
 
-          echo '</tbody></table></div>';
+          echo '</tbody></table></div></div>';
+
+          // CARDS PARA MÓVIL
+          echo '<div class="cards-notificaciones">';
+
+          foreach($notificaciones as $notif){
+
+            // Determinar icono y color según tipo
+            $icono = "fa-info-circle";
+            $color = "text-blue";
+            $tipoTexto = "Información";
+
+            if($notif["tipo"] == "stock_agotado"){
+              $icono = "fa-times-circle";
+              $color = "text-red";
+              $tipoTexto = "Stock Agotado";
+            } else if($notif["tipo"] == "stock_bajo"){
+              $icono = "fa-exclamation-triangle";
+              $color = "text-yellow";
+              $tipoTexto = "Stock Bajo";
+            }
+            else if($notif["tipo"] == "actividad_proxima"){
+              $icono = "fa-calendar";
+              $color = "text-blue";
+              $tipoTexto = "Actividad Próxima";
+            } else if($notif["tipo"] == "gasto_proximo"){
+              $icono = "fa-money";
+              $color = "text-orange";
+              $tipoTexto = "Gasto Próximo";
+            } else if($notif["tipo"] == "orden_agente_ia"){
+              $icono = "fa-magic";
+              $color = "text-green";
+              $tipoTexto = "Orden Agente IA";
+            }
+
+            $claseNoLeida = $notif["leida"] == 0 ? ' no-leida' : '';
+
+            echo '<div class="card-notificacion'.$claseNoLeida.'">
+
+                    <input type="checkbox" class="checkNotificacion card-notificacion-checkbox" value="'.$notif["id"].'">
+
+                    <div class="card-notificacion-header">
+                      <div class="card-notificacion-icon">
+                        <i class="fa '.$icono.' '.$color.'"></i>
+                      </div>
+                      <div class="card-notificacion-info">
+                        <div class="card-notificacion-tipo">'.$tipoTexto.'</div>
+                        <div class="card-notificacion-titulo">'.$notif["titulo"].'</div>
+                      </div>
+                    </div>
+
+                    <div class="card-notificacion-mensaje">
+                      '.$notif["mensaje"].'
+                    </div>
+
+                    <div class="card-notificacion-footer">
+                      <span class="card-notificacion-fecha">
+                        <i class="fa fa-clock-o"></i> '.date("d/m/Y H:i", strtotime($notif["fecha"])).'
+                      </span>';
+
+            if($notif["leida"] == 0){
+              echo '<button class="btn btn-xs btn-primary btnMarcarLeida" data-id="'.$notif["id"].'">
+                      <i class="fa fa-check"></i>
+                    </button>';
+            } else {
+              echo '<span class="text-muted" style="font-size: 11px;"><i class="fa fa-check-circle"></i> Leída</span>';
+            }
+
+            echo '</div>
+                  </div>';
+          }
+
+          echo '</div>';
 
         } else {
 

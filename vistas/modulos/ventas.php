@@ -337,15 +337,15 @@
 
 
                   foreach ($respuesta as $key => $value) {
-                    
+
                     echo '<tr>
                         <td>'.($key+1).'</td>
 
                          <td>'.$formatoCodigoVenta.$value["codigo"].'</td>';
- 
-                        $itemCliente = "id";
-                        $valorCliente = $value["id_cliente"];
-                        $respuestaCliente = ControladorClientes::ctrMostrarClientes($itemCliente, $valorCliente);
+
+                        // Usar nombres que ya vienen del JOIN en la consulta SQL
+                        $nombreCliente = !empty($value["nombre_cliente"]) ? $value["nombre_cliente"] : "Cliente no encontrado";
+                        $nombreVendedor = !empty($value["nombre_vendedor"]) ? $value["nombre_vendedor"] : "Vendedor no encontrado";
 
                           echo'<td>
 
@@ -354,17 +354,11 @@
                                         data-target="#modalEditarCliente"
                                         idCliente="'.$value["id_cliente"].'"
                                         style="cursor: pointer; color: #337ab7; text-decoration: underline;">
-                                      '.$respuestaCliente["nombre"].'
+                                      '.$nombreCliente.'
                                   </span>
-                              </td>'; 
+                              </td>';
 
-                        $itemUsuario = "id";
-
-                        $valorUsuario = $value["id_vendedor"];
-
-                        $respuestaUsuario = ControladorUsuarios::ctrMostrarUsuarios($itemUsuario, $valorUsuario);
-
-                        echo'<td>'.$respuestaUsuario["nombre"].'</td> 
+                        echo'<td>'.$nombreVendedor.'</td> 
 
                         <td>'.$moneda.' '.$value["metodo_pago"].'</td>';
 
@@ -446,15 +440,9 @@
 
             foreach ($respuesta as $key => $value) {
 
-              // Obtener cliente
-              $itemCliente = "id";
-              $valorCliente = $value["id_cliente"];
-              $respuestaCliente = ControladorClientes::ctrMostrarClientes($itemCliente, $valorCliente);
-
-              // Obtener vendedor
-              $itemUsuario = "id";
-              $valorUsuario = $value["id_vendedor"];
-              $respuestaUsuario = ControladorUsuarios::ctrMostrarUsuarios($itemUsuario, $valorUsuario);
+              // Usar nombres que ya vienen del JOIN en la consulta SQL
+              $nombreCliente = !empty($value["nombre_cliente"]) ? $value["nombre_cliente"] : "Cliente no encontrado";
+              $nombreVendedor = !empty($value["nombre_vendedor"]) ? $value["nombre_vendedor"] : "Vendedor no encontrado";
 
               // Imagen
               $imagenVenta = !empty($value["imagen"]) ? $value["imagen"] : "vistas/img/ventas/default/sinventa.png";
@@ -490,7 +478,7 @@
                                   data-target="#modalEditarCliente"
                                   idCliente="'.$value["id_cliente"].'"
                                   style="cursor: pointer; color: #337ab7; text-decoration: underline;">
-                            '.$respuestaCliente["nombre"].'
+                            '.$nombreCliente.'
                           </span>
                       </div>
 
@@ -506,7 +494,7 @@
                           <i class="fa fa-credit-card"></i> '.$value["metodo_pago"].'
                         </div>
                         <div class="card-venta-info-item">
-                          <i class="fa fa-user"></i> Vendedor: '.$respuestaUsuario["nombre"].'
+                          <i class="fa fa-user"></i> Vendedor: '.$nombreVendedor.'
                         </div>
                         <div class="card-venta-info-item">
                           <i class="fa fa-money"></i> Neto: '.$moneda.' '.number_format($value["neto"],2).'

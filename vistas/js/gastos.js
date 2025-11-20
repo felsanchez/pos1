@@ -38,7 +38,7 @@ $(document).ready(function(){
 EDITAR GASTO
 =============================================*/
 
-$(".tablas1").on("click", ".btnEditarGasto", function(){
+$(document).on("click", ".btnEditarGasto", function(){
 
 	var idGasto = $(this).attr("idGasto");
     console.log("ID Gasto: " + idGasto);
@@ -93,7 +93,7 @@ $(".tablas1").on("click", ".btnEditarGasto", function(){
 ELIMINAR GASTO
 =============================================*/
 
-$(".tablas1").on("click", ".btnEliminarGasto", function(){
+$(document).on("click", ".btnEliminarGasto", function(){
 
 	var idGasto = $(this).attr("idGasto");
 	var codigoGasto = $(this).attr("codigoGasto");
@@ -322,9 +322,8 @@ $("#btnFiltrarGastos").on("click", function(){
 
                     var card = '<div class="card-gasto'+claseHoy+'">';
 
-                    // Header con checkbox y botones
+                    // Header con botones
                     card += '<div class="card-gasto-header">';
-                    card += '<input type="checkbox" class="card-gasto-checkbox checkGasto" value="'+gasto.id+'">';
                     card += '<div class="btn-group">';
                     card += '<button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'+gasto.id+'" data-toggle="modal" data-target="#modalEditarGasto">';
                     card += '<i class="fa fa-pencil"></i>';

@@ -29,15 +29,9 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
 
 .card-gasto-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 10px;
-}
-
-.card-gasto-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
 }
 
 .card-gasto-concepto {
@@ -343,7 +337,6 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
             echo '<div class="card-gasto'.$claseHoy.'">
 
                     <div class="card-gasto-header">
-                      <input type="checkbox" class="card-gasto-checkbox checkGasto" value="'.$value["id"].'">
                       <div class="btn-group">
                         <button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto">
                           <i class="fa fa-pencil"></i>

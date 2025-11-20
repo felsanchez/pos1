@@ -11,8 +11,18 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 15px;
   padding: 15px;
+  padding-top: 20px;
   position: relative;
   border-left: 4px solid #3c8dbc;
+}
+
+.card-notificacion-checkbox {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 .card-notificacion.no-leida {
@@ -243,6 +253,8 @@
             $claseNoLeida = $notif["leida"] == 0 ? ' no-leida' : '';
 
             echo '<div class="card-notificacion'.$claseNoLeida.'">
+
+                    <input type="checkbox" class="checkNotificacion card-notificacion-checkbox" value="'.$notif["id"].'">
 
                     <div class="card-notificacion-header">
                       <div class="card-notificacion-icon">

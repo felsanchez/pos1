@@ -279,7 +279,15 @@
               <i class="fa fa-caret-down"></i>
             </button>
 
-            <a href="index.php?ruta=ventas" class="btn btn-default">Mostrar Todo</a>
+            <a href="index.php?ruta=ventas" class="btn btn-default">
+              <i class="fa fa-refresh"></i> Últimos 30 días
+            </a>
+
+            <a href="index.php?ruta=ventas&fechaInicial=2000-01-01&fechaFinal=<?php echo date('Y-m-d'); ?>"
+               class="btn btn-warning"
+               onclick="return confirm('Cargar todas las ventas puede tardar. ¿Continuar?');">
+              <i class="fa fa-database"></i> Ver todas
+            </a>
             <!--<a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-d', strtotime('-1 day')); ?>&fechaFinal=<?php echo date('Y-m-d', strtotime('-1 day')); ?>" class="btn btn-default">Hoy</a>
             <a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-d', strtotime('-2 day')); ?>&fechaFinal=<?php echo date('Y-m-d', strtotime('-2 day')); ?>" class="btn btn-default">Ayer</a>
             <a href="index.php?ruta=ventas&fechaInicial=<?php echo date('Y-m-01'); ?>&fechaFinal=<?php echo date('Y-m-d'); ?>" class="btn btn-default">Mes actual</a>-->
@@ -311,16 +319,17 @@
 
               <tbody>
 
-                <?php 
+                <?php
 
                   if (isset($_GET["fechaInicial"]) && isset($_GET["fechaFinal"])) {
                     $fechaInicial = $_GET["fechaInicial"];
                     $fechaFinal = $_GET["fechaFinal"];
                     echo "<p>Filtrando desde $fechaInicial hasta $fechaFinal</p>";
                   } else {
-                    $fechaInicial = null;
-                    $fechaFinal = null;
-                    echo "<p>Mostrando todas las ventas</p>";
+                    // Por defecto: últimos 30 días para mejorar rendimiento
+                    $fechaInicial = date('Y-m-d', strtotime('-30 days'));
+                    $fechaFinal = date('Y-m-d');
+                    echo "<p>Mostrando ventas de los últimos 30 días (del $fechaInicial al $fechaFinal)</p>";
                   }
 
                   //$respuesta = ControladorVentas::ctrRangoFechasVentas($fechaInicial, $fechaFinal);
@@ -432,10 +441,10 @@
           <div class="cards-ventas">
 
             <?php
-            // Obtener ventas nuevamente para las cards
-            $respuestaCards = ControladorVentas::ctrRangoFechasVentasPorEstado($fechaInicial, $fechaFinal, "venta");
+            // Reutilizar la misma consulta de la tabla para evitar duplicar carga
+            // $respuesta ya contiene las ventas, no hacer nueva consulta
 
-            foreach ($respuestaCards as $key => $value) {
+            foreach ($respuesta as $key => $value) {
 
               // Obtener cliente
               $itemCliente = "id";

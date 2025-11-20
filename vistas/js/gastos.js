@@ -232,11 +232,13 @@ $("#btnFiltrarGastos").on("click", function(){
 
             console.log("Gastos filtrados:", respuesta);
 
-            // Limpiar tabla
+            // Limpiar tabla y cards
             $(".tablas1 tbody").empty();
+            $(".cards-gastos").empty();
 
             if(respuesta.length == 0){
                 $(".tablas1 tbody").html('<tr><td colspan="8" class="text-center">No se encontraron gastos con los filtros seleccionados</td></tr>');
+                $(".cards-gastos").html('<div class="alert alert-info"><i class="fa fa-info-circle"></i> No se encontraron gastos con los filtros seleccionados</div>');
             } else {
 
                 // Llenar tabla con resultados
@@ -310,6 +312,58 @@ $("#btnFiltrarGastos").on("click", function(){
                     fila += '</tr>';
 
                     $(".tablas1 tbody").append(fila);
+
+                    // CREAR CARD PARA MÓVIL
+                    var claseHoy = esHoy ? ' gasto-hoy' : '';
+                    var categoriaBadgeCard = gasto.categoria_nombre ?
+                        '<span class="badge" style="background-color: '+gasto.categoria_color+'">'+gasto.categoria_nombre+'</span>' :
+                        '<span class="text-muted">Sin categoría</span>';
+                    var proveedorCard = gasto.proveedor_nombre ? gasto.proveedor_nombre : 'Sin proveedor';
+
+                    var card = '<div class="card-gasto'+claseHoy+'">';
+
+                    // Header con checkbox y botones
+                    card += '<div class="card-gasto-header">';
+                    card += '<input type="checkbox" class="card-gasto-checkbox checkGasto" value="'+gasto.id+'">';
+                    card += '<div class="btn-group">';
+                    card += '<button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'+gasto.id+'" data-toggle="modal" data-target="#modalEditarGasto">';
+                    card += '<i class="fa fa-pencil"></i>';
+                    card += '</button>';
+                    card += '<button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'+gasto.id+'" codigoGasto="'+gasto.codigo+'">';
+                    card += '<i class="fa fa-times"></i>';
+                    card += '</button>';
+                    card += '</div>';
+                    card += '</div>';
+
+                    // Concepto
+                    card += '<div class="card-gasto-concepto">💰 '+gasto.concepto+'</div>';
+
+                    // Contenido
+                    card += '<div class="card-gasto-contenido">';
+
+                    // Imagen
+                    if(gasto.imagen_comprobante && gasto.imagen_comprobante != ''){
+                        card += '<div class="card-gasto-imagen">';
+                        card += '<img src="'+gasto.imagen_comprobante+'" class="img-comprobante-clickeable" style="cursor: pointer;">';
+                        card += '</div>';
+                    } else {
+                        card += '<div class="card-gasto-imagen sin-imagen">';
+                        card += '<i class="fa fa-image fa-2x"></i><br>Sin imagen';
+                        card += '</div>';
+                    }
+
+                    // Detalles
+                    card += '<div class="card-gasto-detalles">';
+                    card += '<div class="card-gasto-fecha"><i class="fa fa-calendar"></i> '+fechaFormateada+'</div>';
+                    card += '<div class="card-gasto-monto"><i class="fa fa-money"></i> '+monto+'</div>';
+                    card += '<div class="card-gasto-categoria">'+categoriaBadgeCard+'</div>';
+                    card += '<div class="card-gasto-proveedor"><i class="fa fa-user"></i> '+proveedorCard+'</div>';
+                    card += '</div>';
+
+                    card += '</div>';
+                    card += '</div>';
+
+                    $(".cards-gastos").append(card);
                 });
 
             }

@@ -6,21 +6,119 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
 
 <!-- Estilos responsive -->
 <style>
-@media (max-width: 767px) {
-  .tablas1 td,
-  .tablas1 th {
-      display: none;
-  }
+/* Cards para móvil */
+.cards-gastos {
+  display: none;
+}
 
-  .tablas1 td:nth-child(2),
-  .tablas1 td:nth-child(4),
-  .tablas1 td:nth-child(7),
-  .tablas1 td:nth-child(12),
-  .tablas1 th:nth-child(2),
-  .tablas1 th:nth-child(4),
-  .tablas1 th:nth-child(7),
-  .tablas1 th:nth-child(12) {
-      display: table-cell;
+.card-gasto {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  padding: 15px;
+  position: relative;
+  border-left: 4px solid #3c8dbc;
+}
+
+.card-gasto.gasto-hoy {
+  border-left: 6px solid #28a745 !important;
+  background-color: #f0f9f4;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.card-gasto-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-gasto-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.card-gasto-concepto {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.card-gasto-contenido {
+  display: flex;
+  gap: 15px;
+}
+
+.card-gasto-imagen {
+  flex-shrink: 0;
+  width: 120px;
+}
+
+.card-gasto-imagen img {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.card-gasto-imagen.sin-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f5f5;
+  border: 2px dashed #ddd;
+  border-radius: 4px;
+  color: #999;
+  font-size: 12px;
+  text-align: center;
+  padding: 10px;
+}
+
+.card-gasto-detalles {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-gasto-fecha {
+  color: #666;
+  font-size: 14px;
+}
+
+.card-gasto-monto {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3c8dbc;
+}
+
+.card-gasto-categoria {
+  margin: 5px 0;
+}
+
+.card-gasto-proveedor {
+  color: #666;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .tabla-gastos {
+    display: none !important;
+  }
+  .cards-gastos {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .tabla-gastos {
+    display: block !important;
+  }
+  .cards-gastos {
+    display: none !important;
   }
 }
 
@@ -127,9 +225,10 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
 
       </div>
 
-      <div class="box-body table-responsive">
+      <div class="box-body">
 
-        <table id="tablaGastos" class="table table-bordered table-striped tablas1">
+        <div class="tabla-gastos table-responsive">
+          <table id="tablaGastos" class="table table-bordered table-striped tablas1">
 
           <thead>
             <tr>
@@ -215,6 +314,86 @@ $mediosPago = !empty($configuracion["medios_pago"]) ? explode(",", $configuracio
           </tbody>
 
         </table>
+        </div>
+
+        <!-- CARDS PARA MÓVIL -->
+        <div class="cards-gastos">
+
+          <?php
+          foreach ($gastos as $key => $value) {
+
+            // Preparar badge de categoría
+            $categoriaBadge = '';
+            if(!empty($value["categoria_nombre"])){
+              $categoriaBadge = '<span class="badge" style="background-color: '.$value["categoria_color"].'">'.$value["categoria_nombre"].'</span>';
+            } else {
+              $categoriaBadge = '<span class="text-muted">Sin categoría</span>';
+            }
+
+            // Verificar si el gasto es de hoy para resaltarlo
+            $fechaHoy = date('Y-m-d');
+            $esHoy = (!empty($value["fecha"]) && $value["fecha"] == $fechaHoy);
+            $claseHoy = $esHoy ? ' gasto-hoy' : '';
+
+            // Formatear datos
+            $fecha = !empty($value["fecha"]) ? date("d/m/Y", strtotime($value["fecha"])) : '-';
+            $monto = !empty($value["monto"]) ? '$'.number_format($value["monto"], 2, ',', '.') : '-';
+            $proveedor = !empty($value["proveedor_nombre"]) ? $value["proveedor_nombre"] : 'Sin proveedor';
+
+            echo '<div class="card-gasto'.$claseHoy.'">
+
+                    <div class="card-gasto-header">
+                      <input type="checkbox" class="card-gasto-checkbox checkGasto" value="'.$value["id"].'">
+                      <div class="btn-group">
+                        <button class="btn btn-warning btn-sm btnEditarGasto" idGasto="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarGasto">
+                          <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm btnEliminarGasto" idGasto="'.$value["id"].'" codigoGasto="'.$value["codigo"].'">
+                          <i class="fa fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="card-gasto-concepto">
+                      💰 '.$value["concepto"].'
+                    </div>
+
+                    <div class="card-gasto-contenido">';
+
+            // Imagen
+            if(!empty($value["imagen_comprobante"])){
+              echo '<div class="card-gasto-imagen">
+                      <img src="'.$value["imagen_comprobante"].'" class="img-comprobante-clickeable" style="cursor: pointer;">
+                    </div>';
+            } else {
+              echo '<div class="card-gasto-imagen sin-imagen">
+                      <i class="fa fa-image fa-2x"></i><br>
+                      Sin imagen
+                    </div>';
+            }
+
+            echo '<div class="card-gasto-detalles">
+                    <div class="card-gasto-fecha">
+                      <i class="fa fa-calendar"></i> '.$fecha.'
+                    </div>
+                    <div class="card-gasto-monto">
+                      <i class="fa fa-money"></i> '.$monto.'
+                    </div>
+                    <div class="card-gasto-categoria">
+                      '.$categoriaBadge.'
+                    </div>
+                    <div class="card-gasto-proveedor">
+                      <i class="fa fa-user"></i> '.$proveedor.'
+                    </div>
+                  </div>
+
+                    </div>
+
+                  </div>';
+          }
+          ?>
+
+        </div>
 
       </div>
 

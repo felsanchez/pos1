@@ -1093,7 +1093,7 @@ function listarMetodos(){
 BOTON EDITAR VENTA
 =============================================*/
 
-$(".tablas").on("click", ".btnEditarVenta", function(){
+$(document).on("click", ".btnEditarVenta", function(){
 
 	var idVenta = $(this).attr("idVenta");
 
@@ -1105,7 +1105,7 @@ $(".tablas").on("click", ".btnEditarVenta", function(){
 BORRAR VENTA
 =============================================*/
 
-$(".tablas").on("click", ".btnEliminarVenta", function(){
+$(document).on("click", ".btnEliminarVenta", function(){
 
 	var idVenta = $(this).attr("idVenta");
 	
@@ -1164,7 +1164,7 @@ $(".tablas").on("click", ".btnImprimirFactura", function(){
 })
 	*/
 
-$(".tablas").off("click", ".btnImprimirFactura").on("click", ".btnImprimirFactura", function() {
+$(document).off("click", ".btnImprimirFactura").on("click", ".btnImprimirFactura", function() {
 
 	var codigoVenta = $(this).attr("codigoVenta");
 

@@ -112,16 +112,8 @@ class tablaProductos{
     }
 
 
-	
+
 }
-
-
-/*=============================================
-	ACTIVAR TABLA DE PRODUCTOS
-=============================================*/
-
-$activar = new TablaProductos();
-$activar -> mostrarTabla();
 
 
 //Guardar Notas
@@ -136,6 +128,7 @@ if (isset($_POST["idVentaNota"])) {
 
   $respuesta = ControladorVentas::ctrActualizarNotaVenta($datos);
   echo json_encode($respuesta);
+  exit;
 }
 
 //Guardar Observaciones
@@ -150,6 +143,7 @@ if (isset($_POST["idVentaObservacion"])) {
 
   $respuesta = ControladorVentas::ctrActualizarObservacionVenta($datos);
   echo json_encode($respuesta);
+  exit;
 }
 
 
@@ -157,8 +151,20 @@ if (isset($_POST["idVentaObservacion"])) {
 EDITAR IMAGEN DE VENTA
 =============================================*/
 if(isset($_POST["idVentaImagen"])){
-    $editarImagen = new AjaxVentas();
+    require_once "../controladores/ventas.controlador.php";
+    require_once "../modelos/ventas.modelo.php";
+
+    $editarImagen = new TablaProductos();
     $editarImagen -> idVentaImagen = $_POST["idVentaImagen"];
     $editarImagen -> nuevaImagenVenta = $_FILES["nuevaImagenVenta"];
     $editarImagen -> ajaxEditarImagenVenta();
+    exit;
 }
+
+
+/*=============================================
+	ACTIVAR TABLA DE PRODUCTOS
+=============================================*/
+
+$activar = new TablaProductos();
+$activar -> mostrarTabla();

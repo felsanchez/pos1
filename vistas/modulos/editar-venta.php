@@ -1,27 +1,13 @@
 
 <style>
-/* Centrar solo los primeros 3 campos en desktop */
-.formularioVenta .form-group:nth-child(1) .input-group,
-.formularioVenta .form-group:nth-child(2) .input-group,
-.formularioVenta .form-group:nth-child(3) .input-group {
-  margin: 0 auto;
-  float: none;
-}
-
-@media (min-width: 768px) {
-  .formularioVenta .form-group:nth-child(1) .input-group,
-  .formularioVenta .form-group:nth-child(2) .input-group,
-  .formularioVenta .form-group:nth-child(3) .input-group {
-    max-width: 75%;
-  }
-}
-
 /* Responsive para móvil */
 @media (max-width: 767px) {
-  /* Primeros 3 campos - ancho completo */
-  .formularioVenta .form-group .input-group.col-xs-12 {
+  /* Campos de ancho completo */
+  .formularioVenta .form-group .input-group.col-xs-12,
+  .formularioVenta .form-group .col-xs-6 {
     width: 100% !important;
     max-width: 100%;
+    padding: 0 !important;
   }
 
   /* Productos - diseño vertical en móvil */

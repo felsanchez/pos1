@@ -30,9 +30,6 @@ class ModeloVentas{
 
 		}
 
-
-		$stmt -> close();
-
 		$stmt = null;
 
 	}
@@ -73,7 +70,6 @@ class ModeloVentas{
 
 		}
 
-		$stmt->close();
 		$stmt = null;
 
 	}
@@ -105,14 +101,14 @@ class ModeloVentas{
 
 		if($stmt->execute()){
 
-		return "ok";
-		}
-		else{
+			return "ok";
+
+		}else{
 
 			return "error";
+
 		}
 
-		$stmt -> close();
 		$stmt = null;
 
 	}
@@ -137,10 +133,7 @@ class ModeloVentas{
 
 		}
 
-		$stmt -> close();
-
 		$stmt = null;
-
 
 	}
 
@@ -212,8 +205,6 @@ class ModeloVentas{
 
 		return $stmt -> fetch();
 
-		$stmt -> close();
-
 		$stmt = null;
 	}
 
@@ -229,8 +220,6 @@ class ModeloVentas{
 
 		return $stmt -> fetch();
 
-		$stmt -> close();
-
 		$stmt = null;
 	}
 
@@ -244,7 +233,6 @@ class ModeloVentas{
 
 		$resultado = $stmt -> fetch();
 
-		$stmt -> close();
 		$stmt = null;
 
 		if($resultado){
@@ -367,7 +355,6 @@ class ModeloVentas{
 			return "error";
 		}
 
-		$stmt->close();
 		$stmt = null;
 	}
 
@@ -392,7 +379,6 @@ class ModeloVentas{
 
 		}
 
-		$stmt->close();
 		$stmt = null;
 
 	}

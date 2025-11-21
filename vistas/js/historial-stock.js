@@ -26,20 +26,22 @@ function cargarTablaMovimientos(){
 		success: function(movimientos){
 
 			console.log("Movimientos cargados:", movimientos);
+			console.log("Configurando tabla con responsive mode...");
 
 			tablaMovimientos = $(".tablaHistorialStock").DataTable({
 
 				data: movimientos,
-				
+				responsive: true,
+
 				columns: [
 					{ data: "id" },
-					{ 
+					{
 						data: "fecha",
 						render: function(data){
 							var fecha = new Date(data);
-							return fecha.toLocaleString('es-ES', { 
-								year: 'numeric', 
-								month: '2-digit', 
+							return fecha.toLocaleString('es-ES', {
+								year: 'numeric',
+								month: '2-digit',
 								day: '2-digit',
 								hour: '2-digit',
 								minute: '2-digit'
@@ -47,7 +49,7 @@ function cargarTablaMovimientos(){
 						}
 					},
 					{ data: "nombre_producto" },
-					{ 
+					{
 						data: "tipo_producto",
 						render: function(data){
 							if(data == "producto"){
@@ -57,7 +59,7 @@ function cargarTablaMovimientos(){
 							}
 						}
 					},
-					{ 
+					{
 						data: "tipo_movimiento",
 						render: function(data){
 							var badges = {
@@ -72,7 +74,7 @@ function cargarTablaMovimientos(){
 							return badges[data] || data;
 						}
 					},
-					{ 
+					{
 						data: "cantidad",
 						render: function(data){
 							if(data > 0){
@@ -83,7 +85,7 @@ function cargarTablaMovimientos(){
 						}
 					},
 					{ data: "stock_anterior" },
-					{ 
+					{
 						data: "stock_nuevo",
 						render: function(data, type, row){
 							var cambio = row.stock_nuevo - row.stock_anterior;
@@ -104,6 +106,20 @@ function cargarTablaMovimientos(){
 							return '<div contenteditable="true" class="celda-notas-movimiento" data-id="'+row.id+'">'+data+'</div>';
 						}
 					}
+				],
+
+				columnDefs: [
+					{ responsivePriority: 1, targets: 0 },  // id - siempre visible
+					{ responsivePriority: 2, targets: 1 },  // fecha - siempre visible
+					{ responsivePriority: 3, targets: 2 },  // producto - siempre visible
+					{ responsivePriority: 4, targets: 4 },  // tipo_movimiento - siempre visible en móvil
+					{ responsivePriority: 10, targets: 3 }, // tipo - se oculta en móvil (expandir)
+					{ responsivePriority: 11, targets: 5 }, // cantidad - se oculta
+					{ responsivePriority: 12, targets: 6 }, // stock_anterior - se oculta
+					{ responsivePriority: 13, targets: 7 }, // stock_nuevo - se oculta
+					{ responsivePriority: 14, targets: 8 }, // usuario - se oculta
+					{ responsivePriority: 15, targets: 9 }, // referencia - se oculta
+					{ responsivePriority: 16, targets: 10 } // notas - se oculta
 				],
 
 				"language": {
@@ -130,22 +146,6 @@ function cargarTablaMovimientos(){
 						"sSortDescending": ": Activar para ordenar la columna de manera descendente"
 					}
 				},
-
-				"responsive": true,
-
-				"columnDefs": [
-					{ "responsivePriority": 1, "targets": 0 },  // id - siempre visible
-					{ "responsivePriority": 2, "targets": 1 },  // fecha - alta prioridad
-					{ "responsivePriority": 3, "targets": 2 },  // producto - alta prioridad
-					{ "responsivePriority": 10, "targets": 3 }, // tipo - baja prioridad (se oculta)
-					{ "responsivePriority": 4, "targets": 4 },  // tipo_movimiento - alta prioridad (visible en móvil)
-					{ "responsivePriority": 11, "targets": 5 }, // cantidad - se oculta
-					{ "responsivePriority": 12, "targets": 6 }, // stock_anterior - se oculta
-					{ "responsivePriority": 13, "targets": 7 }, // stock_nuevo - se oculta
-					{ "responsivePriority": 14, "targets": 8 }, // usuario - se oculta
-					{ "responsivePriority": 15, "targets": 9 }, // referencia - se oculta
-					{ "responsivePriority": 16, "targets": 10 } // notas - se oculta
-				],
 
 				"order": [[ 0, "desc" ]],
 				"pageLength": 25

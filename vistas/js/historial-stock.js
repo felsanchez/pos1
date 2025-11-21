@@ -31,12 +31,24 @@ function cargarTablaMovimientos(){
 			tablaMovimientos = $(".tablaHistorialStock").DataTable({
 
 				data: movimientos,
-				responsive: true,
+
+				responsive: {
+					details: {
+						display: $.fn.dataTable.Responsive.display.childRowImmediate,
+						type: ''
+					}
+				},
+
+				autoWidth: false,
 
 				columns: [
-					{ data: "id" },
+					{
+						data: "id",
+						className: "all"
+					},
 					{
 						data: "fecha",
+						className: "all",
 						render: function(data){
 							var fecha = new Date(data);
 							return fecha.toLocaleString('es-ES', {
@@ -48,9 +60,13 @@ function cargarTablaMovimientos(){
 							});
 						}
 					},
-					{ data: "nombre_producto" },
+					{
+						data: "nombre_producto",
+						className: "all"
+					},
 					{
 						data: "tipo_producto",
+						className: "none",
 						render: function(data){
 							if(data == "producto"){
 								return '<span class="label label-primary">Producto</span>';
@@ -61,6 +77,7 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "tipo_movimiento",
+						className: "all",
 						render: function(data){
 							var badges = {
 								"venta": '<span class="label label-success">Venta</span>',
@@ -76,6 +93,7 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "cantidad",
+						className: "none",
 						render: function(data){
 							if(data > 0){
 								return '<span class="text-green"><i class="fa fa-arrow-up"></i> +'+data+'</span>';
@@ -84,9 +102,13 @@ function cargarTablaMovimientos(){
 							}
 						}
 					},
-					{ data: "stock_anterior" },
+					{
+						data: "stock_anterior",
+						className: "none"
+					},
 					{
 						data: "stock_nuevo",
+						className: "none",
 						render: function(data, type, row){
 							var cambio = row.stock_nuevo - row.stock_anterior;
 							if(cambio > 0){
@@ -98,28 +120,21 @@ function cargarTablaMovimientos(){
 							}
 						}
 					},
-					{ data: "nombre_usuario" },
-					{ data: "referencia" },
+					{
+						data: "nombre_usuario",
+						className: "none"
+					},
+					{
+						data: "referencia",
+						className: "none"
+					},
 					{
 						data: "notas",
+						className: "none",
 						render: function(data, type, row){
 							return '<div contenteditable="true" class="celda-notas-movimiento" data-id="'+row.id+'">'+data+'</div>';
 						}
 					}
-				],
-
-				columnDefs: [
-					{ responsivePriority: 1, targets: 0 },  // id - siempre visible
-					{ responsivePriority: 2, targets: 1 },  // fecha - siempre visible
-					{ responsivePriority: 3, targets: 2 },  // producto - siempre visible
-					{ responsivePriority: 4, targets: 4 },  // tipo_movimiento - siempre visible en móvil
-					{ responsivePriority: 10, targets: 3 }, // tipo - se oculta en móvil (expandir)
-					{ responsivePriority: 11, targets: 5 }, // cantidad - se oculta
-					{ responsivePriority: 12, targets: 6 }, // stock_anterior - se oculta
-					{ responsivePriority: 13, targets: 7 }, // stock_nuevo - se oculta
-					{ responsivePriority: 14, targets: 8 }, // usuario - se oculta
-					{ responsivePriority: 15, targets: 9 }, // referencia - se oculta
-					{ responsivePriority: 16, targets: 10 } // notas - se oculta
 				],
 
 				"language": {

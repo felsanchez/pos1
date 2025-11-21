@@ -31,7 +31,12 @@ function cargarTablaMovimientos(){
 			tablaMovimientos = $(".tablaHistorialStock").DataTable({
 
 				data: movimientos,
-				responsive: true,
+
+				responsive: {
+					details: true
+				},
+
+				autoWidth: false,
 
 				columns: [
 					{
@@ -155,9 +160,17 @@ function cargarTablaMovimientos(){
 				},
 
 				"order": [[ 0, "desc" ]],
-				"pageLength": 25
+				"pageLength": 25,
+
+				"initComplete": function() {
+					console.log("Tabla inicializada, recalculando responsive...");
+					this.api().responsive.recalc();
+				}
 
 			});
+
+			console.log("DataTable creado:", tablaMovimientos);
+			console.log("Responsive enabled:", tablaMovimientos.responsive);
 
 		},
 		error: function(jqXHR, textStatus, errorThrown){

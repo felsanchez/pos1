@@ -725,6 +725,16 @@ static public function ctrEditarVenta(){
 			}
 		}
 
+		// Agregar campo "recibe" a las notas si tiene contenido
+		if(!empty($_POST["recibe"])){
+			$textoRecibe = "Recibe: " . $_POST["recibe"];
+			if(!empty($notasFinales)){
+				$notasFinales = $notasFinales . " - " . $textoRecibe;
+			} else {
+				$notasFinales = $textoRecibe;
+			}
+		}
+
 		$datos = array(
 
 			"id_vendedor"=>$_POST["idVendedor"],

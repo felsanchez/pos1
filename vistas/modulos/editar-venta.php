@@ -1,22 +1,72 @@
 
 <style>
-/* Centrar campos del formulario */
-.formularioVenta .form-group .input-group {
+/* Centrar solo los primeros 3 campos en desktop */
+.formularioVenta .form-group:nth-child(1) .input-group,
+.formularioVenta .form-group:nth-child(2) .input-group,
+.formularioVenta .form-group:nth-child(3) .input-group {
   margin: 0 auto;
   float: none;
 }
 
-/* Responsive para inputs */
 @media (min-width: 768px) {
-  .formularioVenta .form-group .input-group {
+  .formularioVenta .form-group:nth-child(1) .input-group,
+  .formularioVenta .form-group:nth-child(2) .input-group,
+  .formularioVenta .form-group:nth-child(3) .input-group {
     max-width: 75%;
   }
 }
 
+/* Responsive para móvil */
 @media (max-width: 767px) {
-  .formularioVenta .form-group .input-group {
+  /* Primeros 3 campos - ancho completo */
+  .formularioVenta .form-group .input-group.col-xs-12 {
     width: 100% !important;
     max-width: 100%;
+  }
+
+  /* Productos - diseño vertical en móvil */
+  .nuevoProducto .row.col-xs-10 {
+    width: 100% !important;
+    margin: 0;
+    padding: 5px 15px;
+  }
+
+  .nuevoProducto .row .col-xs-7,
+  .nuevoProducto .row .col-xs-2,
+  .nuevoProducto .row .col-xs-3 {
+    width: 100% !important;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .nuevoProducto .row .col-xs-7 {
+    margin-bottom: 5px;
+  }
+
+  /* Tabla de impuesto y total - diseño vertical */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  table thead th,
+  table tbody td {
+    font-size: 12px;
+    padding: 5px !important;
+  }
+
+  table tbody td .input-group {
+    min-width: 120px;
+  }
+
+  /* Descuento - ancho completo */
+  .col-xs-10 {
+    width: 100% !important;
+  }
+
+  /* Input-group en móvil */
+  .input-group-addon {
+    padding: 6px 8px;
+    font-size: 12px;
   }
 }
 </style>
@@ -214,8 +264,9 @@
                         ENTRADA IMPUESTOS Y TOTAL
                         ======================================-->
                          
-                          <div class="col-xs-6">
-                           
+                          <div class="col-xs-12 col-sm-6">
+
+                             <div class="table-responsive">
                              <table class="table">                     
 
                                <thead>
@@ -258,7 +309,7 @@
                                </tbody>
 
                              </table>
-
+                             </div><!-- /table-responsive -->
 
                            </div>
                        

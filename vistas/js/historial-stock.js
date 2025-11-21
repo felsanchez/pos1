@@ -66,7 +66,6 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "tipo_producto",
-						className: "none",
 						responsivePriority: 10,
 						render: function(data){
 							if(data == "producto"){
@@ -95,7 +94,6 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "cantidad",
-						className: "none",
 						responsivePriority: 11,
 						render: function(data){
 							if(data > 0){
@@ -107,12 +105,10 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "stock_anterior",
-						className: "none",
 						responsivePriority: 12
 					},
 					{
 						data: "stock_nuevo",
-						className: "none",
 						responsivePriority: 13,
 						render: function(data, type, row){
 							var cambio = row.stock_nuevo - row.stock_anterior;
@@ -127,17 +123,14 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "nombre_usuario",
-						className: "none",
 						responsivePriority: 14
 					},
 					{
 						data: "referencia",
-						className: "none",
 						responsivePriority: 15
 					},
 					{
 						data: "notas",
-						className: "none",
 						responsivePriority: 16,
 						render: function(data, type, row){
 							return '<div contenteditable="true" class="celda-notas-movimiento" data-id="'+row.id+'">'+data+'</div>';

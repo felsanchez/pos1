@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Test DataTables Responsive</title>
+
+ 
+
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="vistas/bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+ 
+
+    <!-- DataTables CSS -->
+
+    <link rel="stylesheet" href="vistas/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+
+    <link rel="stylesheet" href="vistas/bower_components/datatables.net-bs/css/responsive.bootstrap.min.css">
+
+ 
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet" href="vistas/bower_components/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+<body>
+
+    <div class="container" style="margin-top: 20px;">
+
+        <h2>Test DataTables Responsive - Historial Stock</h2>
+
+ 
+
+        <p class="alert alert-info">
+
+            <strong>Prueba:</strong> Reduce el ancho del navegador para ver el comportamiento responsive.
+
+            En móvil deben aparecer: ID, Fecha, Producto, Tipo Movimiento. Las demás columnas deben ocultarse y aparecer con un botón +.
+
+        </p>
+
+ 
+
+        <table id="testTable" class="table table-bordered table-striped dt-responsive" width="100%">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Fecha</th>
+
+                    <th>Producto</th>
+
+                    <th>Tipo</th>
+
+                    <th>Tipo Movimiento</th>
+
+                    <th>Cantidad</th>
+
+                    <th>Stock Anterior</th>
+
+                    <th>Stock Nuevo</th>
+
+                    <th>Usuario</th>
+
+                    <th>Referencia</th>
+
+                    <th>Notas</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <!-- Datos de prueba -->
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+ 
+
+    <!-- jQuery -->
+
+    <script src="vistas/bower_components/jquery/dist/jquery.min.js"></script>
+
+ 
+
+    <!-- Bootstrap JS -->
+
+    <script src="vistas/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+ 
+
+    <!-- DataTables -->
+
+    <script src="vistas/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+
+    <script src="vistas/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+
+    <script src="vistas/bower_components/datatables.net-bs/js/dataTables.responsive.min.js"></script>
+
+    <script src="vistas/bower_components/datatables.net-bs/js/responsive.bootstrap.min.js"></script>
+
+ 
+
+    <script>
+
+        $(document).ready(function() {
+
+ 
+
+            // Datos de prueba
+
+            var datosTest = [
+
+                {
+
+                    id: 1,
+
+                    fecha: "2024-01-15 10:30",
+
+                    producto: "Producto Test 1",
+
+                    tipo: "Producto",
+
+                    tipo_movimiento: "Venta",
+
+                    cantidad: -5,
+
+                    stock_anterior: 100,
+
+                    stock_nuevo: 95,
+
+                    usuario: "Admin",
+
+                    referencia: "VTA-001",
+
+                    notas: "Venta normal"
+
+                },
+
+                {
+
+                    id: 2,
+
+                    fecha: "2024-01-15 11:45",
+
+                    producto: "Producto Test 2",
+
+                    tipo: "Variante",
+
+                    tipo_movimiento: "Creación",
+
+                    cantidad: 50,
+
+                    stock_anterior: 0,
+
+                    stock_nuevo: 50,
+
+                    usuario: "Admin",
+
+                    referencia: "CRE-001",
+
+                    notas: "Stock inicial"
+
+                },
+
+                {
+
+                    id: 3,
+
+                    fecha: "2024-01-15 14:20",
+
+                    producto: "Producto Test 3",
+
+                    tipo: "Producto",
+
+                    tipo_movimiento: "Edición Stock",
+
+                    cantidad: 10,
+
+                    stock_anterior: 30,
+
+                    stock_nuevo: 40,
+
+                    usuario: "Admin",
+
+                    referencia: "EDI-001",
+
+                    notas: "Ajuste de inventario"
+
+                }
+
+            ];
+
+ 
+
+            console.log("Inicializando tabla de prueba...");
+
+            console.log("Datos:", datosTest);
+
+ 
+
+            var tabla = $('#testTable').DataTable({
+
+                data: datosTest,
+
+                responsive: true,
+
+ 
+
+                columns: [
+
+                    {
+
+                        data: "id",
+
+                        responsivePriority: 1
+
+                    },
+
+                    {
+
+                        data: "fecha",
+
+                        responsivePriority: 2
+
+                    },
+
+                    {
+
+                        data: "producto",
+
+                        responsivePriority: 3
+
+                    },
+
+                    {
+
+                        data: "tipo",
+
+                        responsivePriority: 10,
+
+                        render: function(data) {
+
+                            if(data == "Producto") {
+
+                                return '<span class="label label-primary">Producto</span>';
+
+                            } else {
+
+                                return '<span class="label label-info">Variante</span>';
+
+                            }
+
+                        }
+
+                    },
+
+                    {
+
+                        data: "tipo_movimiento",
+
+                        responsivePriority: 4,
+
+                        render: function(data) {
+
+                            var badges = {
+
+                                "Venta": '<span class="label label-success">Venta</span>',
+
+                                "Creación": '<span class="label label-primary">Creación</span>',
+
+                                "Edición Stock": '<span class="label label-default">Edición Stock</span>'
+
+                            };
+
+                            return badges[data] || data;
+
+                        }
+
+                    },
+
+                    {
+
+                        data: "cantidad",
+
+                        responsivePriority: 11
+
+                    },
+
+                    {
+
+                        data: "stock_anterior",
+
+                        responsivePriority: 12
+
+                    },
+
+                    {
+
+                        data: "stock_nuevo",
+
+                        responsivePriority: 13
+
+                    },
+
+                    {
+
+                        data: "usuario",
+
+                        responsivePriority: 14
+
+                    },
+
+                    {
+
+                        data: "referencia",
+
+                        responsivePriority: 15
+
+                    },
+
+                    {
+
+                        data: "notas",
+
+                        responsivePriority: 16
+
+                    }
+
+                ],
+
+ 
+
+                language: {
+
+                    "sProcessing": "Procesando...",
+
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+
+                    "sZeroRecords": "No se encontraron resultados",
+
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
+
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0",
+
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+
+                    "sSearch": "Buscar:",
+
+                    "oPaginate": {
+
+                        "sFirst": "Primero",
+
+                        "sLast": "Último",
+
+                        "sNext": "Siguiente",
+
+                        "sPrevious": "Anterior"
+
+                    }
+
+                }
+
+            });
+
+ 
+
+            console.log("Tabla inicializada:", tabla);
+
+            console.log("Responsive habilitado:", tabla.responsive);
+
+        });
+
+    </script>
+
+</body>
+
+</html>

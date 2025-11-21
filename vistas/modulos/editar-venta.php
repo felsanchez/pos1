@@ -141,28 +141,28 @@
 
                             $stockAntiguo = $respuesta["stock"] + $value["cantidad"];
                             
-                            echo '<div class="row" style="padding:5px 15px">
+                            echo '<div class="row col-xs-10" style="padding:5px 15px">
 
                           
-                            <div class="col-xs-5" style="padding-right:0px">
+                            <div class="col-xs-7" style="padding-right:0px">
                               <div class="input-group">
-                               
+                               <span class="input-group-addon"><i class="fa fa-tags"></i></span>
                                  <input type="text" class="form-control nuevaDescripcionProducto" idProducto="'.$value["id"].'" name="agregarProducto" value="'.$value["descripcion"].'" readonly required>                                          
                               </div>
                             </div>
 
 
-                            <div class="col-xs-3">
+                            <div class="col-xs-2">
                                 <div class="input-group">
-                                    
+                                    <span class="input-group-addon"><i class="fa fa-list-ol"></i></span>
                                     <input type="number" class="form-control nuevaCantidadProducto" name="nuevaCantidadProducto" min="1" value="'.$value["cantidad"].'" stock="'.$stockAntiguo.'" nuevoStock="'.$value["stock"].'" readonly>
                                 </div> 
                             </div>
 
 
-                            <div class="col-xs-4 ingresoPrecio" style="padding-left:0px">                                       
+                            <div class="col-xs-3 ingresoPrecio" style="padding-left:0px">                                       
                                 <div class="input-group">
-                                                                           
+                                     <span class="input-group-addon"><i class="fa fa-credit-card"></i></span>                                      
                                     <input type="text" class="form-control nuevoPrecioProducto" precioReal="'.$respuesta["precio_venta"].'" name="nuevoPrecioProducto" value="'.number_format($value["total"], 0, '', '.').'" readonly required>
                                 </div>
                             </div>
@@ -192,7 +192,7 @@
                         ENTRADA IMPUESTOS Y TOTAL
                         ======================================-->
                          
-                          <div class="col-xs-8">
+                          <div class="col-xs-6">
                            
                              <table class="table">                     
 
@@ -208,10 +208,10 @@
                                <tbody>
                                  
                                  <tr>
-                                   <td style="width: 10%">
+                                   <td style="width: 20%">
                                      
                                      <div class="input-group"> 
-                                        <!--<span class="input-group-addon"><i class="fa fa-percent"></i></span> -->                                
+                                        <span class="input-group-addon"><i class="fa fa-percent"></i></span>                            
                                         <input type="number" class="form-control input-lg" min="0" id="nuevoImpuestoVenta" name="nuevoImpuestoVenta" value="<?php echo $porcentajeImpuesto; ?>" readonly>
                                         <input type="hidden" name="nuevoPrecioImpuesto" id="nuevoPrecioImpuesto" value="<?php echo $venta["impuesto"]; ?>" required>
                                         <input type="hidden" name="nuevoPrecioNeto" id="nuevoPrecioNeto" value="<?php echo $venta["neto"]; ?>" required>
@@ -222,7 +222,7 @@
                                    <td style="width: 50%">
                                      
                                      <div class="input-group">  
-                                        <!-- span class="input-group-addon"><i class="ion ion-social-usd"></i></span> -->                             
+                                        <span class="input-group-addon"><i class="ion ion-social-usd"></i></span>                        
                                         <input type="text" class="form-control input-lg" id="nuevoTotalVenta" name="nuevoTotalVenta" total="" value="<?php echo $venta["total"]; ?>" readonly required>
 
                                         <input type="hidden" name="totalVenta" value="<?php echo $venta["total"]; ?>" id="totalVenta">
@@ -253,7 +253,7 @@
 
                         <div class="row">
 
-                          <div class="col-xs-11">
+                          <div class="col-xs-10">
 
                             <div class="form-group">
 
@@ -310,7 +310,7 @@
                         ======================================-->
 
                         <div class="form-group row">                          
-                          <div class="col-xs-11" style="padding-right:0px">
+                          <div class="col-xs-6" style="padding-right:0px">
                             <div class="input-group">
 
                                 <span class="input-group-addon">Método de Pago</span>

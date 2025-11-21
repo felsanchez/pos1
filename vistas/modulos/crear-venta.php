@@ -199,7 +199,7 @@
                         ENTRADA IMPUESTOS Y TOTAL
                         ======================================-->
                          
-                          <div class="col-xs-8 pull-left">
+                          <div class="col-xs-12 pull-left">
                            
                               <table class="table"> 
 
@@ -582,25 +582,16 @@ MODAL AGREGAR CLIENTE
            <input type="hidden" name="vistaOrigen" value="crear-venta">
 
 
-
-
-           <!-- entrada para la fecha naciminiento -->
-            
+           <!-- entrada para la fecha naciminiento -->            
             <!--
-           <div class="form-group">
-          
-            <div class="input-group">
-              
+           <div class="form-group">         
+            <div class="input-group">              
               <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-
               <input type="text" class="form-control input-lg" name="nuevaFechaNacimiento" placeholder="Ingresar fecha de nacimiento" data-inputmask="'alias': 'yyyy/mm/dd'" data-mask required>
-
              </div>
-
            </div>
           -->
-
-          
+         
 
          </div>  
 

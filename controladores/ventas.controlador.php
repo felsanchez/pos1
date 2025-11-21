@@ -1336,8 +1336,12 @@ static public function ctrEliminarVenta(){
 		return ModeloVentas::mdlActualizarNotaVenta("ventas", $datos);
 	}
 
+	//Guardar observaciones
+	static public function ctrActualizarObservacionVenta($datos) {
+		return ModeloVentas::mdlActualizarObservacionVenta("ventas", $datos);
+	}
 
-	
+
 	/*=============================================
 	EDITAR IMAGEN DE VENTA
 	=============================================*/

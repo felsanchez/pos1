@@ -181,9 +181,10 @@ echo "</pre>";
                 <th>Neto</th>
                 <th>Total</th>
                 <th>Notas</th>
+                <th>Observación</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
-              </tr>             
+              </tr>
             </thead>
 
               <tbody>
@@ -254,7 +255,9 @@ echo "</pre>";
                         <td>'.$moneda.' '.number_format($value["total"],2).'</td>
 
                         <td contenteditable="true" class="celda-nota" data-id="'.$value['id'].'">'.$value['notas'].'</td>
-                        
+
+                        <td contenteditable="true" class="celda-observacion" data-id="'.$value['id'].'">'.$value['observacion'].'</td>
+
                          <td>'.$value["fecha"];
 
                             // MUESTRA LOS BTN EN MOVIL
@@ -541,6 +544,29 @@ $(document).on('blur', '.celda-nota', function() {
 });
 </script>
 
+<!--Guardar observaciones-->
+<script>
+$(document).on('blur', '.celda-observacion', function() {
+  const idVenta = $(this).data('id');
+  const nuevaObservacion = $(this).text().trim();
+
+  console.log("Guardando observación:", nuevaObservacion, "para ID:", idVenta);
+  $.ajax({
+    url: "ajax/datatable-ventas.ajax.php",
+    method: "POST",
+    data: {
+      idVentaObservacion: idVenta,
+      nuevaObservacion: nuevaObservacion
+    },
+    success: function(respuesta) {
+      console.log("Respuesta del servidor:", respuesta);
+    },
+    error: function() {
+      alert("Hubo un error al guardar la observación.");
+    }
+  });
+});
+</script>
 
 <!-- Ampliar foto al hacer clic -->
 <script>

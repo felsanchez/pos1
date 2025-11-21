@@ -138,6 +138,20 @@ if (isset($_POST["idVentaNota"])) {
   echo json_encode($respuesta);
 }
 
+//Guardar Observaciones
+if (isset($_POST["idVentaObservacion"])) {
+  require_once "../controladores/ventas.controlador.php";
+  require_once "../modelos/ventas.modelo.php";
+
+  $datos = [
+    "id" => $_POST["idVentaObservacion"],
+    "observacion" => $_POST["nuevaObservacion"]
+  ];
+
+  $respuesta = ControladorVentas::ctrActualizarObservacionVenta($datos);
+  echo json_encode($respuesta);
+}
+
 
 /*=============================================
 EDITAR IMAGEN DE VENTA

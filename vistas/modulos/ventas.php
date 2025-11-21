@@ -322,9 +322,10 @@
                 <th>Neto</th>
                 <th>Total</th>
                 <th>Notas</th>
+                <th>Observación</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
-              </tr>             
+              </tr>
             </thead>
 
               <tbody>
@@ -385,7 +386,9 @@
                         <td>'.$moneda.' '.number_format($value["total"],2).'</td>
 
                         <td>'.$value['notas'].'</td>
-                        
+
+                        <td contenteditable="true" class="celda-observacion" data-id="'.$value['id'].'">'.$value['observacion'].'</td>
+
                        <td>'.$value["fecha"];
 
                             // 1. Botón Eliminar - Solo Administrador
@@ -771,6 +774,29 @@ $(document).on('blur', '.celda-nota', function() {
 </script>
 -->
 
+<!--Guardar observaciones-->
+<script>
+$(document).on('blur', '.celda-observacion', function() {
+  const idVenta = $(this).data('id');
+  const nuevaObservacion = $(this).text().trim();
+
+  console.log("Guardando observación:", nuevaObservacion, "para ID:", idVenta);
+  $.ajax({
+    url: "ajax/datatable-ventas.ajax.php",
+    method: "POST",
+    data: {
+      idVentaObservacion: idVenta,
+      nuevaObservacion: nuevaObservacion
+    },
+    success: function(respuesta) {
+      console.log("Respuesta del servidor:", respuesta);
+    },
+    error: function() {
+      alert("Hubo un error al guardar la observación.");
+    }
+  });
+});
+</script>
 
 <!-- Ampliar foto -->
 <script>

@@ -344,10 +344,25 @@ class ModeloVentas{
 
 
 	static public function mdlActualizarNotaVenta($tabla, $datos) {
-		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET notas = :notas WHERE codigo = :codigo");
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET notas = :notas WHERE id = :id");
 
 		$stmt->bindParam(":notas", $datos["notas"], PDO::PARAM_STR);
-		$stmt->bindParam(":codigo", $datos["codigo"], PDO::PARAM_INT);
+		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
+
+		if ($stmt->execute()) {
+			return "ok";
+		} else {
+			return "error";
+		}
+
+		$stmt = null;
+	}
+
+	static public function mdlActualizarObservacionVenta($tabla, $datos) {
+		$stmt = Conexion::conectar()->prepare("UPDATE $tabla SET observacion = :observacion WHERE id = :id");
+
+		$stmt->bindParam(":observacion", $datos["observacion"], PDO::PARAM_STR);
+		$stmt->bindParam(":id", $datos["id"], PDO::PARAM_INT);
 
 		if ($stmt->execute()) {
 			return "ok";

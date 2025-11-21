@@ -193,8 +193,7 @@ class ModeloVentas{
 				$stmt->bindParam(":fechaFinal", $fechaFinal, PDO::PARAM_STR);
 				$stmt->execute();
 			}
-			return $stmt->fetchAll();
-			
+			return $stmt->fetchAll();			
 	}	
 
 
@@ -213,58 +212,90 @@ class ModeloVentas{
 		$stmt -> close();
 
 		$stmt = null;
-
 	}
 
 	//Diferenciar entre venta y orden
 	static public function mdlRangoFechasVentasPorEstado($tabla, $fechaInicial, $fechaFinal, $estado){
 
 		if($fechaInicial == null){
-
+	
 			$stmt = Conexion::conectar()->prepare("SELECT v.*,
+
 													c.nombre AS nombre_cliente,
+
 													u.nombre AS nombre_vendedor
+
 													FROM $tabla v
+
 													LEFT JOIN clientes c ON v.id_cliente = c.id
+
 													LEFT JOIN usuarios u ON v.id_vendedor = u.id
+
 													WHERE v.estado = :estado
-													ORDER BY v.id DESC");
-			$stmt->bindParam(":estado", $estado, PDO::PARAM_STR);
-			$stmt->execute();
-			return $stmt->fetchAll();
 
-		}else if($fechaInicial == $fechaFinal){
+													ORDER BY v.id DESC");
+
+			$stmt->bindParam(":estado", $estado, PDO::PARAM_STR);
+
+			$stmt->execute();
+
+			return $stmt->fetchAll(); 
+
+		}else if($fechaInicial == $fechaFinal){ 
 
 			$stmt = Conexion::conectar()->prepare("SELECT v.*,
+
 													c.nombre AS nombre_cliente,
+
 													u.nombre AS nombre_vendedor
+
 													FROM $tabla v
+
 													LEFT JOIN clientes c ON v.id_cliente = c.id
+
 													LEFT JOIN usuarios u ON v.id_vendedor = u.id
+
 													WHERE DATE(v.fecha) = :fecha AND v.estado = :estado
-													ORDER BY v.id DESC");
-			$stmt->bindParam(":fecha", $fechaFinal, PDO::PARAM_STR);
-			$stmt->bindParam(":estado", $estado, PDO::PARAM_STR);
-			$stmt->execute();
-			return $stmt->fetchAll();
 
-		}else{
+													ORDER BY v.id DESC");
+
+			$stmt->bindParam(":fecha", $fechaFinal, PDO::PARAM_STR);
+
+			$stmt->bindParam(":estado", $estado, PDO::PARAM_STR);
+
+			$stmt->execute();
+
+			return $stmt->fetchAll(); 
+
+		}else{ 
 
 			$stmt = Conexion::conectar()->prepare("SELECT v.*,
+
 													c.nombre AS nombre_cliente,
+
 													u.nombre AS nombre_vendedor
+
 													FROM $tabla v
+
 													LEFT JOIN clientes c ON v.id_cliente = c.id
+
 													LEFT JOIN usuarios u ON v.id_vendedor = u.id
+
 													WHERE v.fecha BETWEEN :fechaInicial AND :fechaFinal AND v.estado = :estado
+
 													ORDER BY v.id DESC");
+
 			$stmt->bindParam(":fechaInicial", $fechaInicial, PDO::PARAM_STR);
+
 			$stmt->bindParam(":fechaFinal", $fechaFinal, PDO::PARAM_STR);
+
 			$stmt->bindParam(":estado", $estado, PDO::PARAM_STR);
+
 			$stmt->execute();
+
 			return $stmt->fetchAll();
 		}
-
+	
 		$stmt = null;
 	}
 	

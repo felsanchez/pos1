@@ -119,17 +119,17 @@ if(isset($_POST["accion"]) && $_POST["accion"] == "obtenerPorCategoria"){
 ACTUALIZAR IMAGEN DE COMPROBANTE DESDE LA TABLA
 =============================================*/
 
-if(isset($_FILES["nuevaImagenComprobante"])){
+if(isset($_FILES["nuevaImagenComprobante"])){ 
 
-	require_once "../modelos/gastos.modelo.php";
+	require_once "../modelos/gastos.modelo.php"; 
 
 	$idGasto = $_POST["idGastoImagen"];
 	$concepto = $_POST["conceptoGasto"];
 
-	list($ancho, $alto) = getimagesize($_FILES["nuevaImagenComprobante"]["tmp_name"]);
+	list($ancho, $alto) = getimagesize($_FILES["nuevaImagenComprobante"]["tmp_name"]); 
 
 	$nuevoAncho = 800;
-	$nuevoAlto = 600;
+	$nuevoAlto = 600; 
 
 	// Crear directorio si no existe
 	$directorio = "vistas/img/gastos/comprobantes";
@@ -137,33 +137,31 @@ if(isset($_FILES["nuevaImagenComprobante"])){
 		mkdir("../".$directorio, 0755, true);
 	}
 
-	// Procesar según el tipo de imagen
+ 	// Procesar según el tipo de imagen
 	$ruta = "";
 
-	if($_FILES["nuevaImagenComprobante"]["type"] == "image/jpeg"){
+	if($_FILES["nuevaImagenComprobante"]["type"] == "image/jpeg"){ 
 
 		$aleatorio = mt_rand(100, 999);
-		$ruta = $directorio."/gasto_".$idGasto."_".$aleatorio.".jpeg";
+		$ruta = $directorio."/gasto_".$idGasto."_".$aleatorio.".jpeg"; 
 
 		$origen = imagecreatefromjpeg($_FILES["nuevaImagenComprobante"]["tmp_name"]);
 		$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
 
 		imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-		imagejpeg($destino, "../".$ruta);
+		imagejpeg($destino, "../".$ruta); 
+	} 
 
-	}
-
-	if($_FILES["nuevaImagenComprobante"]["type"] == "image/png"){
+	if($_FILES["nuevaImagenComprobante"]["type"] == "image/png"){ 
 
 		$aleatorio = mt_rand(100, 999);
-		$ruta = $directorio."/gasto_".$idGasto."_".$aleatorio.".png";
+		$ruta = $directorio."/gasto_".$idGasto."_".$aleatorio.".png"; 
 
 		$origen = imagecreatefrompng($_FILES["nuevaImagenComprobante"]["tmp_name"]);
 		$destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
 
-		imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+ 		imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
 		imagepng($destino, "../".$ruta);
-
 	}
 
 	// Obtener la imagen actual para eliminarla
@@ -176,15 +174,14 @@ if(isset($_FILES["nuevaImagenComprobante"])){
 		unlink("../".$gastoActual["imagen_comprobante"]);
 	}
 
-	// Actualizar en la base de datos
+ 	// Actualizar en la base de datos
 	$tabla = "gastos";
 	$datos = array(
 		"id" => $idGasto,
 		"imagen_comprobante" => $ruta
 	);
 
-	$respuesta = ModeloGastos::mdlActualizarImagenGasto($tabla, $datos);
+ 	$respuesta = ModeloGastos::mdlActualizarImagenGasto($tabla, $datos); 
 
 	echo json_encode($respuesta);
-
 }

@@ -10,10 +10,11 @@ Data Table
 =============================================*/
 
 // Inicializar todas las tablas con clase .tablas EXCEPTO .tablas1, .tablas2 y #example
-// (esas tienen inicialización personalizada)
-$(".tablas").not('.tablas1, .tablas2, #example').DataTable({
 
-	"language": {
+// (esas tienen inicialización personalizada)
+$(".tablas").not('.tablas1, .tablas2, #example').DataTable({ 
+
+	"language": { 
 
 		"sProcessing":     "Procesando...",
 		"sLengthMenu":     "Mostrar _MENU_ registros",
@@ -33,17 +34,19 @@ $(".tablas").not('.tablas1, .tablas2, #example').DataTable({
 		"sNext":           "Siguiente",
 		"sPrevious":       "Anterior"
 			},
+
 		"oAria":  {
 			"sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
 			"sSortDescending": ": Activar para ordenar la columna de manera descendente"
 		}
-
 	}
 
-});
+ });
+ 
 
 // Inicialización específica para tabla de ventas (#example)
 // Oculta la tabla hasta que esté completamente procesada para evitar el efecto de "acomodamiento"
+
 if($('#example').length > 0){
 	$('#example').DataTable({
 		"language": {
@@ -70,13 +73,16 @@ if($('#example').length > 0){
 				"sSortDescending": ": Activar para ordenar la columna de manera descendente"
 			}
 		},
+
 		"preDrawCallback": function() {
 			// Ocultar tabla antes de dibujarla por primera vez
 			if (!$(this).hasClass('datatable-ready')) {
 				$(this).css('visibility', 'hidden');
 			}
 		},
+
 		"initComplete": function() {
+
 			// Mostrar tabla solo cuando esté completamente inicializada
 			$(this).addClass('datatable-ready').css('visibility', 'visible');
 		}

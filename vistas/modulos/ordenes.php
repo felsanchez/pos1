@@ -19,33 +19,148 @@
 .d-none {
   display: none !important;
 }
-</style>
 
+/* Cards para móvil - Órdenes */
+.cards-ordenes {
+  display: none;
+}
 
-<!-- Ocultar todas las columnas por defecto -->
-<style> 
+.card-orden {
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+  padding: 10px;
+  position: relative;
+  border-left: 4px solid #dd4b39;
+}
+
+.card-orden-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.card-orden-codigo {
+  font-size: 14px;
+  font-weight: bold;
+  color: #dd4b39;
+}
+
+.card-orden-acciones .btn-group {
+  display: flex;
+  gap: 3px;
+}
+
+.card-orden-info-principal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 10px;
+}
+
+.card-orden-cliente {
+  font-size: 15px;
+  font-weight: bold;
+  color: #333;
+  flex: 1;
+  margin: 0;
+}
+
+.card-orden-total {
+  font-size: 16px;
+  font-weight: bold;
+  color: #dd4b39;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.card-orden-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+.card-orden-info-fila {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card-orden-info-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  flex: 1;
+}
+
+.card-orden-info-item i {
+  margin-right: 5px;
+  width: 15px;
+  text-align: center;
+}
+
+.card-orden-notas {
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+  border-left: 2px solid #3c8dbc;
+}
+
+.card-orden-observacion {
+  background: #fff9e6;
+  padding: 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+  border-left: 2px solid #f39c12;
+  cursor: pointer;
+}
+
+.card-orden-observacion:hover {
+  background: #fff3d9;
+}
+
+.card-orden-imagen-icono {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #3c8dbc;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.card-orden-imagen-icono:hover {
+  background: #2e6da4;
+}
+
+/* Responsive */
 @media (max-width: 767px) {
-  .tablas td,
-  .tablas th {
-      display: none;
+  .tabla-ordenes {
+    display: none !important;
   }
-  
-  /* Mostrar solo las columnas en MOVIL*/
-  .tablas td:nth-child(2),
-  .tablas td:nth-child(3),
-  .tablas td:nth-child(5),
-  .tablas td:nth-child(6),
-  .tablas td:nth-child(8),
-  .tablas td:nth-child(9),
-  .tablas td:nth-child(10),
-  .tablas th:nth-child(2),
-  .tablas th:nth-child(3),
-  .tablas th:nth-child(5),
-  .tablas th:nth-child(6),
-  .tablas th:nth-child(8),
-  .tablas th:nth-child(9),
-  .tablas th:nth-child(10) {
-      display: table-cell;
+  .cards-ordenes {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .tabla-ordenes {
+    display: block !important;
+  }
+  .cards-ordenes {
+    display: none !important;
   }
 }
 </style>
@@ -166,9 +281,10 @@ echo "</pre>";
    
         </div>
 
-        <div class="box-body table-responsive">
+        <div class="box-body">
 
-          <table id="example" class="table table-bordered table-striped tablas display nowrap">
+          <div class="tabla-ordenes table-responsive">
+            <table id="example" class="table table-bordered table-striped tablas display nowrap">
               
             <thead>
               <tr>
@@ -310,9 +426,116 @@ echo "</pre>";
 
           </table>
 
+          </div>
+
+          <!-- Cards para móvil -->
+          <div class="cards-ordenes">
+
+            <?php
+            // Reutilizar la misma consulta de la tabla para evitar duplicar carga
+            // $respuesta ya contiene las órdenes, no hacer nueva consulta
+
+            foreach ($respuesta as $key => $value) {
+
+              // Usar nombres que ya vienen del JOIN en la consulta SQL
+              $nombreCliente = !empty($value["nombre_cliente"]) ? $value["nombre_cliente"] : "Cliente no encontrado";
+              $nombreVendedor = !empty($value["nombre_vendedor"]) ? $value["nombre_vendedor"] : "Vendedor no encontrado";
+
+              // Imagen
+              $imagenOrden = !empty($value["imagen"]) ? $value["imagen"] : "vistas/img/ventas/default/sinventa.png";
+
+              echo '<div class="card-orden">
+
+                      <div class="card-orden-header">
+                        <div class="card-orden-codigo">
+                          '.$formatoCodigoVenta.$value["codigo"].'
+                        </div>
+                        <div class="card-orden-acciones">
+                          <div class="btn-group">
+                            <button class="btn btn-info btn-xs btnImprimirFactura" codigoVenta="'.$value["codigo"].'">
+                              <i class="fa fa-print"></i>
+                            </button>
+                            <a href="index.php?ruta=editar-orden&idVenta='.$value["id"].'" class="btn btn-warning btn-xs">
+                              <i class="fa fa-line-chart"></i>
+                            </a>';
+
+              if ($_SESSION["perfil"] == "Administrador") {
+                echo '<button class="btn btn-danger btn-xs btnEliminarVenta" idVenta="'.$value["id"].'">
+                        <i class="fa fa-times"></i>
+                      </button>';
+              }
+
+              echo '      </div>
+                        </div>
+                      </div>
+
+                      <div class="card-orden-info-principal">
+                        <div class="card-orden-cliente">
+                          <span class="btnVerClienteDesdeVenta"
+                                data-toggle="modal"
+                                data-target="#modalEditarCliente"
+                                idCliente="'.$value["id_cliente"].'"
+                                style="cursor: pointer; color: #dd4b39; text-decoration: underline;">
+                            '.$nombreCliente.'
+                          </span>
+                        </div>
+                        <div class="card-orden-total">
+                          '.$moneda.' '.number_format($value["total"],2).'
+                        </div>
+                      </div>
+
+                      <div class="card-orden-info">
+                        <div class="card-orden-info-fila">
+                          <div class="card-orden-info-item">
+                            <i class="fa fa-calendar"></i> '.$value["fecha"].'
+                          </div>
+                          <div class="card-orden-info-item">
+                            <i class="fa fa-credit-card"></i> '.$value["metodo_pago"].'
+                          </div>
+                        </div>
+                        <div class="card-orden-info-fila">
+                          <div class="card-orden-info-item">
+                            <i class="fa fa-user"></i> '.$nombreVendedor.'
+                          </div>
+                          <div class="card-orden-info-item">
+                            <i class="fa fa-money"></i> '.$moneda.' '.number_format($value["neto"],2).'
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="card-orden-imagen-icono img-ampliar-orden"
+                           data-imagen="'.$imagenOrden.'"
+                           data-idventa="'.$value["id"].'">
+                        <i class="fa fa-image"></i> Ver comprobante
+                      </div>';
+
+              // Notas
+              if(!empty($value["notas"])){
+                echo '<div class="card-orden-notas">
+                        <i class="fa fa-sticky-note-o"></i> '.$value["notas"].'
+                      </div>';
+              }
+
+              // Observación editable
+              if(!empty($value["observacion"])){
+                echo '<div class="card-orden-observacion celda-observacion" data-id="'.$value['id'].'" contenteditable="true">
+                        <i class="fa fa-pencil"></i> '.$value["observacion"].'
+                      </div>';
+              } else {
+                echo '<div class="card-orden-observacion celda-observacion" data-id="'.$value['id'].'" contenteditable="true">
+                        <i class="fa fa-pencil"></i> <span style="color: #999;">Agregar observación...</span>
+                      </div>';
+              }
+
+              echo '</div>';
+            }
+            ?>
+
+          </div>
+
           <?php
 
-            $eliminarVenta = new ControladorVentas(); 
+            $eliminarVenta = new ControladorVentas();
             $eliminarVenta -> ctrEliminarVenta();
 
           ?>

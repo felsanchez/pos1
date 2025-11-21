@@ -181,7 +181,7 @@ echo "</pre>";
                 <th>Neto</th>
                 <th>Total</th>
                 <th>Notas</th>
-                <th>Observación</th>
+                <th><i class="fa fa-pencil"></i> Observación</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
               </tr>

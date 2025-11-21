@@ -180,7 +180,9 @@ echo "</pre>";
                 <th>Forma de pago</th>
                 <th>Neto</th>
                 <th>Total</th>
-                <th>Notas</th>
+                <!--<th>Notas</th>-->
+                <th>Agente IA</th>
+                 <th><i class="fa fa-pencil"></i> Observación</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
               </tr>             
@@ -253,7 +255,9 @@ echo "</pre>";
 
                         <td>'.$moneda.' '.number_format($value["total"],2).'</td>
 
-                        <td contenteditable="true" class="celda-nota" data-id="'.$value['id'].'">'.$value['notas'].'</td>
+                        <td class="celda-nota" data-id="'.$value['id'].'">'.$value['notas'].'</td>
+
+                        <td contenteditable="true" class="celda-observacion" data-id="'.$value['id'].'">'.$value['observacion'].'</td>
                         
                          <td>'.$value["fecha"];
 
@@ -536,6 +540,30 @@ $(document).on('blur', '.celda-nota', function() {
     },
     error: function() {
       alert("Hubo un error al guardar la nota.");
+    }
+  });
+});
+</script>
+
+
+<!--Guardar observaciones-->
+<script>
+$(document).on('blur', '.celda-observacion', function() {
+  const idVenta = $(this).data('id');
+  const nuevaObservacion = $(this).text().trim(); 
+  console.log("Guardando observación:", nuevaObservacion, "para ID:", idVenta);
+  $.ajax({
+    url: "ajax/datatable-ventas.ajax.php",
+    method: "POST",
+    data: {
+      idVentaObservacion: idVenta,
+      nuevaObservacion: nuevaObservacion
+    },
+    success: function(respuesta) {
+      console.log("Respuesta del servidor:", respuesta);
+    },
+    error: function() {
+      alert("Hubo un error al guardar la observación.");
     }
   });
 });

@@ -232,6 +232,24 @@ class ControladorVentas{
                				"recibe" => isset($_POST["recibe"]) ? $_POST["recibe"] : null,
 							"extra" => null);
 
+			// Agregar descuento a las notas si existe
+			if(!empty($_POST["tipoDescuento"]) && !empty($_POST["valorDescuento"])){
+				$textoDescuento = "";
+				if($_POST["tipoDescuento"] == "porcentaje"){
+					$textoDescuento = "Descuento: " . $_POST["valorDescuento"] . "%";
+				} else if($_POST["tipoDescuento"] == "fijo"){
+					$textoDescuento = "Descuento: $" . number_format($_POST["valorDescuento"], 0, ',', '.');
+				}
+
+				if(!empty($textoDescuento)){
+					if(!empty($datos["notas"])){
+						$datos["notas"] = $datos["notas"] . " - " . $textoDescuento;
+					} else {
+						$datos["notas"] = $textoDescuento;
+					}
+				}
+			}
+
 			$respuesta = ModeloVentas::mdlIngresarVenta($tabla, $datos);
 
 			if ($respuesta == "ok") {
@@ -679,7 +697,7 @@ static public function ctrEditarVenta(){
 			$origenTexto = "Desde orden";
 			if(!empty($traerVenta["extra"]) && strpos($traerVenta["extra"], 'n8n') !== false){
 				$origenTexto = "Desde Agente IA";
-			} 
+			}
 
 			if(!empty($notasFinales)){
 				$notasFinales = $notasFinales . " | " . $origenTexto;
@@ -687,7 +705,35 @@ static public function ctrEditarVenta(){
 			} else {
 				$notasFinales = $origenTexto;
 			}
-		} 
+		}
+
+		// Agregar descuento a las notas si existe (para editar-orden.php)
+		if(!empty($_POST["tipoDescuento"]) && !empty($_POST["valorDescuento"])){
+			$textoDescuento = "";
+			if($_POST["tipoDescuento"] == "porcentaje"){
+				$textoDescuento = "Descuento: " . $_POST["valorDescuento"] . "%";
+			} else if($_POST["tipoDescuento"] == "fijo"){
+				$textoDescuento = "Descuento: $" . number_format($_POST["valorDescuento"], 0, ',', '.');
+			}
+
+			if(!empty($textoDescuento)){
+				if(!empty($notasFinales)){
+					$notasFinales = $notasFinales . " - " . $textoDescuento;
+				} else {
+					$notasFinales = $textoDescuento;
+				}
+			}
+		}
+
+		// Agregar campo "recibe" a las notas si tiene contenido
+		if(!empty($_POST["recibe"])){
+			$textoRecibe = "Recibe: " . $_POST["recibe"];
+			if(!empty($notasFinales)){
+				$notasFinales = $notasFinales . " - " . $textoRecibe;
+			} else {
+				$notasFinales = $textoRecibe;
+			}
+		}
 
 		$datos = array(
 
@@ -703,6 +749,9 @@ static public function ctrEditarVenta(){
 			"estado" => $_POST["estado"],
 			"fecha" => $fechaHoraActual,
 			"metodo_pago"=>$_POST["listaMetodoPago"],
+			"tipo_descuento" => isset($_POST["tipoDescuento"]) ? $_POST["tipoDescuento"] : "",
+			"valor_descuento" => isset($_POST["valorDescuento"]) ? $_POST["valorDescuento"] : 0,
+			"monto_descuento" => isset($_POST["montoDescuento"]) ? $_POST["montoDescuento"] : 0,
         	"recibe" => isset($_POST["recibe"]) ? $_POST["recibe"] : null,
 			"extra" => $traerVenta["extra"]
     	);
@@ -1287,6 +1336,11 @@ static public function ctrEliminarVenta(){
 		return ModeloVentas::mdlActualizarNotaVenta("ventas", $datos);
 	}
 
+
+	//Guardar observaciones
+	static public function ctrActualizarObservacionVenta($datos) {
+		return ModeloVentas::mdlActualizarObservacionVenta("ventas", $datos);
+	}
 
 	
 	/*=============================================

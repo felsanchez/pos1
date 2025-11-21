@@ -1,4 +1,63 @@
 
+
+<style>
+/* Responsive para móvil */
+@media (max-width: 767px) {
+  /* Campos de ancho completo */
+  .formularioVenta .form-group .input-group.col-xs-12,
+  .formularioVenta .form-group .col-xs-6 {
+    width: 100% !important;
+    max-width: 100%;
+    padding: 0 !important;
+  }
+
+  /* Productos - diseño vertical en móvil */
+  .nuevoProducto .row.col-xs-10 {
+    width: 100% !important;
+    margin: 0;
+    padding: 5px 15px;
+  }
+
+  .nuevoProducto .row .col-xs-7,
+  .nuevoProducto .row .col-xs-2,
+  .nuevoProducto .row .col-xs-3 {
+    width: 100% !important;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .nuevoProducto .row .col-xs-7 {
+    margin-bottom: 5px;
+  }
+
+  /* Tabla de impuesto y total - diseño vertical */
+  .table-responsive {
+    overflow-x: auto;
+  }
+
+  table thead th,
+  table tbody td {
+    font-size: 12px;
+    padding: 5px !important;
+  }
+
+  table tbody td .input-group {
+    min-width: 120px;
+  }
+
+  /* Descuento - ancho completo */
+  .col-xs-10 {
+    width: 100% !important;
+  }
+
+  /* Input-group en móvil */
+  .input-group-addon {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+</style>
+
 <div class="content-wrapper">
     <section class="content-header">
 
@@ -68,16 +127,16 @@
 
                       <div class="form-group">
 
-                        <div class="input-group col-xs-9">
+                        <div class="input-group col-xs-12">
 
-                          <span class="input-group-addon">Usuario</span>                          
+                          <span class="input-group-addon">Usuario</span>
                           <input type="text" class="form-control" id="nuevoVendedor" value="<?php echo $vendedor["nombre"]; ?>" readonly>
                           <span class="input-group-addon"><i class="fa fa-user"></i></span>
 
                           <input type="hidden" name="idVendedor" value="<?php echo $vendedor["id"]; ?>">
-                          
+
                         </div>
-                        
+
                       </div>
 
                       <!--=====================================
@@ -86,14 +145,14 @@
 
                       <div class="form-group">
 
-                        <div class="input-group col-xs-9">
+                        <div class="input-group col-xs-12">
 
                           <span class="input-group-addon">Código</span>
                           <input type="text" class="form-control" id="nuevaVenta" name="editarVenta" value="<?php echo $venta["codigo"]; ?>" readonly>
                           <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                          
+
                         </div>
-                        
+
                       </div>
 
                       <!--=====================================
@@ -106,12 +165,12 @@
                         ?>
                       
                     <div class="form-group">
-                    <div class="input-group col-xs-9">
+                    <div class="input-group col-xs-12">
 
                         <span class="input-group-addon">Cliente</span>
                         <input type="text" class="form-control" value="<?php echo $cliente["nombre"]; ?>" readonly>
                         <span class="input-group-addon"><i class="fa fa-users"></i></span>
-                        
+
                         <!-- Campo oculto con el ID del cliente -->
                         <input type="hidden" name="seleccionarCliente" value="<?php echo $cliente["id"]; ?>">
                         <br>
@@ -192,8 +251,9 @@
                         ENTRADA IMPUESTOS Y TOTAL
                         ======================================-->
                          
-                          <div class="col-xs-6">
-                           
+                          <div class="col-xs-12 col-sm-6">
+
+                             <div class="table-responsive">
                              <table class="table">                     
 
                                <thead>
@@ -236,7 +296,7 @@
                                </tbody>
 
                              </table>
-
+                             </div><!-- /table-responsive -->
 
                            </div>
                        
@@ -559,4 +619,3 @@ MODAL AGREGAR CLIENTE
   </div>
 
 </div>
-

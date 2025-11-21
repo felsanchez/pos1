@@ -117,10 +117,10 @@
                               echo '<input type="date" class="form-control" id="nuevaVenta" name="nuevaVenta" value="'.$fecha.'">';
                               */
 
-                            // Obtener el último consecutivo y calcular el siguiente
+                            // Obtener el siguiente consecutivo
 
-                            $ultimoConsecutivo = ModeloVentas::mdlObtenerUltimoConsecutivo("ventas");
-                            $siguienteNumero = $ultimoConsecutivo + 1;
+                            $siguienteNumero = ModeloVentas::mdlObtenerSiguienteConsecutivo("ventas");
+                            
                           ?>
 
                           <!-- Mostrar el codigo en el campo de texto -->

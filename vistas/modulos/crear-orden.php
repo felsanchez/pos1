@@ -117,9 +117,11 @@
                             }
                             */
 
-                             // Obtener el último consecutivo y calcular el siguiente
-                            $ultimoConsecutivo = ModeloVentas::mdlObtenerUltimoConsecutivo("ventas");
-                            $siguienteNumero = $ultimoConsecutivo + 1;
+                             // Obtener el siguiente consecutivo
+
+                            $siguienteNumero = ModeloVentas::mdlObtenerSiguienteConsecutivo("ventas");
+
+
                           ?> 
 
                           <!-- Mostrar el codigo en el campo de texto -->
@@ -208,7 +210,7 @@
                         ENTRADA IMPUESTOS Y TOTAL
                         ======================================-->
                          
-                          <div class="col-xs-8 pull-left">
+                          <div class="col-xs-12 pull-left">
                            
                              <table class="table"> 
 

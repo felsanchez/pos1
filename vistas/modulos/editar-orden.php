@@ -135,16 +135,14 @@
                        <!--=====================================
                       ENTRADA notas
                       ======================================-->
-
+                    <!--
                       <div class="form-group">
                         <div class="input-group">
                           <span class="input-group-addon"><i class="fa fa-sticky-note"></i></span>
                           <textarea class="form-control input-lg" name="notas" placeholder="Sin notas" readonly><?php echo $venta["notas"]; ?></textarea>
-
                         </div>
                       </div>
-
-
+                      -->
 
                       <!--=====================================
                       ENTRADA DEL CLIENTE

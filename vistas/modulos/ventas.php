@@ -322,6 +322,7 @@
                 <th>Neto</th>
                 <th>Total</th>
                 <th>Notas</th>
+                 <th><i class="fa fa-pencil"></i> Observación</th>
                 <th>Fecha</th>
                 <th>Acciones</th>
               </tr>             
@@ -385,6 +386,8 @@
                         <td>'.$moneda.' '.number_format($value["total"],2).'</td>
 
                         <td>'.$value['notas'].'</td>
+
+                        <td contenteditable="true" class="celda-observacion" data-id="'.$value['id'].'">'.$value['observacion'].'</td>
                         
                        <td>'.$value["fecha"];
 
@@ -744,32 +747,28 @@ $('#daterange-btn').daterangepicker(
 );
 </script>
 
-<!--Guarddar notas - DESACTIVADO: Notas ya no son editables-->
-<!--
+<!--Guardar observaciones-->
 <script>
-$(document).on('blur', '.celda-nota', function() {
+$(document).on('blur', '.celda-observacion', function() {
   const idVenta = $(this).data('id');
-  const nuevaNota = $(this).text().trim();
-
-  console.log("Guardando nota:", nuevaNota, "para ID:", idVenta); // <== prueba
-
+  const nuevaObservacion = $(this).text().trim();
+  console.log("Guardando observación:", nuevaObservacion, "para ID:", idVenta);
   $.ajax({
     url: "ajax/datatable-ventas.ajax.php",
     method: "POST",
     data: {
-      idVentaNota: idVenta,
-      nuevaNota: nuevaNota
+      idVentaObservacion: idVenta,
+      nuevaObservacion: nuevaObservacion
     },
     success: function(respuesta) {
       console.log("Respuesta del servidor:", respuesta);
     },
     error: function() {
-      alert("Hubo un error al guardar la nota.");
+      alert("Hubo un error al guardar la observación.");
     }
   });
 });
 </script>
--->
 
 
 <!-- Ampliar foto -->

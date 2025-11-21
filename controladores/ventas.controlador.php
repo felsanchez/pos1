@@ -232,6 +232,24 @@ class ControladorVentas{
                				"recibe" => isset($_POST["recibe"]) ? $_POST["recibe"] : null,
 							"extra" => null);
 
+			// Agregar descuento a las notas si existe
+			if(!empty($_POST["tipoDescuento"]) && !empty($_POST["valorDescuento"])){
+				$textoDescuento = "";
+				if($_POST["tipoDescuento"] == "porcentaje"){
+					$textoDescuento = "Descuento: " . $_POST["valorDescuento"] . "%";
+				} else if($_POST["tipoDescuento"] == "valor"){
+					$textoDescuento = "Descuento: $" . number_format($_POST["valorDescuento"], 0, ',', '.');
+				}
+
+				if(!empty($textoDescuento)){
+					if(!empty($datos["notas"])){
+						$datos["notas"] = $datos["notas"] . " - " . $textoDescuento;
+					} else {
+						$datos["notas"] = $textoDescuento;
+					}
+				}
+			}
+
 			$respuesta = ModeloVentas::mdlIngresarVenta($tabla, $datos);
 
 			if ($respuesta == "ok") {
@@ -679,7 +697,7 @@ static public function ctrEditarVenta(){
 			$origenTexto = "Desde orden";
 			if(!empty($traerVenta["extra"]) && strpos($traerVenta["extra"], 'n8n') !== false){
 				$origenTexto = "Desde Agente IA";
-			} 
+			}
 
 			if(!empty($notasFinales)){
 				$notasFinales = $notasFinales . " | " . $origenTexto;
@@ -687,7 +705,25 @@ static public function ctrEditarVenta(){
 			} else {
 				$notasFinales = $origenTexto;
 			}
-		} 
+		}
+
+		// Agregar descuento a las notas si existe (para editar-orden.php)
+		if(!empty($_POST["tipoDescuento"]) && !empty($_POST["valorDescuento"])){
+			$textoDescuento = "";
+			if($_POST["tipoDescuento"] == "porcentaje"){
+				$textoDescuento = "Descuento: " . $_POST["valorDescuento"] . "%";
+			} else if($_POST["tipoDescuento"] == "valor"){
+				$textoDescuento = "Descuento: $" . number_format($_POST["valorDescuento"], 0, ',', '.');
+			}
+
+			if(!empty($textoDescuento)){
+				if(!empty($notasFinales)){
+					$notasFinales = $notasFinales . " - " . $textoDescuento;
+				} else {
+					$notasFinales = $textoDescuento;
+				}
+			}
+		}
 
 		$datos = array(
 

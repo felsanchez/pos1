@@ -31,24 +31,16 @@ function cargarTablaMovimientos(){
 			tablaMovimientos = $(".tablaHistorialStock").DataTable({
 
 				data: movimientos,
-
-				responsive: {
-					details: {
-						display: $.fn.dataTable.Responsive.display.childRowImmediate,
-						type: ''
-					}
-				},
-
-				autoWidth: false,
+				responsive: true,
 
 				columns: [
 					{
 						data: "id",
-						className: "all"
+						responsivePriority: 1
 					},
 					{
 						data: "fecha",
-						className: "all",
+						responsivePriority: 2,
 						render: function(data){
 							var fecha = new Date(data);
 							return fecha.toLocaleString('es-ES', {
@@ -62,11 +54,11 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "nombre_producto",
-						className: "all"
+						responsivePriority: 3
 					},
 					{
 						data: "tipo_producto",
-						className: "none",
+						responsivePriority: 10,
 						render: function(data){
 							if(data == "producto"){
 								return '<span class="label label-primary">Producto</span>';
@@ -77,7 +69,7 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "tipo_movimiento",
-						className: "all",
+						responsivePriority: 4,
 						render: function(data){
 							var badges = {
 								"venta": '<span class="label label-success">Venta</span>',
@@ -93,7 +85,7 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "cantidad",
-						className: "none",
+						responsivePriority: 11,
 						render: function(data){
 							if(data > 0){
 								return '<span class="text-green"><i class="fa fa-arrow-up"></i> +'+data+'</span>';
@@ -104,11 +96,11 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "stock_anterior",
-						className: "none"
+						responsivePriority: 12
 					},
 					{
 						data: "stock_nuevo",
-						className: "none",
+						responsivePriority: 13,
 						render: function(data, type, row){
 							var cambio = row.stock_nuevo - row.stock_anterior;
 							if(cambio > 0){
@@ -122,15 +114,15 @@ function cargarTablaMovimientos(){
 					},
 					{
 						data: "nombre_usuario",
-						className: "none"
+						responsivePriority: 14
 					},
 					{
 						data: "referencia",
-						className: "none"
+						responsivePriority: 15
 					},
 					{
 						data: "notas",
-						className: "none",
+						responsivePriority: 16,
 						render: function(data, type, row){
 							return '<div contenteditable="true" class="celda-notas-movimiento" data-id="'+row.id+'">'+data+'</div>';
 						}

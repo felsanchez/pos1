@@ -739,6 +739,9 @@ static public function ctrEditarVenta(){
 			"estado" => $_POST["estado"],
 			"fecha" => $fechaHoraActual,
 			"metodo_pago"=>$_POST["listaMetodoPago"],
+			"tipo_descuento" => isset($_POST["tipoDescuento"]) ? $_POST["tipoDescuento"] : "",
+			"valor_descuento" => isset($_POST["valorDescuento"]) ? $_POST["valorDescuento"] : 0,
+			"monto_descuento" => isset($_POST["montoDescuento"]) ? $_POST["montoDescuento"] : 0,
         	"recibe" => isset($_POST["recibe"]) ? $_POST["recibe"] : null,
 			"extra" => $traerVenta["extra"]
     	);

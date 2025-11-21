@@ -131,11 +131,7 @@ function cargarTablaMovimientos(){
 					}
 				},
 
-				"responsive": {
-					"details": {
-						"type": "column"
-					}
-				},
+				"responsive": true,
 
 				"columnDefs": [
 					{ "responsivePriority": 1, "targets": 0 },  // id - siempre visible

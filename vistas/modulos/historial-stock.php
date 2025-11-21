@@ -200,7 +200,7 @@
 
       <div class="box-body">
         
-        <table class="table table-bordered table-striped dt-responsive tablaHistorialStock" width="100%">
+        <table class="table table-bordered table-striped tablaHistorialStock" width="100%">
           
           <thead>
             

@@ -1,4 +1,26 @@
 
+<style>
+/* Centrar campos del formulario */
+.formularioVenta .form-group .input-group {
+  margin: 0 auto;
+  float: none;
+}
+
+/* Responsive para inputs */
+@media (min-width: 768px) {
+  .formularioVenta .form-group .input-group {
+    max-width: 75%;
+  }
+}
+
+@media (max-width: 767px) {
+  .formularioVenta .form-group .input-group {
+    width: 100% !important;
+    max-width: 100%;
+  }
+}
+</style>
+
 <div class="content-wrapper">
     <section class="content-header">
 
@@ -68,16 +90,16 @@
 
                       <div class="form-group">
 
-                        <div class="input-group col-xs-9">
+                        <div class="input-group col-xs-12">
 
-                          <span class="input-group-addon">Usuario</span>                          
+                          <span class="input-group-addon">Usuario</span>
                           <input type="text" class="form-control" id="nuevoVendedor" value="<?php echo $vendedor["nombre"]; ?>" readonly>
                           <span class="input-group-addon"><i class="fa fa-user"></i></span>
 
                           <input type="hidden" name="idVendedor" value="<?php echo $vendedor["id"]; ?>">
-                          
+
                         </div>
-                        
+
                       </div>
 
                       <!--=====================================
@@ -86,14 +108,14 @@
 
                       <div class="form-group">
 
-                        <div class="input-group col-xs-9">
+                        <div class="input-group col-xs-12">
 
                           <span class="input-group-addon">Código</span>
                           <input type="text" class="form-control" id="nuevaVenta" name="editarVenta" value="<?php echo $venta["codigo"]; ?>" readonly>
                           <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                          
+
                         </div>
-                        
+
                       </div>
 
                       <!--=====================================
@@ -106,12 +128,12 @@
                         ?>
                       
                     <div class="form-group">
-                    <div class="input-group col-xs-9">
+                    <div class="input-group col-xs-12">
 
                         <span class="input-group-addon">Cliente</span>
                         <input type="text" class="form-control" value="<?php echo $cliente["nombre"]; ?>" readonly>
                         <span class="input-group-addon"><i class="fa fa-users"></i></span>
-                        
+
                         <!-- Campo oculto con el ID del cliente -->
                         <input type="hidden" name="seleccionarCliente" value="<?php echo $cliente["id"]; ?>">
                         <br>

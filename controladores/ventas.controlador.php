@@ -237,7 +237,7 @@ class ControladorVentas{
 				$textoDescuento = "";
 				if($_POST["tipoDescuento"] == "porcentaje"){
 					$textoDescuento = "Descuento: " . $_POST["valorDescuento"] . "%";
-				} else if($_POST["tipoDescuento"] == "valor"){
+				} else if($_POST["tipoDescuento"] == "fijo"){
 					$textoDescuento = "Descuento: $" . number_format($_POST["valorDescuento"], 0, ',', '.');
 				}
 
@@ -712,7 +712,7 @@ static public function ctrEditarVenta(){
 			$textoDescuento = "";
 			if($_POST["tipoDescuento"] == "porcentaje"){
 				$textoDescuento = "Descuento: " . $_POST["valorDescuento"] . "%";
-			} else if($_POST["tipoDescuento"] == "valor"){
+			} else if($_POST["tipoDescuento"] == "fijo"){
 				$textoDescuento = "Descuento: $" . number_format($_POST["valorDescuento"], 0, ',', '.');
 			}
 

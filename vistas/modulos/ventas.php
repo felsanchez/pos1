@@ -773,25 +773,6 @@ $(document).on('blur', '.celda-observacion', function() {
 
 <!-- Ampliar foto -->
 <script>
-// Ampliar imagen de venta al hacer clic
-$(document).on("click", ".img-ampliar-venta", function(){
-    var rutaImagen = $(this).attr("data-imagen");
-    
-    // Buscar el ID de la venta en la misma fila
-    var idVenta = $(this).closest("tr").find("td:last").text(); // Ajusta según tu estructura
-    
-    // Si tienes un botón con el ID, usa esto:
-    // var idVenta = $(this).closest("tr").find(".btnEliminarVenta").attr("idVenta");
-    
-    console.log("ID Venta:", idVenta); // Para debug
-    console.log("Ruta Imagen:", rutaImagen); // Para debug
-    
-    $("#imagenVentaAmpliada").attr("src", rutaImagen);
-    $("#idVentaImagen").val(idVenta);
-    $(".nuevaImagenVenta").val(""); // Limpiar el input file
-    $("#modalAmpliarImagenVenta").modal("show");
-});
-
 // Previsualizar nueva imagen cuando se selecciona
 $(".nuevaImagenVenta").change(function(){
     var imagen = this.files[0];

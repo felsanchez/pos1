@@ -953,13 +953,14 @@ MODAL EDITAR ESTADO
 
             <div class="form-group">
               <label>Nombre *</label>
-              <input type="text" class="form-control" name="editarNombreEstadoActividad" id="editarNombreEstadoActividad" required>
-              <input type="hidden" name="idEstadoActividad" id="idEstadoActividad">
+              <input type="text" class="form-control" name="editarEstadoNombre" id="editarEstadoNombre" required>
+              <input type="hidden" name="idEstado" id="idEstado">
+              <input type="hidden" name="editarEstadoOrden" id="editarEstadoOrden">
             </div>
 
             <div class="form-group">
               <label>Color</label>
-              <input type="color" class="form-control" name="editarColorEstadoActividad" id="editarColorEstadoActividad">
+              <input type="color" class="form-control" name="editarEstadoColor" id="editarEstadoColor">
             </div>
 
           </div>

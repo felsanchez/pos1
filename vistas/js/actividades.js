@@ -197,9 +197,10 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 			}
 
 			// Rellenar los campos del modal
-			$("#idEstadoActividad").val(respuesta["id"]);
-			$("#editarNombreEstadoActividad").val(respuesta["nombre"]);
-			$("#editarColorEstadoActividad").val(respuesta["color"]);
+			$("#idEstado").val(respuesta["id"]);
+			$("#editarEstadoNombre").val(respuesta["nombre"]);
+			$("#editarEstadoColor").val(respuesta["color"]);
+			$("#editarEstadoOrden").val(respuesta["orden"]);
 
 			// Abrir el modal DESPUÉS de cargar los datos
 			$("#modalEditarEstadoActividad").modal("show");

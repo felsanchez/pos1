@@ -925,18 +925,27 @@ MODAL GESTIONAR ESTADOS
 <!-- Estilos para asegurar que el modal de edición sea interactivo -->
 <style>
 #modalEditarEstadoActividad .modal-dialog {
-  z-index: 1050;
+  z-index: 1060;
+}
+
+#modalEditarEstadoActividad .modal-backdrop {
+  z-index: 1040 !important;
 }
 
 #modalEditarEstadoActividad input,
 #modalEditarEstadoActividad .form-control {
   pointer-events: auto !important;
-  z-index: 1051 !important;
+  z-index: 1070 !important;
+  position: relative;
 }
 
 #modalEditarEstadoActividad .modal-content {
   position: relative;
-  z-index: 1050;
+  z-index: 1060;
+}
+
+#modalEditarEstadoActividad.modal {
+  z-index: 1055 !important;
 }
 </style>
 
@@ -944,7 +953,7 @@ MODAL GESTIONAR ESTADOS
 MODAL EDITAR ESTADO
 ======================================-->
 
-<div id="modalEditarEstadoActividad" class="modal fade" role="dialog" data-backdrop="true" data-keyboard="true">
+<div id="modalEditarEstadoActividad" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="true">
 
   <div class="modal-dialog">
 

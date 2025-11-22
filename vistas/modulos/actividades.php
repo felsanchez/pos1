@@ -91,8 +91,12 @@
 
             <div class="box-header with-border">
 
-                <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregarActividad">             
+                <button class="btn btn-primary" data-toggle="modal" data-target="#modalAgregarActividad">
                     Agregar Actividad
+                </button>
+
+                <button class="btn btn-default" data-toggle="modal" data-target="#modalGestionarEstados">
+                    <i class="fa fa-flag"></i> Gestionar estados
                 </button>
 
             </div>
@@ -805,6 +809,187 @@ MODAL AGREGAR TIPO ACTIVIDAD
 </div>
 
 
+<!--=====================================
+MODAL GESTIONAR ESTADOS
+======================================-->
+
+<div id="modalGestionarEstados" class="modal fade" role="dialog">
+
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+
+      <!--=====================================
+      CABEZA DEL MODAL
+      ======================================-->
+
+      <div class="modal-header" style="background:#3c8dbc; color: white">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Gestionar Estados de Actividades</h4>
+      </div>
+
+      <!--=====================================
+      CUERPO DEL MODAL
+      ======================================-->
+
+      <div class="modal-body">
+
+        <!-- Formulario agregar estado -->
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Agregar Nuevo Estado</h3>
+          </div>
+          <div class="panel-body">
+            <form role="form" method="post" id="formAgregarEstado">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="nuevoEstadoNombreGestion" placeholder="Nombre del estado *" required>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <input type="color" class="form-control" name="nuevoEstadoColorGestion" value="#3c8dbc">
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fa fa-plus"></i> Agregar
+                  </button>
+                </div>
+              </div>
+
+              <!-- CAMPO OCULTO PARA ORIGEN -->
+              <input type="hidden" name="origenModal" value="actividades">
+
+              <?php
+                $crearEstadoGestion = new ControladorEstadosActividades();
+                $crearEstadoGestion -> ctrCrearEstado();
+              ?>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Lista de estados -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Estados Existentes</h3>
+          </div>
+          <div class="panel-body">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Nombre</th>
+                  <th>Color</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                  $estadosGestion = ControladorEstadosActividades::ctrMostrarEstadosActividades(null, null);
+                  foreach ($estadosGestion as $key => $value) {
+                    echo '<tr>
+                      <td>'.($key+1).'</td>
+                      <td><span class="badge" style="background-color: '.$value["color"].'">'.ucfirst($value["nombre"]).'</span></td>
+                      <td><input type="color" value="'.$value["color"].'" disabled style="width: 50px;"></td>
+                      <td>
+                        <button class="btn btn-warning btn-xs btnEditarEstadoActividad" idEstado="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarEstadoActividad"><i class="fa fa-pencil"></i></button>
+                        <button class="btn btn-danger btn-xs btnEliminarEstadoActividad" idEstado="'.$value["id"].'" nombreEstado="'.$value["nombre"].'"><i class="fa fa-times"></i></button>
+                      </td>
+                    </tr>';
+                  }
+                ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!--=====================================
+      PIE DEL MODAL
+      ======================================-->
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!--=====================================
+MODAL EDITAR ESTADO
+======================================-->
+
+<div id="modalEditarEstadoActividad" class="modal fade" role="dialog">
+
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+
+      <form role="form" method="post">
+
+        <!--=====================================
+        CABEZA DEL MODAL
+        ======================================-->
+
+        <div class="modal-header" style="background:#3c8dbc; color: white">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Editar Estado</h4>
+        </div>
+
+        <!--=====================================
+        CUERPO DEL MODAL
+        ======================================-->
+
+        <div class="modal-body">
+
+          <div class="box-body">
+
+            <div class="form-group">
+              <label>Nombre *</label>
+              <input type="text" class="form-control" name="editarNombreEstadoActividad" id="editarNombreEstadoActividad" required>
+              <input type="hidden" name="idEstadoActividad" id="idEstadoActividad">
+            </div>
+
+            <div class="form-group">
+              <label>Color</label>
+              <input type="color" class="form-control" name="editarColorEstadoActividad" id="editarColorEstadoActividad">
+            </div>
+
+          </div>
+
+        </div>
+
+        <!--=====================================
+        PIE DEL MODAL
+        ======================================-->
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Salir</button>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+
+        <?php
+
+          $editarEstadoActividad = new ControladorEstadosActividades();
+          $editarEstadoActividad -> ctrEditarEstado();
+
+        ?>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <!-- FullCalendar JS -->
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.js'></script>
@@ -821,6 +1006,9 @@ MODAL AGREGAR TIPO ACTIVIDAD
   <?php
     $eliminarActividad = new ControladorActividades();
     $eliminarActividad -> ctrEliminarActividad();
+
+    $eliminarEstado = new ControladorEstadosActividades();
+    $eliminarEstado -> ctrEliminarEstado();
   ?>
 
 <!--=============CALENDARIO========================

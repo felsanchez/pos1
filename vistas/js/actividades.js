@@ -156,3 +156,70 @@ $(".tablas").on("change", ".cambiarEstado", function() {
     });
 });
 */
+
+
+/*=============================================
+Editar Estado desde Modal de Gestión
+=============================================*/
+$("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(){
+
+	var idEstado = $(this).attr("idEstado");
+    console.log("ID Estado: " + idEstado);
+
+	// Rellenar el input hidden
+    $('#modalEditarEstadoActividad input[name="idEstadoActividad"]').val(idEstado);
+
+	var datos = new FormData();
+	datos.append("idEstado", idEstado);
+
+	$.ajax({
+
+		url:"ajax/estados_actividades.ajax.php",
+		method: "POST",
+		data: datos,
+		cache: false,
+		contentType: false,
+		processData: false,
+		dataType: "json",
+		success:function(respuesta){
+
+			console.log("Datos del estado:", respuesta);
+
+			$("#editarNombreEstadoActividad").val(respuesta["nombre"]);
+			$("#editarColorEstadoActividad").val(respuesta["color"]);
+
+		}
+
+	})
+
+})
+
+
+/*=============================================
+Eliminar Estado
+=============================================*/
+$(".btnEliminarEstadoActividad").click(function(){
+
+	var idEstado = $(this).attr("idEstado");
+	var nombreEstado = $(this).attr("nombreEstado");
+
+	swal({
+		title: '¿Está seguro de borrar el estado "'+nombreEstado+'"?',
+		text: "¡Si no lo está puede cancelar la acción!",
+		type: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		cancelButtonText: 'Cancelar',
+		confirmButtonText: 'Sí, borrar estado!'
+	}).then(function(result){
+
+		if(result.value){
+
+			window.location = "index.php?ruta=actividades&idEstado="+idEstado+"&nombreEstado="+nombreEstado;
+
+		}
+
+	})
+
+})

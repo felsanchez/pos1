@@ -214,6 +214,9 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 
 			console.log("Abriendo modal de edición (manteniendo modal de gestión abierto)...");
 
+			// Ocultar el backdrop del modal de gestión para evitar que capture eventos
+			$(".modal-backdrop").first().hide();
+
 			// Abrir el modal de edición directamente (sin cerrar el de gestión)
 			$("#modalEditarEstadoActividad").modal("show");
 
@@ -224,6 +227,12 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 					$("#editarEstadoNombre").focus().select();
 					console.log("Focus aplicado");
 				}, 150);
+			});
+
+			// Restaurar el backdrop del modal de gestión cuando se cierre el de edición
+			$("#modalEditarEstadoActividad").one("hidden.bs.modal", function(){
+				console.log("Modal de edición cerrado, restaurando backdrop de gestión...");
+				$(".modal-backdrop").first().show();
 			});
 
 		},

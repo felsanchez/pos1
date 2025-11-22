@@ -174,7 +174,7 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 
 	$.ajax({
 
-		url:"ajax/estados_actividades.ajax.php",
+		url:"ajax/estados-actividades.ajax.php",
 		method: "POST",
 		data: datos,
 		cache: false,

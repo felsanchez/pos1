@@ -182,10 +182,13 @@
                         $item = null;
                         $valor = null;
                         $actividades = ControladorActividades::ctrMostrarActividades($item, $valor);
+
+                        // Obtener estados una sola vez para toda la tabla
+                        $estadosActividades = ControladorEstadosActividades::ctrMostrarEstadosActividades(null, null);
                         ?>
 
-                            <?php 
-                            foreach ($actividades as $key => $value):                       
+                            <?php
+                            foreach ($actividades as $key => $value):
                             ?>
 
                         <tr>
@@ -212,11 +215,10 @@
                             // Obtener el estado actual
                             $estadoActual = $value["estado"] ?? "";
 
-                            // Buscar el color del estado
-                            $estadosActividades = ControladorEstadosActividades::ctrMostrarEstadosActividades(null, null);
+                            // Buscar el color del estado (comparación case-insensitive)
                             $colorEstado = "#999"; // Color por defecto
                             foreach($estadosActividades as $estado){
-                                if($estado["nombre"] == $estadoActual){
+                                if(strcasecmp($estado["nombre"], $estadoActual) == 0){
                                     $colorEstado = $estado["color"];
                                     break;
                                 }

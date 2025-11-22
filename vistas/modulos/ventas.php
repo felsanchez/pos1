@@ -136,6 +136,12 @@
   min-height: 30px;
 }
 
+.card-venta-observacion:empty:before {
+  content: "Escribe una observación...";
+  color: #999;
+  font-style: italic;
+}
+
 .card-venta-observacion:focus {
   outline: 2px solid #f39c12;
   background: #fffef5;
@@ -550,9 +556,7 @@
               }
 
               // Observación editable
-              echo '<div class="card-venta-observacion celda-observacion" contenteditable="true" data-id="'.$value["id"].'">
-                      <i class="fa fa-pencil"></i> '.$value["observacion"].'
-                    </div>';
+              echo '<div class="card-venta-observacion celda-observacion" contenteditable="true" data-id="'.$value["id"].'">'.$value["observacion"].'</div>';
 
               echo '</div>';
             }

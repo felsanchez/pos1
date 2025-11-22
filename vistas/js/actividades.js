@@ -161,13 +161,13 @@ $(".tablas").on("change", ".cambiarEstado", function() {
 /*=============================================
 Editar Estado desde Modal de Gestión
 =============================================*/
-$("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(){
+$("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e){
+
+	// Prevenir que el modal se abra inmediatamente
+	e.preventDefault();
 
 	var idEstado = $(this).attr("idEstado");
     console.log("ID Estado: " + idEstado);
-
-	// Rellenar el input hidden
-    $('#modalEditarEstadoActividad input[name="idEstadoActividad"]').val(idEstado);
 
 	var datos = new FormData();
 	datos.append("idEstado", idEstado);
@@ -185,9 +185,23 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(){
 
 			console.log("Datos del estado:", respuesta);
 
+			// Rellenar los campos del modal
+			$("#idEstadoActividad").val(respuesta["id"]);
 			$("#editarNombreEstadoActividad").val(respuesta["nombre"]);
 			$("#editarColorEstadoActividad").val(respuesta["color"]);
 
+			// Abrir el modal DESPUÉS de cargar los datos
+			$("#modalEditarEstadoActividad").modal("show");
+
+		},
+		error: function(xhr, status, error){
+			console.error("Error AJAX:", error);
+			console.error("Respuesta completa:", xhr.responseText);
+			swal({
+				type: "error",
+				title: "Error",
+				text: "No se pudieron cargar los datos del estado"
+			});
 		}
 
 	})

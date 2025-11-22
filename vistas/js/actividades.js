@@ -197,13 +197,33 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 			}
 
 			// Rellenar los campos del modal
+			console.log("Rellenando campos con:", respuesta);
 			$("#idEstado").val(respuesta["id"]);
 			$("#editarEstadoNombre").val(respuesta["nombre"]);
 			$("#editarEstadoColor").val(respuesta["color"]);
 			$("#editarEstadoOrden").val(respuesta["orden"]);
 
+			// Verificar valores
+			console.log("Valor de editarEstadoNombre:", $("#editarEstadoNombre").val());
+			console.log("Campo disabled?:", $("#editarEstadoNombre").prop("disabled"));
+			console.log("Campo readonly?:", $("#editarEstadoNombre").prop("readonly"));
+
+			// Asegurar que los campos no estén deshabilitados
+			$("#editarEstadoNombre").prop("disabled", false).prop("readonly", false);
+			$("#editarEstadoColor").prop("disabled", false).prop("readonly", false);
+
+			console.log("Abriendo modal...");
 			// Abrir el modal DESPUÉS de cargar los datos
 			$("#modalEditarEstadoActividad").modal("show");
+
+			// Forzar focus en el campo nombre cuando el modal esté completamente visible
+			$("#modalEditarEstadoActividad").one("shown.bs.modal", function(){
+				console.log("Modal abierto, aplicando focus");
+				setTimeout(function(){
+					$("#editarEstadoNombre").focus().select();
+					console.log("Focus aplicado");
+				}, 100);
+			});
 
 		},
 		error: function(xhr, status, error){

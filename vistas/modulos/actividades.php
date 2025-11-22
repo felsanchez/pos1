@@ -922,11 +922,29 @@ MODAL GESTIONAR ESTADOS
 
 </div>
 
+<!-- Estilos para asegurar que el modal de edición sea interactivo -->
+<style>
+#modalEditarEstadoActividad .modal-dialog {
+  z-index: 1050;
+}
+
+#modalEditarEstadoActividad input,
+#modalEditarEstadoActividad .form-control {
+  pointer-events: auto !important;
+  z-index: 1051 !important;
+}
+
+#modalEditarEstadoActividad .modal-content {
+  position: relative;
+  z-index: 1050;
+}
+</style>
+
 <!--=====================================
 MODAL EDITAR ESTADO
 ======================================-->
 
-<div id="modalEditarEstadoActividad" class="modal fade" role="dialog">
+<div id="modalEditarEstadoActividad" class="modal fade" role="dialog" data-backdrop="true" data-keyboard="true">
 
   <div class="modal-dialog">
 

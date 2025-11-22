@@ -161,13 +161,13 @@ $(".tablas").on("change", ".cambiarEstado", function() {
 /*=============================================
 Editar Estado desde Modal de Gestión
 =============================================*/
-$("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e){
-
-	// Prevenir que el modal se abra inmediatamente
-	e.preventDefault();
+$("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(){
 
 	var idEstado = $(this).attr("idEstado");
     console.log("ID Estado: " + idEstado);
+
+	// Rellenar el input hidden
+	$('#modalEditarEstadoActividad input[name="idEstado"]').val(idEstado);
 
 	var datos = new FormData();
 	datos.append("idEstado", idEstado);
@@ -181,59 +181,13 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 		contentType: false,
 		processData: false,
 		dataType: "json",
-		success:function(respuesta){
+		success: function(respuesta){
 
-			console.log("Datos del estado:", respuesta);
+			console.log("Respuesta AJAX Estado:", respuesta);
 
-			// Verificar si hay error en la respuesta
-			if(respuesta.error){
-				console.error("Error del servidor:", respuesta.error);
-				swal({
-					type: "error",
-					title: "Error",
-					text: respuesta.error
-				});
-				return;
-			}
-
-			// Rellenar los campos del modal
-			console.log("Rellenando campos con:", respuesta);
-			$("#idEstado").val(respuesta["id"]);
 			$("#editarEstadoNombre").val(respuesta["nombre"]);
 			$("#editarEstadoColor").val(respuesta["color"]);
 			$("#editarEstadoOrden").val(respuesta["orden"]);
-
-			// Verificar valores
-			console.log("Valor de editarEstadoNombre:", $("#editarEstadoNombre").val());
-			console.log("Campo disabled?:", $("#editarEstadoNombre").prop("disabled"));
-			console.log("Campo readonly?:", $("#editarEstadoNombre").prop("readonly"));
-
-			// Asegurar que los campos no estén deshabilitados
-			$("#editarEstadoNombre").prop("disabled", false).prop("readonly", false);
-			$("#editarEstadoColor").prop("disabled", false).prop("readonly", false);
-
-			console.log("Abriendo modal de edición (manteniendo modal de gestión abierto)...");
-
-			// Ocultar el backdrop del modal de gestión para evitar que capture eventos
-			$(".modal-backdrop").first().hide();
-
-			// Abrir el modal de edición directamente (sin cerrar el de gestión)
-			$("#modalEditarEstadoActividad").modal("show");
-
-			// Forzar focus en el campo nombre cuando el modal esté completamente visible
-			$("#modalEditarEstadoActividad").one("shown.bs.modal", function(){
-				console.log("Modal de edición abierto, aplicando focus");
-				setTimeout(function(){
-					$("#editarEstadoNombre").focus().select();
-					console.log("Focus aplicado");
-				}, 150);
-			});
-
-			// Restaurar el backdrop del modal de gestión cuando se cierre el de edición
-			$("#modalEditarEstadoActividad").one("hidden.bs.modal", function(){
-				console.log("Modal de edición cerrado, restaurando backdrop de gestión...");
-				$(".modal-backdrop").first().show();
-			});
 
 		},
 		error: function(xhr, status, error){

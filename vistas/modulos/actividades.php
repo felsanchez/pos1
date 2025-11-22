@@ -933,30 +933,6 @@ MODAL GESTIONAR ESTADOS
   z-index: 1049 !important;
 }
 
-/* Modal de edición - nivel superior */
-#modalEditarEstadoActividad.modal {
-  z-index: 1060 !important;
-}
-
-#modalEditarEstadoActividad + .modal-backdrop {
-  z-index: 1059 !important;
-}
-
-#modalEditarEstadoActividad .modal-dialog {
-  z-index: 1061;
-}
-
-#modalEditarEstadoActividad input,
-#modalEditarEstadoActividad .form-control {
-  pointer-events: auto !important;
-  z-index: 1062 !important;
-  position: relative;
-}
-
-#modalEditarEstadoActividad .modal-content {
-  position: relative;
-  z-index: 1061;
-}
 </style>
 
 <!--=====================================

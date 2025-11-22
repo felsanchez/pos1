@@ -895,7 +895,7 @@ MODAL GESTIONAR ESTADOS
                       <td><span class="badge" style="background-color: '.$value["color"].'">'.ucfirst($value["nombre"]).'</span></td>
                       <td><input type="color" value="'.$value["color"].'" disabled style="width: 50px;"></td>
                       <td>
-                        <button class="btn btn-warning btn-xs btnEditarEstadoActividad" idEstado="'.$value["id"].'"><i class="fa fa-pencil"></i></button>
+                        <button class="btn btn-warning btn-xs btnEditarEstadoActividad" idEstado="'.$value["id"].'" data-toggle="modal" data-target="#modalEditarEstadoActividad"><i class="fa fa-pencil"></i></button>
                         <button class="btn btn-danger btn-xs btnEliminarEstadoActividad" idEstado="'.$value["id"].'" nombreEstado="'.$value["nombre"].'"><i class="fa fa-times"></i></button>
                       </td>
                     </tr>';

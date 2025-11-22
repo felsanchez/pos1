@@ -212,33 +212,18 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 			$("#editarEstadoNombre").prop("disabled", false).prop("readonly", false);
 			$("#editarEstadoColor").prop("disabled", false).prop("readonly", false);
 
-			console.log("Cerrando modal de gestión...");
-			// CRÍTICO: Cerrar el modal de gestión primero
-			$("#modalGestionarEstados").modal("hide");
+			console.log("Abriendo modal de edición (manteniendo modal de gestión abierto)...");
 
-			// Esperar a que se cierre completamente antes de abrir el de edición
-			$("#modalGestionarEstados").one("hidden.bs.modal", function(){
-				console.log("Modal de gestión cerrado, abriendo modal de edición...");
+			// Abrir el modal de edición directamente (sin cerrar el de gestión)
+			$("#modalEditarEstadoActividad").modal("show");
 
-				// Abrir el modal de edición
-				$("#modalEditarEstadoActividad").modal("show");
-
-				// Forzar focus en el campo nombre cuando el modal esté completamente visible
-				$("#modalEditarEstadoActividad").one("shown.bs.modal", function(){
-					console.log("Modal de edición abierto, aplicando focus");
-					setTimeout(function(){
-						$("#editarEstadoNombre").focus().select();
-						console.log("Focus aplicado");
-					}, 150);
-				});
-
-				// IMPORTANTE: Volver a abrir el modal de gestión cuando se cierre el de edición
-				$("#modalEditarEstadoActividad").one("hidden.bs.modal", function(){
-					console.log("Modal de edición cerrado, reabriendo modal de gestión...");
-					setTimeout(function(){
-						$("#modalGestionarEstados").modal("show");
-					}, 300);
-				});
+			// Forzar focus en el campo nombre cuando el modal esté completamente visible
+			$("#modalEditarEstadoActividad").one("shown.bs.modal", function(){
+				console.log("Modal de edición abierto, aplicando focus");
+				setTimeout(function(){
+					$("#editarEstadoNombre").focus().select();
+					console.log("Focus aplicado");
+				}, 150);
 			});
 
 		},

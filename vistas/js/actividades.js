@@ -221,6 +221,16 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(){
 
 })
 
+/*=============================================
+Restaurar scroll al cerrar modal de edición
+=============================================*/
+$("#modalEditarEstadoActividad").on("hidden.bs.modal", function(){
+	// Si el modal de gestión sigue abierto, restaurar la clase modal-open
+	if($("#modalGestionarEstados").hasClass("in")){
+		$("body").addClass("modal-open");
+	}
+});
+
 // Debug: Detectar eventos en el campo de edición
 $(document).ready(function(){
 	$(document).on("keydown keypress keyup input", "#editarEstadoNombre", function(e){

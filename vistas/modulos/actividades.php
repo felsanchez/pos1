@@ -969,6 +969,7 @@ MODAL EDITAR ESTADO
               <input type="text" class="form-control" name="editarEstadoNombre" id="editarEstadoNombre" required>
               <input type="hidden" name="idEstado" id="idEstado">
               <input type="hidden" name="editarEstadoOrden" id="editarEstadoOrden">
+              <input type="hidden" name="origenModal" value="actividades">
             </div>
 
             <div class="form-group">

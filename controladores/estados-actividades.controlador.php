@@ -124,6 +124,9 @@ class ControladorEstadosActividades{
 
 		if(isset($_POST["editarEstadoNombre"])){
 
+			// Detectar desde dónde se llamó el modal
+			$redireccion = isset($_POST["origenModal"]) && $_POST["origenModal"] == "actividades" ? "actividades" : "estados-actividades";
+
 			if(preg_match('/^[a-zA-Z0-9ñÑáéíóúÁÉÍÓÚ ]+$/', $_POST["editarEstadoNombre"])){
 
 				$tabla = "estados_actividades";
@@ -146,7 +149,7 @@ class ControladorEstadosActividades{
 							confirmButtonText: "Cerrar"
 						}).then((result) => {
 							if(result.value){
-								window.location = "estados-actividades";
+								window.location = "'.$redireccion.'";
 							}
 						});
 					</script>';
@@ -160,7 +163,7 @@ class ControladorEstadosActividades{
 							confirmButtonText: "Cerrar"
 						}).then((result) => {
 							if(result.value){
-								window.location = "estados-actividades";
+								window.location = "'.$redireccion.'";
 							}
 						});
 					</script>';
@@ -173,7 +176,7 @@ class ControladorEstadosActividades{
 							confirmButtonText: "Cerrar"
 						}).then((result) => {
 							if(result.value){
-								window.location = "estados-actividades";
+								window.location = "'.$redireccion.'";
 							}
 						});
 					</script>';
@@ -187,7 +190,7 @@ class ControladorEstadosActividades{
 						confirmButtonText: "Cerrar"
 					}).then((result) => {
 						if(result.value){
-							window.location = "estados-actividades";
+							window.location = "'.$redireccion.'";
 						}
 					});
 				</script>';

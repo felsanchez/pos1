@@ -185,6 +185,17 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 
 			console.log("Datos del estado:", respuesta);
 
+			// Verificar si hay error en la respuesta
+			if(respuesta.error){
+				console.error("Error del servidor:", respuesta.error);
+				swal({
+					type: "error",
+					title: "Error",
+					text: respuesta.error
+				});
+				return;
+			}
+
 			// Rellenar los campos del modal
 			$("#idEstadoActividad").val(respuesta["id"]);
 			$("#editarNombreEstadoActividad").val(respuesta["nombre"]);
@@ -196,11 +207,28 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 		},
 		error: function(xhr, status, error){
 			console.error("Error AJAX:", error);
+			console.error("Status:", status);
 			console.error("Respuesta completa:", xhr.responseText);
+
+			var mensajeError = "No se pudieron cargar los datos del estado";
+
+			// Intentar parsear la respuesta como JSON
+			try {
+				var respuestaJSON = JSON.parse(xhr.responseText);
+				if(respuestaJSON.error){
+					mensajeError = respuestaJSON.error;
+				}
+			} catch(e) {
+				// Si no es JSON válido, mostrar la respuesta tal cual
+				if(xhr.responseText){
+					mensajeError = xhr.responseText.substring(0, 200);
+				}
+			}
+
 			swal({
 				type: "error",
 				title: "Error",
-				text: "No se pudieron cargar los datos del estado"
+				text: mensajeError
 			});
 		}
 

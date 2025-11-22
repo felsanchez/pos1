@@ -1,5 +1,10 @@
 <?php
 
+// Habilitar reporte de errores para debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // No mostrar errores en pantalla
+ini_set('log_errors', 1);
+
 require_once "../controladores/estados-actividades.controlador.php";
 require_once "../modelos/estados-actividades.modelo.php";
 
@@ -13,12 +18,20 @@ class AjaxEstadosActividades{
 
 	public function ajaxEditarEstadoActividad(){
 
-		$item = "id";
-		$valor = $this->idEstado;
+		try {
+			$item = "id";
+			$valor = $this->idEstado;
 
-		$respuesta = ControladorEstadosActividades::ctrMostrarEstadosActividades($item, $valor);
+			$respuesta = ControladorEstadosActividades::ctrMostrarEstadosActividades($item, $valor);
 
-		echo json_encode($respuesta);
+			if($respuesta){
+				echo json_encode($respuesta);
+			} else {
+				echo json_encode(array("error" => "No se encontró el estado"));
+			}
+		} catch (Exception $e) {
+			echo json_encode(array("error" => $e->getMessage()));
+		}
 	}
 
 }
@@ -32,4 +45,6 @@ if(isset($_POST["idEstado"])){
 	$estado = new AjaxEstadosActividades();
 	$estado -> idEstado = $_POST["idEstado"];
 	$estado -> ajaxEditarEstadoActividad();
+} else {
+	echo json_encode(array("error" => "No se recibió el ID del estado"));
 }

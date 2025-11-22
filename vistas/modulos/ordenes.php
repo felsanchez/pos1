@@ -71,6 +71,31 @@
 }
 </style>
 
+<!-- Estilos para campo observación -->
+<style>
+.celda-observacion {
+  background: #fff9e6;
+  padding: 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #666;
+  border-left: 2px solid #f39c12;
+  cursor: text;
+  min-height: 30px;
+}
+
+.celda-observacion:empty:before {
+  content: "Escribe una observación...";
+  color: #999;
+  font-style: italic;
+}
+
+.celda-observacion:focus {
+  outline: 2px solid #f39c12;
+  background: #fffef5;
+}
+</style>
+
 
 <!-- DateRangePicker -->
 <link rel="stylesheet" href="vistas/bower_components/bootstrap-daterangepicker/daterangepicker.css">

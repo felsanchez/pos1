@@ -257,6 +257,20 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 
 })
 
+// Debug: Detectar eventos en el campo de edición
+$(document).ready(function(){
+	$(document).on("keydown keypress keyup input", "#editarEstadoNombre", function(e){
+		console.log("Evento detectado en editarEstadoNombre:", e.type, "Key:", e.key);
+		return true; // Permitir que el evento continúe
+	});
+
+	$(document).on("click", "#editarEstadoNombre", function(e){
+		console.log("Click en editarEstadoNombre detectado");
+		console.log("Elemento:", this);
+		console.log("Es editable?:", !$(this).prop("disabled") && !$(this).prop("readonly"));
+	});
+});
+
 
 /*=============================================
 Eliminar Estado

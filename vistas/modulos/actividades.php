@@ -1019,6 +1019,7 @@ MODAL EDITAR ESTADO
 
 <!--Ruta actividades.js-->
 <script src="vistas/js/actividades.js"></script>
+<!-- Archivo actualizado para funcionar con badges en lugar de selects -->
 <script src="assets/js/actividades.js"></script>
 
 

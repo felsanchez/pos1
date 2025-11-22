@@ -124,6 +124,23 @@
   border-left: 2px solid #3c8dbc;
 }
 
+.card-venta-observacion {
+  background: #fff9e6;
+  padding: 8px;
+  border-radius: 3px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+  border-left: 2px solid #f39c12;
+  cursor: text;
+  min-height: 30px;
+}
+
+.card-venta-observacion:focus {
+  outline: 2px solid #f39c12;
+  background: #fffef5;
+}
+
 .card-venta-imagen-icono {
   display: inline-block;
   padding: 4px 8px;
@@ -531,6 +548,11 @@
                         <i class="fa fa-sticky-note-o"></i> '.$value["notas"].'
                       </div>';
               }
+
+              // Observación editable
+              echo '<div class="card-venta-observacion celda-observacion" contenteditable="true" data-id="'.$value["id"].'">
+                      <i class="fa fa-pencil"></i> '.$value["observacion"].'
+                    </div>';
 
               echo '</div>';
             }

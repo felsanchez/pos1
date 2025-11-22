@@ -1,76 +1,8 @@
-<!-- Librería de estilos de Choices.js -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 <!-- Ruta actividades.css -->
 <link rel="stylesheet" href="assets/css/actividades.css">
 
 <!-- FullCalendar CSS -->
 <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.17/index.global.min.css' rel='stylesheet' />
-
-<!-- Estilos dinámicos para estados de actividades -->
-<style>
-<?php
-$estadosParaEstilos = ControladorEstadosActividades::ctrMostrarEstadosActividades(null, null);
-foreach($estadosParaEstilos as $estadoEstilo){
-    $nombreLimpio = str_replace(" ", "-", strtolower($estadoEstilo["nombre"]));
-    $color = $estadoEstilo["color"];
-
-    // Estilos para el contenedor cerrado de Choices.js (select cuando NO está abierto)
-    echo '.estado-act-'.$nombreLimpio.' .choices__inner,';
-    echo '.estado-act-'.$nombreLimpio.'.choices .choices__inner {';
-    echo '  background-color: '.$color.' !important;';
-    echo '  border-color: '.$color.' !important;';
-    echo '  color: #fff !important;';
-    echo '}';
-    echo "\n";
-
-    // Estilos para el select normal (antes de que Choices.js lo transforme)
-    echo 'select.estado-act-'.$nombreLimpio.' {';
-    echo '  background-color: '.$color.' !important;';
-    echo '  border-color: '.$color.' !important;';
-    echo '  color: #fff !important;';
-    echo '}';
-    echo "\n";
-
-    // Estilos para cada opción individual en el dropdown (basado SOLO en data-value, NO en clase del contenedor)
-    echo '.choices__list--dropdown .choices__item--selectable[data-value="'.$estadoEstilo["nombre"].'"] {';
-    echo '  background-color: '.$color.' !important;';
-    echo '  color: #fff !important;';
-    echo '  border: none !important;';
-    echo '}';
-    echo "\n";
-    echo '.choices__list--dropdown .choices__item--selectable[data-value="'.$estadoEstilo["nombre"].'"]:hover {';
-    echo '  background-color: '.adjustBrightnessActividad($color, -20).' !important;';
-    echo '  color: #fff !important;';
-    echo '}';
-    echo "\n";
-} 
-
-// Función helper para ajustar brillo (hover más oscuro)
-function adjustBrightnessActividad($hex, $steps) {
-    $steps = max(-255, min(255, $steps));
-    $hex = str_replace('#', '', $hex);
-    $r = hexdec(substr($hex, 0, 2));
-    $g = hexdec(substr($hex, 2, 2));
-    $b = hexdec(substr($hex, 4, 2));
-    $r = max(0, min(255, $r + $steps));
-    $g = max(0, min(255, $g + $steps));
-    $b = max(0, min(255, $b + $steps));
-    return '#'.str_pad(dechex($r), 2, '0', STR_PAD_LEFT).str_pad(dechex($g), 2, '0', STR_PAD_LEFT).str_pad(dechex($b), 2, '0', STR_PAD_LEFT);
-}
-?>
-</style> 
-
-<!-- Mapa de colores de estados para JavaScript -->
-<script>
-  window.estadosActividadesColores = {
-    <?php
-    foreach($estadosParaEstilos as $key => $estadoEstilo){
-      $coma = ($key < count($estadosParaEstilos) - 1) ? ',' : '';
-      echo '"'.strtolower($estadoEstilo["nombre"]).'": "'.$estadoEstilo["color"].'"'.$coma."\n";
-    }
-    ?>
-  };
-</script>
 
 
 <!-- Centrar filtro -->
@@ -132,40 +64,6 @@ function adjustBrightnessActividad($hex, $steps) {
 </style>
 
 
-<!-- Estilos para que el dropdown de Choices.js no se corte -->
-<style>
-/* Permitir que el dropdown se muestre fuera del contenedor de la tabla */
-.table-responsive {
-    overflow: visible !important;
-}
-
-/* Asegurar que el dropdown de Choices.js tenga z-index alto y se posicione correctamente */
-.choices__list--dropdown {
-    position: absolute !important;
-    z-index: 9999 !important;
-    max-height: none !important;
-    overflow: visible !important;
-} 
-
-/* El scroll solo en el contenedor interno de Choices.js */
-.choices__list--dropdown .choices__list {
-    max-height: 250px !important;
-    overflow-y: auto !important;
-}
- 
-/* Asegurar que el contenedor box-body permita overflow visible */
-.box-body {
-    overflow: visible !important;
-}
-
- /* Pero mantener scroll horizontal solo si es necesario en pantallas pequeñas */
-@media (max-width: 991px) {
-    .table-responsive {
-        overflow-x: auto !important;
-        overflow-y: visible !important;
-    }
-}
-</style>
 
 
 <div class="content-wrapper">
@@ -290,19 +188,9 @@ function adjustBrightnessActividad($hex, $steps) {
                             <td><?php echo $key + 1; ?></td>
                             <td><?php echo $value["descripcion"]; ?></td>
                             
-                            <td>
-                                <select class="form-control cambiarTipo" data-id="<?php echo $value["id"]; ?>">
-                                    <?php
-                                    $tiposActividades = ControladorTiposActividades::ctrMostrarTiposActividades(null, null);
-                                    foreach($tiposActividades as $tipo){
-                                        $selected = ($value["tipo"] == $tipo["nombre"]) ? "selected" : "";
-                                        echo '<option value="'.$tipo["nombre"].'" '.$selected.'>'.ucfirst($tipo["nombre"]).'</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </td>
+                            <td><?php echo ucfirst($value["tipo"]); ?></td>
 
-                            <?php 
+                            <?php
                             $itemUsuario = "id";
                             $valorUsuario = $value["id_user"];
                             $respuestaUsuario = ControladorUsuarios::ctrMostrarUsuarios($itemUsuario, $valorUsuario);
@@ -317,25 +205,32 @@ function adjustBrightnessActividad($hex, $steps) {
 
                             <td>
                             <?php
+                            // Obtener el estado actual
                             $estadoActual = $value["estado"] ?? "";
-                            $estadoClass = "estado-act-" . str_replace(" ", "-", strtolower($estadoActual));
-                            ?>
 
-                            <select class="form-control cambiarEstado cambiarEstadoActividad <?php echo $estadoClass; ?>" data-id="<?php echo $value["id"]; ?>">
-                                <?php
-                                $estadosActividades = ControladorEstadosActividades::ctrMostrarEstadosActividades(null, null);
-                                foreach($estadosActividades as $estado){
-                                    $selected = ($value["estado"] == $estado["nombre"]) ? "selected" : "";
-                                    echo '<option value="'.$estado["nombre"].'" '.$selected.'>'.ucfirst($estado["nombre"]).'</option>';
+                            // Buscar el color del estado
+                            $estadosActividades = ControladorEstadosActividades::ctrMostrarEstadosActividades(null, null);
+                            $colorEstado = "#999"; // Color por defecto
+                            foreach($estadosActividades as $estado){
+                                if($estado["nombre"] == $estadoActual){
+                                    $colorEstado = $estado["color"];
+                                    break;
                                 }
-                                ?>
-                            </select>
+                            }
+
+                            // Mostrar badge con color
+                            if(!empty($estadoActual)){
+                                echo '<span class="badge" style="background-color: '.$colorEstado.'">'.ucfirst($estadoActual).'</span>';
+                            } else {
+                                echo '<span class="text-muted">Sin estado</span>';
+                            }
+                            ?>
 
                                 <!--BTN EDITAR Y ELIMINAR EN MOVIL-->
                                 <button class="btn btn-danger btnEliminarActividad btn-xs solo-movil" style="float: right;" idActividad="<?php echo $value["id"]; ?>"><i class="fa fa-times"></i></button>
 
                                 <button class="btn btn-warning btnEditarActividad btn-xs solo-movil" style="float: right;" data-id="<?php echo $actividad['id']; ?>" data-toggle="modal" data-target="#modalEditarActividad" idActividad="<?php echo $value["id"]; ?>"><i class="fa fa-pencil"></i></button>
-                                
+
                             </td>
 
 
@@ -916,151 +811,6 @@ MODAL AGREGAR TIPO ACTIVIDAD
 <!-- Idioma Esp FullCalendar JS -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/locales/es.js"></script>
 
-  <!-- Choices.js para Campo estatus-->
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
-
-
-
-<!-- Script para inicializar Choices.js y aplicar colores a estados -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Función para aplicar color al contenedor según el estado seleccionado
-
-  function aplicarColorEstadoActividad(select) {
-    const value = select.value;
-    const container = select.closest('.choices'); 
-
-    if (!container) {
-      console.log('ERROR: No se encontró contenedor .choices');
-      return;
-    } 
-
-    // Eliminar clases anteriores que empiecen con "estado-act-"
-    container.className = container.className
-      .split(" ")
-      .filter(cls => !cls.startsWith("estado-act-"))
-      .join(" "); 
-
-    // Agregar la nueva clase
-    const nuevaClase = "estado-act-" + value.replace(/ /g, "-").toLowerCase();
-    container.classList.add(nuevaClase); 
-
-    // Aplicar estilos inline directamente usando el mapa de colores
-    const valueLower = value.toLowerCase();
-    const color = window.estadosActividadesColores ? window.estadosActividadesColores[valueLower] : null; 
-
-    if (color) {
-      const choicesInner = container.querySelector('.choices__inner');
-      if (choicesInner) {
-        // Aplicar con setProperty para poder usar !important
-        choicesInner.style.setProperty('background-color', color, 'important');
-        choicesInner.style.setProperty('border-color', color, 'important');
-        choicesInner.style.setProperty('color', '#fff', 'important');
-        console.log('✓ Color aplicado al contenedor:', nuevaClase, color);
-      }
-    }
-  } 
-
-    // Aplicar colores inline a las opciones del dropdown
-  function aplicarColoresOpcionesDropdown() {
-    console.log('=== Aplicando colores a opciones del dropdown ===');
-    console.log('Mapa de colores:', window.estadosActividadesColores); 
-
-    // Buscar TODAS las opciones, incluyendo las ocultas
-    const opcionesVisible = document.querySelectorAll('.choices__list--dropdown .choices__item--selectable');
-    const opcionesTodas = document.querySelectorAll('.choices__item--selectable');
-    const dropdowns = document.querySelectorAll('.choices__list--dropdown'); 
-
-    console.log('Dropdowns encontrados:', dropdowns.length);
-    console.log('Opciones visibles encontradas:', opcionesVisible.length);
-    console.log('Opciones totales encontradas:', opcionesTodas.length); 
-
-    // Usar todas las opciones, no solo las del dropdown
-    const opciones = opcionesTodas;
-
-    opciones.forEach(function(opcion) {
-      const valorEstado = opcion.getAttribute('data-value');
-      if (!valorEstado) return; 
-
-      console.log('Procesando opción:', valorEstado); 
-
-      // Buscar el color correspondiente en el mapa
-      const colorEstado = window.estadosActividadesColores[valorEstado.toLowerCase()];
-      console.log('Color encontrado para "' + valorEstado + '":', colorEstado);
-
-
-      if (colorEstado) {
-        // Aplicar estilos inline directamente
-        opcion.style.setProperty('background-color', colorEstado, 'important');
-        opcion.style.setProperty('color', '#fff', 'important');
-        opcion.style.setProperty('border', 'none', 'important');
-        console.log('✓ Colores aplicados a:', valorEstado);
-      } else {
-
-        console.warn('✗ No se encontró color para:', valorEstado);
-      }
-    });
-  } 
-
-  // Inicializar Choices.js y aplicar colores
-  function inicializarChoicesEstadoActividad() {
-    const selects = document.querySelectorAll('.cambiarEstadoActividad');
-
- 
-    selects.forEach(function(select) {
-      // Evitar reinicializar si ya tiene Choices.js
-      if (select.classList.contains('choices__input')) {
-        return;
-      } 
-
-      // Guardar las clases de estado del select original
-      const clasesEstado = Array.from(select.classList).filter(cls => cls.startsWith('estado-act-'));
- 
-      // Inicializar Choices.js
-      const choices = new Choices(select, {
-        searchEnabled: false,
-        itemSelectText: '',
-        shouldSort: false
-      });
-
-       // Aplicar color inicial después de que Choices.js cree el contenedor
-      setTimeout(() => {
-        const container = select.closest('.choices'); 
-
-        if (container && clasesEstado.length > 0) {
-          // Agregar las clases de estado al contenedor de Choices.js
-          clasesEstado.forEach(clase => {
-            container.classList.add(clase);
-          });
-        } 
-
-        // Aplicar estilos inline
-        aplicarColorEstadoActividad(select); 
-
-        // Aplicar colores a las opciones del dropdown
-        aplicarColoresOpcionesDropdown();
-      }, 100); 
-
-      // Cambiar color dinámicamente al cambiar el valor
-      select.addEventListener('change', function() {
-        aplicarColorEstadoActividad(this);
-      });
-
-      // Aplicar colores a opciones cuando se abre el dropdown
-      select.addEventListener('showDropdown', function() {
-        setTimeout(aplicarColoresOpcionesDropdown, 50);
-      }, false);
-    });
-  }
-    // Inicializar Choices.js al cargar la página
-  inicializarChoicesEstadoActividad(); 
-
-  // Reinicializar cuando DataTables recarga los datos
-  $('.tablas').on('draw.dt', function() {
-    setTimeout(inicializarChoicesEstadoActividad, 100);
-  });
-});
-</script>
 
 
 <!--Ruta actividades.js-->

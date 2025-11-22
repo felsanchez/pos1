@@ -216,12 +216,23 @@
                             $estadoActual = $value["estado"] ?? "";
 
                             // Buscar el color del estado (comparación case-insensitive)
-                            $colorEstado = "#999"; // Color por defecto
+                            $colorEstado = "#999"; // Color por defecto (gris)
+                            $encontrado = false;
                             foreach($estadosActividades as $estado){
                                 if(strcasecmp($estado["nombre"], $estadoActual) == 0){
                                     $colorEstado = $estado["color"];
+                                    $encontrado = true;
                                     break;
                                 }
+                            }
+
+                            // DEBUG: Si no encontró el estado, mostrar advertencia en comentario HTML
+                            if(!$encontrado && !empty($estadoActual)){
+                                echo "<!-- ADVERTENCIA: Estado '".$estadoActual."' no encontrado en la tabla estados_actividades. Estados disponibles: ";
+                                foreach($estadosActividades as $est){
+                                    echo "'".$est["nombre"]."' ";
+                                }
+                                echo "-->";
                             }
 
                             // Mostrar badge con color

@@ -846,12 +846,12 @@ MODAL GESTIONAR ESTADOS
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input type="text" class="form-control" name="nuevoEstadoNombreGestion" placeholder="Nombre del estado *" required>
+                    <input type="text" class="form-control" name="nuevoEstadoNombre" placeholder="Nombre del estado *" required>
                   </div>
                 </div>
                 <div class="col-md-3">
                   <div class="form-group">
-                    <input type="color" class="form-control" name="nuevoEstadoColorGestion" value="#3c8dbc">
+                    <input type="color" class="form-control" name="nuevoEstadoColor" value="#3c8dbc">
                   </div>
                 </div>
                 <div class="col-md-3">

@@ -93,8 +93,9 @@ $(".tablas").on("click", ".btnEliminarActividad", function(){
 
 
 /*=============================================
-Guardar Tipo
+Guardar Tipo - DESACTIVADO (campo ahora es solo lectura)
 =============================================*/
+/*
 $(".tablas").on("change", ".cambiarTipo", function() {
     var idActividad = $(this).data("id");
     var nuevoTipo = $(this).val();
@@ -118,14 +119,16 @@ $(".tablas").on("change", ".cambiarTipo", function() {
 				// Aquí puedes actualizar el valor mostrado en la tabla, si quieres
 			}
 		}
-        
+
     });
 });
+*/
 
 
 /*=============================================
-Guardar Estado
+Guardar Estado - DESACTIVADO (campo ahora es solo lectura)
 =============================================*/
+/*
 $(".tablas").on("change", ".cambiarEstado", function() {
     var idActividad = $(this).data("id");
     var nuevoEstado = $(this).val();
@@ -149,6 +152,7 @@ $(".tablas").on("change", ".cambiarEstado", function() {
 				// Aquí puedes actualizar el valor mostrado en la tabla, si quieres
 			}
 		}
-        
+
     });
 });
+*/

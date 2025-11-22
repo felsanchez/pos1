@@ -337,7 +337,13 @@ class ModeloVentas{
 	//Para los reportes
 	public static function mdlMostrarVentasAsociativo($tabla, $item, $valor)
 	{
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+		$stmt = Conexion::conectar()->prepare("SELECT v.*,
+												c.nombre AS nombre_cliente,
+												u.nombre AS nombre_vendedor
+												FROM $tabla v
+												LEFT JOIN clientes c ON v.id_cliente = c.id
+												LEFT JOIN usuarios u ON v.id_vendedor = u.id
+												ORDER BY v.id DESC");
 		$stmt->execute();
 		return $stmt->fetchAll(PDO::FETCH_ASSOC);
 	}

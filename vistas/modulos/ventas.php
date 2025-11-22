@@ -933,8 +933,8 @@ $(document).on("click", ".img-ampliar-venta", function(){
 
 <!-- Abrir modal de clientes desde ordenes -->
 <script>
-$("#example").on("click", ".btnVerClienteDesdeVenta", function(){
-    
+$(document).on("click", ".btnVerClienteDesdeVenta", function(){
+
     var idCliente = $(this).attr("idCliente");
     
     var datos = new FormData();

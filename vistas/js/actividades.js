@@ -231,6 +231,14 @@ $("#modalGestionarEstados").on("click", ".btnEditarEstadoActividad", function(e)
 						console.log("Focus aplicado");
 					}, 150);
 				});
+
+				// IMPORTANTE: Volver a abrir el modal de gestión cuando se cierre el de edición
+				$("#modalEditarEstadoActividad").one("hidden.bs.modal", function(){
+					console.log("Modal de edición cerrado, reabriendo modal de gestión...");
+					setTimeout(function(){
+						$("#modalGestionarEstados").modal("show");
+					}, 300);
+				});
 			});
 
 		},
